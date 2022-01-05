@@ -13,12 +13,26 @@ class SettingActivity : AppCompatActivity() {
     lateinit var settings: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
 
-    @SuppressLint("CommitPrefEdits", "SetTextI18n")
+    @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val settingBinding = MineSettingInfoBinding.inflate(layoutInflater)
+        settings = getSharedPreferences("setting", 0)
+        settingBinding.setName.setText(settings.getString("name", " ").toString().substring(1))
+        var phone: String = settings.getString("phone", "13799").toString()
+        settingBinding.setPhone.setText(phone.substring(0, 3) + phone.substring(phone.length - 2))
+        var id: String = settings.getString("id", "1X").toString()
+        settingBinding.setId.setText(id.substring(0, 1) + id.substring(id.length - 1))
+        settingBinding.setRegion.setText(settings.getString("region", ""))
+        settingBinding.setAddress.setText(settings.getString("address", ""))
+        settingBinding.setWork.setText(settings.getString("work", ""))
+        settingBinding.setEmergencyName.setText(settings.getString("emergency_name",""))
+        settingBinding.setEmergencyPhone.setText(settings.getString("emergency_phone",""))
+        settingBinding.setQq.setText(settings.getString("qq",""))
+        settingBinding.setWechat.setText(settings.getString("wechat",""))
+        settingBinding.setMail.setText(settings.getString("mail",""))
         setContentView(settingBinding.root)
-        val versionName=this.packageManager.getPackageInfo(this.packageName,PackageManager.GET_ACTIVITIES).versionName
+        var versionName=this.packageManager.getPackageInfo(this.packageName,PackageManager.GET_ACTIVITIES).versionName
         settingBinding.version.text="${settingBinding.version.text}${versionName}"
         settingBinding.setCommit.setOnClickListener {
             when {
@@ -30,7 +44,11 @@ class SettingActivity : AppCompatActivity() {
                     Toast.makeText(this@SettingActivity, "证件号不能为空。", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
-                !settingBinding.setId.text.toString().matches("^[0-6]*X|^[1-6][0-9]\$".toRegex()) -> {
+                !settingBinding.setPhone.text.toString().matches("1[0-9]{4}".toRegex()) -> {
+                    Toast.makeText(this@SettingActivity, "电话号码错误。", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                !settingBinding.setId.text.toString().matches("[1-6][0-9X]".toRegex()) -> {
                     Toast.makeText(this@SettingActivity, "证件号格式错误。", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
@@ -62,23 +80,26 @@ class SettingActivity : AppCompatActivity() {
                     Toast.makeText(this@SettingActivity, "微信不能为空", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
-                settingBinding.setMail.text.toString().matches("^(\\w+((-\\w+)|(\\.\\w+))*)\\+\\w+((-\\w+)|(\\.\\w+))*@[A-Za-z0-9]+(([.\\-])[A-Za-z0-9]+)*\\.[A-Za-z0-9]+\$".toRegex()) -> {
+                !settingBinding.setMail.text.toString().matches("[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+".toRegex()) -> {
                     Toast.makeText(this@SettingActivity, "邮箱格式不对", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
                 else -> {
-                    settings = getSharedPreferences("setting", 0)
 
                     editor = settings.edit()
                     editor.putString("name", "*${settingBinding.setName.text} ")
-
                     editor.putString(
                         "id",
                         settingBinding.setId.text.toString()[0]
                                 + "****************"
                                 + settingBinding.setId.text.toString()[1]
                     )
-
+                    editor.putString(
+                        "phone",
+                        settingBinding.setPhone.text.toString().substring(0, 3)
+                                + "******"
+                                + settingBinding.setPhone.text.toString().substring(3, 5)
+                    )
                     editor.putString("region", settingBinding.setRegion.text.toString())
                     editor.putString("address", settingBinding.setAddress.text.toString())
                     editor.putString("work", settingBinding.setWork.text.toString())

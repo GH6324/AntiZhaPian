@@ -56,6 +56,29 @@
                     android:layout_height="match_parent">
 
                     <TextView
+                        android:id="@+id/set_phone_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="电话：" />
+
+                    <EditText
+                        android:id="@+id/set_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="填电话的前3后2共5位"
+                        android:inputType="textPersonName"
+                        android:maxLength="5"
+                        android:textColorHint="#C1C1C1"
+                        android:textSize="12sp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
                         android:id="@+id/set_id_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -95,7 +118,7 @@
                         android:ems="10"
                         android:hint="例如：陕西省.渭南市.富平县（用点隔开）"
                         android:inputType="textPersonName"
-                        android:maxLength="20"
+                        android:maxLength="40"
                         android:textColorHint="#C1C1C1"
                         android:textSize="12sp" />
                 </TableRow>
@@ -117,7 +140,7 @@
                         android:ems="10"
                         android:hint="例如：龙岗中心城福宁路113号"
                         android:inputType="textPersonName"
-                        android:maxLength="20"
+                        android:maxLength="40"
                         android:textColorHint="#C1C1C1"
                         android:textSize="12sp" />
                 </TableRow>
@@ -280,7 +303,7 @@
                         android:ems="10"
                         android:hint="例如：test@host.com"
                         android:inputType="textPersonName"
-                        android:maxLength="16"
+                        android:maxLength="36"
                         android:textColorHint="#C1C1C1"
                         android:textSize="12sp" />
 

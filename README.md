@@ -1,5 +1,7 @@
 # AntiZhaPian
-fork from https://github.com/XJP-GIT/AntiZhaPian , upgrade to add more customizeable info
+最原始的代码来自 https://github.com/XJP-GIT/AntiZhaPian
+https://github.com/zhanghua000/AntiZhaPian，增加了一些自定义属性
+最后我反编译了官方包，使用官方的个人信息页的布局，保证个人信息页显示效果和官方一致
 
 # Useage
 See https://github.com/XJP-GIT/AntiZhaPian/blob/main/README.md

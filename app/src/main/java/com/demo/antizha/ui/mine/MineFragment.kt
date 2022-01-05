@@ -1,6 +1,7 @@
 package com.demo.antizha.ui.mine
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +27,16 @@ class MineFragment : Fragment() {
             ViewModelProvider(this).get(MineViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_mine, container, false)
         val phoneNumber: TextView = root.findViewById(R.id.phone_number)
-        phoneNumber.text = generatePhoneNumber()
+        val settings: SharedPreferences? = this.getActivity()?.getSharedPreferences("setting", 0);
+        if (settings != null) {
+            var phone: String = settings.getString("phone", "13799").toString()
+            phoneNumber.text = getString(R.string.title_mine) + " " + phone.substring(0, 3) +
+                    "******" + phone.substring(phone.length - 2)
+        }
+        else {
+            phoneNumber.text = generatePhoneNumber()
+        }
+
         val personalInfo: TextView = root.findViewById(R.id.more_info)
         val mineSetting: ImageView = root.findViewById(R.id.mine_setting)
         personalInfo.setOnClickListener {

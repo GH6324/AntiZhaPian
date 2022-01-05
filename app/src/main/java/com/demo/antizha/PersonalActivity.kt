@@ -12,7 +12,7 @@ class PersonalActivity : AppCompatActivity() {
         val infoBinding = PersonalInfoBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         val settings: SharedPreferences = getSharedPreferences("setting", 0)
-
+        infoBinding.piTitle.tvTitle.text = "个人信息"
         infoBinding.name.text = settings.getString("name", "*三 ")
         infoBinding.id.text = settings.getString("id", "4****************8")
         infoBinding.region.text = settings.getString("region", "广东省.深圳市.龙岗区")
