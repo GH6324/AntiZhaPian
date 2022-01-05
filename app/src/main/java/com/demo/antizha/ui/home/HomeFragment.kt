@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.demo.antizha.R
@@ -26,33 +28,41 @@ class HomeFragment : Fragment() {
     ): View? {
         ViewModelProvider(this).get(HomeViewModel::class.java).also { homeViewModel = it }
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val dateList = generateDate()
-        root.findViewById<TextView>(R.id.home_text_1).text = dateList[0]
-        root.findViewById<TextView>(R.id.home_text_2).text = dateList[1]
-        root.findViewById<TextView>(R.id.home_text_3).text = dateList[2]
-        root.findViewById<TextView>(R.id.home_text_4).text = dateList[3]
-        root.findViewById<TextView>(R.id.home_text_5).text = dateList[4]
+        val dynamicId = arrayOf(R.id.dynamic01, R.id.dynamic02, R.id.dynamic03, R.id.dynamic04,
+            R.id.dynamic05, R.id.dynamic06, R.id.dynamic07, R.id.dynamic08, R.id.dynamic09,
+            R.id.dynamic10, R.id.dynamic11, R.id.dynamic12, R.id.dynamic13, R.id.dynamic14,
+            R.id.dynamic15, R.id.dynamic16, R.id.dynamic17, R.id.dynamic18, R.id.dynamic19)
+        val dateList = generateDate(dynamicId.size)
+        for (i in 0..dynamicId.size - 1){
+            root.findViewById<TextView>(dynamicId[i]).text = dateList[i]
+        }
+
+        val toolText = arrayOf("我要举报", "举报助手", "来电预警", "身份核实")
+        val imageResource = arrayOf(R.drawable.iv_home_report, R.drawable.iv_home_case, R.drawable.iv_home_warn, R.drawable.iv_home_id_check)
+        val toolId = arrayOf(R.id.tool1, R.id.tool2, R.id.tool3, R.id.tool4)
+        for (i in 0..3){
+            val ImageView1:ImageView = root.findViewById<LinearLayout>(toolId[i]).findViewById<ImageView>(R.id.ll_itool);
+            ImageView1.setImageResource(imageResource[i])
+            val TextView1: TextView = root.findViewById<LinearLayout>(toolId[i]).findViewById<TextView>(R.id.ll_ttool);
+            TextView1.text = toolText[i]
+        }
+
         return root
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun generateDate():ArrayList<String>{
+    private fun generateDate(count:Int):ArrayList<String>{
         val dateList = ArrayList<String>()
         val time = Calendar.getInstance().time
         val calendar = Calendar.getInstance()
-        calendar.time = time
-        with(calendar){
-            set(Calendar.DATE, calendar.get(Calendar.DATE) - 1)
-        }
         val df = SimpleDateFormat("yyyy-MM-dd")
-        val date1 = df.format(calendar.time)
         val head = "国家反诈中心 "
-        with(dateList){
-            add("$head$date1 ${randomFormat((21..23).random())}:${randomFormat((0..59).random())}:${randomFormat((0..59).random())}")
-            add("$head$date1 ${randomFormat((18..20).random())}:${randomFormat((0..59).random())}:${randomFormat((0..59).random())}")
-            add("$head$date1 ${randomFormat((13..17).random())}:${randomFormat((0..59).random())}:${randomFormat((0..59).random())}")
-            add("$head$date1 ${randomFormat((7..12).random())}:${randomFormat((0..59).random())}:${randomFormat((0..59).random())}")
-            add("$head$date1 ${randomFormat((0..6).random())}:${randomFormat((0..59).random())}:${randomFormat((0..59).random())}")
+        calendar.time = time
+        for (index in 1..count){
+            calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - (1..3).random())
+            val date1 = df.format(calendar.time)
+            //add("$head$date1 ${randomFormat((21..23).random())}:${randomFormat((0..59).random())}:${randomFormat((0..59).random())}")
+            dateList.add("$head$date1")
         }
         return dateList
     }

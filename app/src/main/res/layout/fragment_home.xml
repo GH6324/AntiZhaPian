@@ -4,9 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/dp_45"
     android:background="@color/homeback"
-    tools:context=".ui.home.HomeFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".ui.home.HomeFragment">
+
+    <include
+        android:id="@+id/pi_title"
+        layout="@layout/fragment_home_head" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,39 +19,198 @@
         tools:context=".MainActivity">
 
         <LinearLayout
+            android:id="@+id/ll_attent_tag"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="249dp"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginRight="@dimen/dp_15"
+            android:orientation="vertical"
+            android:paddingTop="5.0dip">
 
             <ImageView
-                android:id="@+id/home_bottom"
+                android:id="@+id/banner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:contentDescription="image"
-                app:srcCompat="@drawable/home_header"
+                app:srcCompat="@mipmap/banner1"
                 tools:ignore="MissingConstraints" />
 
-            <ImageView
-                android:id="@+id/overview_home"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:adjustViewBounds="true"
-                android:contentDescription="image"
-                android:orientation="vertical"
-                app:srcCompat="@drawable/home_1"
-                tools:ignore="MissingConstraints" />
+            <LinearLayout
+                android:id="@+id/ll_tool"
+                android:layout_width="fill_parent"
+                android:layout_height="90.0dip"
+                android:layout_marginTop="@dimen/qb_px_10"
+                android:background="@drawable/card_corner_white_bg"
+                android:orientation="horizontal"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
+                <include
+                    android:id="@+id/tool1"
+                    layout="@layout/fragment_home_tool" />
+
+                <include
+                    android:id="@+id/tool2"
+                    layout="@layout/fragment_home_tool" />
+
+                <include
+                    android:id="@+id/tool3"
+                    layout="@layout/fragment_home_tool" />
+
+                <include
+                    android:id="@+id/tool4"
+                    layout="@layout/fragment_home_tool" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_check_frad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/qb_px_20"
+                android:text="风险自查"
+                android:textColor="#ff333333"
+                android:textSize="18.0sp" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/qb_px_10"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:id="@+id/fl_virus_check"
+                    android:layout_width="fill_parent"
+                    android:layout_height="75.0dip"
+                    android:layout_marginRight="2.0dip"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/card_corner_white_bg">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="15.0dip"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_check"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="APP自检"
+                            android:textColor="#ff1c283f"
+                            android:textSize="14.0sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="手机自测可疑APP"
+                            android:textColor="#ff666666"
+                            android:textSize="11.0sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/iv_scaov_bg" />
+
+                    <RelativeLayout
+                        android:id="@+id/ll_checkapp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_margin="8.0dip">
+
+                        <ImageView
+                            android:id="@+id/iv_check_app"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/iv_fruad_check" />
+                    </RelativeLayout>
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/fl_fruad_check"
+                    android:layout_width="fill_parent"
+                    android:layout_height="75.0dip"
+                    android:layout_marginLeft="2.0dip"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/card_corner_white_bg">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="15.0dip"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_frad"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="风险查询"
+                            android:textColor="#ff1c283f"
+                            android:textSize="14.0sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="支付社交账号核验"
+                            android:textColor="#ff666666"
+                            android:textSize="11.0sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/iv_scaov_bg" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_margin="8.0dip"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/iv_virus_check" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_head"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/qb_px_20"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_new_case"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10.0dip"
+                    android:text="最新动态"
+                    android:textColor="#ff333333"
+                    android:textSize="18.0sp" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="10.0dip"
+                    android:background="@drawable/bg_white_crop_head_8dp" />
+            </LinearLayout>
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/home_main"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
                     android:adjustViewBounds="true"
                     android:contentDescription="image"
                     android:orientation="vertical"
@@ -56,70 +220,70 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_marginLeft="30dp">
-
-                    <TextView
-                        android:id="@+id/home_text_1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="bottom"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="10dp"
-                        android:text="1" />
-
-                    <TextView
-                        android:id="@+id/home_text_2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="bottom"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="10dp"
-                        android:text="2" />
-
-                    <TextView
-                        android:id="@+id/home_text_3"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="bottom"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="10dp"
-                        android:text="3" />
-
-                    <TextView
-                        android:id="@+id/home_text_4"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="bottom"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="10dp"
-                        android:text="4" />
-
-                    <TextView
-                        android:id="@+id/home_text_5"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="bottom"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="10dp"
-                        android:text="5" />
+                    android:layout_marginLeft="@dimen/dp_12"
+                    android:layout_marginBottom="@dimen/dp_13"
+                    android:orientation="vertical">
+                    <include
+                        android:id="@+id/dynamic01"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic02"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic03"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic04"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic05"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic06"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic07"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic08"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic09"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic10"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic11"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic12"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic13"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic14"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic15"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic16"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic17"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic18"
+                        layout="@layout/fragment_home_dynamic" />
+                    <include
+                        android:id="@+id/dynamic19"
+                        layout="@layout/fragment_home_dynamic" />
                 </LinearLayout>
-
-
             </FrameLayout>
-
-            <TextView
-                android:id="@+id/textView15"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:text="" />
-
+            <include
+                layout="@layout/item_more_case" />
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>
