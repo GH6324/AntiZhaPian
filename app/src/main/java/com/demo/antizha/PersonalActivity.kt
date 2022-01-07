@@ -23,5 +23,9 @@ class PersonalActivity : AppCompatActivity() {
         infoBinding.qq.text = settings.getString("qq","10000")
         infoBinding.wechat.text = settings.getString("wechat","test_000")
         infoBinding.mail.text = settings.getString("mail","test@host.com")
+
+        infoBinding.piTitle.ivBack.setOnClickListener {
+            finish()
+        }
     }
 }

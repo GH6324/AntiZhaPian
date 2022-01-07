@@ -26,7 +26,7 @@ class MineFragment : Fragment() {
         mineViewModel =
             ViewModelProvider(this).get(MineViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_mine, container, false)
-        val phoneNumber: TextView = root.findViewById(R.id.phone_number)
+        val phoneNumber: TextView = root.findViewById(R.id.tv_phone)
         val settings: SharedPreferences? = this.getActivity()?.getSharedPreferences("setting", 0);
         if (settings != null) {
             var phone: String = settings.getString("phone", "13799").toString()
@@ -37,8 +37,8 @@ class MineFragment : Fragment() {
             phoneNumber.text = generatePhoneNumber()
         }
 
-        val personalInfo: TextView = root.findViewById(R.id.more_info)
-        val mineSetting: ImageView = root.findViewById(R.id.mine_setting)
+        val personalInfo: TextView = root.findViewById(R.id.tv_explain)
+        val mineSetting: ImageView = root.findViewById(R.id.headimg)
         personalInfo.setOnClickListener {
             val intentInfo = Intent(activity, PersonalActivity::class.java)
             startActivity(intentInfo)

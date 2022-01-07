@@ -29,17 +29,17 @@ class MainActivity : AppCompatActivity() {
             resetIcon(binding.navView)
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    item.setIcon(R.drawable.ic_home_seled)
+                    item.setIcon(R.mipmap.tab_home_seled)
                     navController.navigate(R.id.navigation_home)
                     true
                 }
                 R.id.navigation_dashboard -> {
-                    item.setIcon(R.drawable.ic_dashboard_seled)
+                    item.setIcon(R.mipmap.tab_xc_seled)
                     navController.navigate(R.id.navigation_dashboard)
                     true
                 }
                 R.id.navigation_notifications -> {
-                    item.setIcon(R.drawable.ic_mine_seled)
+                    item.setIcon(R.mipmap.tab_mine_seled)
                     navController.navigate(R.id.navigation_notifications)
                     true
                 }
@@ -52,8 +52,8 @@ class MainActivity : AppCompatActivity() {
         val home = navView.menu.findItem(R.id.navigation_home)
         val dashboard = navView.menu.findItem(R.id.navigation_dashboard)
         val mine = navView.menu.findItem(R.id.navigation_notifications)
-        home.setIcon(R.drawable.ic_home_unseled)
-        dashboard.setIcon(R.drawable.ic_dashboard_unseled)
-        mine.setIcon(R.drawable.ic_mine_unseled)
+        home.setIcon(R.mipmap.tab_home_unseled)
+        dashboard.setIcon(R.mipmap.tab_xc_unseled)
+        mine.setIcon(R.mipmap.tab_mine_unseled)
     }
 }
