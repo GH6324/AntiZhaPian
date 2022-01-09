@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
-    tools:context=".WelcomeActivity">
+    android:background="@color/blue">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -16,20 +15,9 @@
             android:id="@+id/imageView5"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="400dp"
             android:adjustViewBounds="true"
-            app:srcCompat="@drawable/iv_welcome_center"
+            android:background="@drawable/splash_bg"
             tools:ignore="MissingConstraints" />
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="技术支持：国家互联网应急中心"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="MissingConstraints"
-        android:layout_marginBottom="40dp"
-        android:textColor="@color/white"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

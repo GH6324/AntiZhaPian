@@ -7,10 +7,14 @@ import androidx.core.view.forEach
 import androidx.navigation.fragment.NavHostFragment
 import com.demo.antizha.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.os.Handler;
+import android.os.Looper
+
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val SPLASH_TIME:Long = 5000
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         val binding = ActivityMainBinding.inflate(layoutInflater)
@@ -19,7 +23,6 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         binding.navView.itemBackground = null
-
         binding.navView.menu.forEach {
             val view = binding.navView.findViewById<View>(it.itemId)
             view.setOnLongClickListener { true }
@@ -46,6 +49,11 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.splash.root.visibility = View.GONE
+            binding.navView.visibility = View.VISIBLE
+            binding.navHostFragment.visibility = View.VISIBLE
+        }, SPLASH_TIME)
     }
 
     private fun resetIcon(navView: BottomNavigationView) {
