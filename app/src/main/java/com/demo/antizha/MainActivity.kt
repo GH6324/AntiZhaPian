@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        userInfoBean.Init(this)
         val navHostFragment =
         supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController

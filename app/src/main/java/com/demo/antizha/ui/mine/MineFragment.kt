@@ -1,7 +1,6 @@
 package com.demo.antizha.ui.mine
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,14 +9,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.demo.antizha.PersonalActivity
-import com.demo.antizha.R
-import com.demo.antizha.SettingActivity
+import android.text.TextUtils;
+import android.widget.LinearLayout
+import com.demo.antizha.*
 
 class MineFragment : Fragment() {
 
     private lateinit var mineViewModel: MineViewModel
-
+    private lateinit var root: View
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,31 +24,29 @@ class MineFragment : Fragment() {
     ): View? {
         mineViewModel =
             ViewModelProvider(this).get(MineViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_mine, container, false)
+        root = inflater.inflate(R.layout.fragment_mine, container, false)
+
+        val personalInfo: TextView = root.findViewById(R.id.tv_explain)
+         personalInfo.setOnClickListener {
+            val intentInfo = Intent(activity, MinePersonalActivity::class.java)
+            startActivity(intentInfo)
+        }
+        return root
+    }
+    override fun onResume()
+    {
+        super.onResume()
         val phoneNumber: TextView = root.findViewById(R.id.tv_phone)
-        val settings: SharedPreferences? = this.getActivity()?.getSharedPreferences("setting", 0);
-        if (settings != null) {
-            var phone: String = settings.getString("phone", "13799").toString()
-            phoneNumber.text = getString(R.string.title_mine) + " " + phone.substring(0, 3) +
-                    "******" + phone.substring(phone.length - 2)
+        if (!TextUtils.isEmpty(userInfoBean.mobileNumber)) {
+            phoneNumber.text = getString(R.string.title_mine) + " " + userInfoBean.mobileNumber.substring(0, 3) +
+                    "******" + userInfoBean.mobileNumber.substring(userInfoBean.mobileNumber.length - 2)
         }
         else {
             phoneNumber.text = generatePhoneNumber()
         }
-
-        val personalInfo: TextView = root.findViewById(R.id.tv_explain)
-        val mineSetting: ImageView = root.findViewById(R.id.headimg)
-        personalInfo.setOnClickListener {
-            val intentInfo = Intent(activity, PersonalActivity::class.java)
-            startActivity(intentInfo)
-        }
-        mineSetting.setOnClickListener {
-            val intentSetting = Intent(activity, SettingActivity::class.java)
-            startActivity(intentSetting)
-        }
-        return root
+        val ver: LinearLayout = root.findViewById(R.id.ll_version)
+        ver.visibility = if (TextUtils.isEmpty(userInfoBean.name)) View.VISIBLE else View.GONE
     }
-
     private fun generatePhoneNumber(): String {   //手机号生成
         val head = getString(R.string.title_mine)
         val a = listOf(

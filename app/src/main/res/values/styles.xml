@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="buttonCrop" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:textSize">@dimen/button_font_size_one</item>
+        <item name="android:textColor">@drawable/button_textcolor</item>
+        <item name="android:background">@drawable/check_update_bg</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dp_40</item>
+        <item name="android:layout_marginLeft">@dimen/dp_15</item>
+        <item name="android:layout_marginRight">@dimen/dp_15</item>
+    </style>
+</resources>

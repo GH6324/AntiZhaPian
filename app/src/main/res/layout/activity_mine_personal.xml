@@ -47,13 +47,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10.0dip"
-                    android:text="已完善100%" />
+                    android:text="已完善0%" />
                 <ProgressBar
                     android:id="@+id/pb_progress"
                     android:layout_width="fill_parent"
                     android:layout_height="5.0dip"
                     android:layout_marginTop="10.0dip"
-                    android:progress="100"
+                    android:progress="0"
                     android:progressDrawable="@drawable/progress_bg"
                     style="?android:progressBarStyleHorizontal" />
             </LinearLayout>
@@ -67,6 +67,38 @@
                 android:text="基础信息"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ll_pross_bg" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/ll_top_cointips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:layout_constraintLeft_toRightOf="@id/tv_tips"
+                app:layout_constraintTop_toBottomOf="@id/ll_pross_bg">
+
+                <TextView
+                    android:textSize="12sp"
+                    android:textColor="#999999"
+                    android:id="@+id/tv_tips2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:text="完善基础信息"
+                    app:layout_constraintLeft_toRightOf="@id/tv_tips"
+                    app:layout_constraintTop_toBottomOf="@id/ll_pross_bg" />
+
+                <TextView
+                    android:textSize="12sp"
+                    android:textColor="#ff7e00"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="+10"
+                    android:drawablePadding="5dp"
+                    app:layout_constraintLeft_toRightOf="@id/tv_tips2"
+                    app:layout_constraintTop_toBottomOf="@id/ll_pross_bg" />
+            </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/ll_context"
@@ -101,14 +133,25 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/name_label">
                     <TextView
+                        android:textSize="@dimen/sp_15"
+                        android:textStyle="bold"
+                        android:textColor="#2b4cff"
+                        android:gravity="center"
+                        android:id="@+id/tv_idfine_var"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="去身份认证"
+                        android:drawableRight="@mipmap/arrow_gray_right"
+                        android:drawablePadding="12dp" />
+                    <TextView
                         android:textSize="@dimen/sp_14"
                         android:textColor="#ff999999"
-                        android:gravity="center|right"
-                        android:id="@+id/name"
+                        android:gravity="right|center_vertical|center_horizontal|center"
+                        android:id="@+id/user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/dp_8"
-                        android:text="*近平"
                         android:lines="1"
                         android:singleLine="true"
                         android:imeOptions="actionNext"
@@ -116,6 +159,7 @@
                     <LinearLayout android:gravity="center"
                         android:id="@+id/ll_idfine_var"
                         android:background="@drawable/id_var_bg"
+                        android:visibility="gone"
                         android:layout_width="80.0dip"
                         android:layout_height="20.0dip">
                         <ImageView
@@ -125,7 +169,7 @@
                             android:src="@drawable/iv_var_ok" />
                         <TextView
                             android:textSize="10.0sp"
-                            android:textColor="#ff3f5cff"
+                            android:textColor="#3f5cff"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="3.0dip"
@@ -141,148 +185,147 @@
                     app:layout_constraintTop_toBottomOf="@id/name_label" />
 
                 <TextView
+                    android:textSize="@dimen/sp_15"
+                    android:textColor="#000000"
+                    android:gravity="center_vertical"
+                    android:id="@+id/ID_label"
                     android:layout_width="wrap_content"
                     android:layout_height="50.0dip"
                     android:layout_marginTop="1.0dip"
-                    android:id="@+id/info_id"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
                     android:text="证件号："
-                    android:textColor="#ff000000"
-                    android:textSize="@dimen/sp_15"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/name_label"/>
 
                 <TextView
                     android:textSize="@dimen/sp_14"
                     android:textColor="#ff999999"
-                    android:gravity="center|right"
-                    android:id="@+id/id"
+                    android:gravity="right|center_vertical|center_horizontal|center"
+                    android:id="@+id/user_ID"
                     android:layout_width="0.0dip"
                     android:layout_height="0.0dip"
-                    android:text="1****************7"
+                    android:text=""
                     android:lines="1"
                     android:singleLine="true"
                     app:layout_constrainedWidth="true"
-                    app:layout_constraintBottom_toBottomOf="@id/info_id"
-                    app:layout_constraintLeft_toRightOf="@id/info_id"
+                    app:layout_constraintBottom_toBottomOf="@id/ID_label"
+                    app:layout_constraintLeft_toRightOf="@id/ID_label"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/info_id" />
+                    app:layout_constraintTop_toTopOf="@id/ID_label" />
 
                 <View
                     android:background="@color/div_line"
                     android:layout_width="fill_parent"
                     android:layout_height="0.5dip"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/info_id" />
+                    app:layout_constraintTop_toBottomOf="@id/ID_label" />
 
                 <TextView
+                    android:textSize="@dimen/sp_15"
+                    android:textColor="#ff000000"
+                    android:gravity="center_vertical"
+                    android:id="@+id/area_label"
                     android:layout_width="wrap_content"
                     android:layout_height="50.0dip"
                     android:layout_marginTop="1.0dip"
-                    android:id="@+id/info_region"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
                     android:text="地区："
-                    android:textColor="#ff000000"
-                    android:textSize="@dimen/sp_15"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/info_id"/>
+                    app:layout_constraintTop_toBottomOf="@id/ID_label"/>
                 <TextView
                     android:textSize="@dimen/sp_14"
-                    android:textColor="#ff999999"
+                    android:textColor="#999999"
                     android:ellipsize="end"
-                    android:gravity="center|right"
-                    android:id="@+id/region"
-                    android:layout_width="0.0dip"
-                    android:layout_height="0.0dip"
-                    android:layout_marginLeft="30.0dip"
-                    android:hint="陕西省.渭南市.富平县"
+                    android:gravity="right|center_vertical|center_horizontal|center"
+                    android:id="@+id/area"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginLeft="30dp"
+                    android:hint="请选择"
                     android:singleLine="true"
                     android:drawableRight="@mipmap/arrow_gray_right"
                     android:drawablePadding="@dimen/dp_10"
                     app:layout_constrainedWidth="true"
-                    app:layout_constraintBottom_toBottomOf="@id/info_region"
-                    app:layout_constraintLeft_toRightOf="@id/info_region"
+                    app:layout_constraintBottom_toBottomOf="@id/area_label"
+                    app:layout_constraintLeft_toRightOf="@id/area_label"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/info_region" />
+                    app:layout_constraintTop_toTopOf="@id/area_label" />
 
                 <View
                     android:background="@color/div_line"
                     android:layout_width="fill_parent"
                     android:layout_height="0.5dip"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/info_region" />
+                    app:layout_constraintTop_toBottomOf="@id/area_label" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="50.0dip"
-                    android:layout_marginTop="1.0dip"
-                    android:id="@+id/info_address"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="详细地址："
-                    android:textColor="#ff000000"
                     android:textSize="@dimen/sp_15"
+                    android:textColor="#000000"
+                    android:gravity="center_vertical"
+                    android:id="@+id/area_detail_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="1dp"
+                    android:text="详细地址："
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/info_region"/>
+                    app:layout_constraintTop_toBottomOf="@id/area_label" />
 
                 <TextView
                     android:textSize="@dimen/sp_14"
-                    android:textColor="#ff999999"
+                    android:textColor="#999999"
                     android:ellipsize="end"
-                    android:gravity="center|right"
-                    android:id="@+id/address"
-                    android:layout_width="0.0dip"
-                    android:layout_height="0.0dip"
-                    android:layout_marginLeft="30.0dip"
+                    android:gravity="right|center_vertical|center_horizontal|center"
+                    android:id="@+id/area_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginLeft="30dp"
                     android:hint="请填写详细地址"
                     android:singleLine="true"
                     android:drawableRight="@mipmap/arrow_gray_right"
                     android:drawablePadding="@dimen/dp_10"
                     app:layout_constrainedWidth="true"
-                    app:layout_constraintBottom_toBottomOf="@id/info_address"
-                    app:layout_constraintLeft_toRightOf="@id/info_address"
+                    app:layout_constraintBottom_toBottomOf="@id/area_detail_label"
+                    app:layout_constraintLeft_toRightOf="@id/area_detail_label"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/info_address" />
+                    app:layout_constraintTop_toTopOf="@id/area_detail_label" />
 
                 <View
                     android:background="@color/div_line"
                     android:layout_width="fill_parent"
                     android:layout_height="0.5dip"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/info_address" />
+                    app:layout_constraintTop_toBottomOf="@id/area_detail_label" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="50.0dip"
                     android:layout_marginTop="1.0dip"
-                    android:id="@+id/info_work"
+                    android:id="@+id/job_label"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="行业："
                     android:textColor="#ff000000"
                     android:textSize="@dimen/sp_15"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/info_address"/>
+                    app:layout_constraintTop_toBottomOf="@id/area_detail_label"/>
                 <TextView
                     android:textSize="@dimen/sp_14"
-                    android:textColor="#ff999999"
+                    android:textColor="#999999"
                     android:ellipsize="end"
-                    android:gravity="center|right"
-                    android:id="@+id/work"
-                    android:layout_width="0.0dip"
-                    android:layout_height="0.0dip"
-                    android:layout_marginLeft="30.0dip"
-                    android:hint="请选择" android:lines="2"
+                    android:gravity="right|center_vertical|center_horizontal|center"
+                    android:id="@+id/tv_job"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginLeft="30dp"
+                    android:hint="请选择"
+                    android:lines="2"
                     android:singleLine="true"
                     android:drawableRight="@mipmap/arrow_gray_right"
                     android:drawablePadding="@dimen/dp_10"
                     app:layout_constrainedWidth="true"
-                    app:layout_constraintBottom_toBottomOf="@id/info_work"
-                    app:layout_constraintLeft_toRightOf="@id/info_work"
+                    app:layout_constraintBottom_toBottomOf="@id/job_label"
+                    app:layout_constraintLeft_toRightOf="@id/job_label"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/info_work" />
+                    app:layout_constraintTop_toTopOf="@id/job_label" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -322,26 +365,45 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
                     <TextView
-                        android:textSize="15.0sp"
-                        android:textColor="#ff333333"
-                        android:id="@+id/emergency_name"
+                        android:textSize="15sp"
+                        android:textColor="#333333"
+                        android:id="@+id/tv_emerg_cont"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8.0dip"
-                        android:layout_marginBottom="10.0dip"
-                        android:text="李四" />
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="添加紧急联系人" />
+
                     <TextView
                         android:textSize="@dimen/sp_14"
-                        android:textColor="#ff999999"
-                        android:id="@+id/emergency_phone"
-                        android:paddingBottom="8.0dip"
-                              android:layout_width="wrap_content"
+                        android:textColor="#999999"
+                        android:id="@+id/tv_emerg_phone"
+                        android:paddingBottom="8dp"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="-5.0dip"
-                        android:text="手机号：21313"
+                        android:layout_marginTop="-5dp"
+                        android:text="21313"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent" />
                 </LinearLayout>
+                <TextView
+                    android:textSize="14sp"
+                    android:textColor="#3f5cff"
+                    android:id="@+id/tv_add_emerg"
+                    android:background="@drawable/bg_crop_blue"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="18dp"
+                    android:text="去添加"
+                    android:drawablePadding="@dimen/dp_5"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -397,7 +459,8 @@
                     <TextView
                         android:textSize="@dimen/sp_14"
                         android:textColor="#ff999999"
-                        android:id="@+id/qq"
+                        android:visibility="gone"
+                        android:id="@+id/tv_qq_cont"
                         android:paddingBottom="10.0dip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -406,6 +469,23 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent" />
                 </LinearLayout>
+                <TextView
+                    android:textSize="14sp"
+                    android:textColor="#3f5cff"
+                    android:id="@+id/tv_add_qq"
+                    android:background="@drawable/bg_crop_blue"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="18dp"
+                    android:text="去填写"
+                    android:drawablePadding="@dimen/dp_5"
+                    app:layout_constraintBottom_toBottomOf="@+id/ll_qq_cont"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/ll_qq_cont" />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -440,7 +520,8 @@
                         android:text="微信账号"/>
                     <TextView android:textSize="@dimen/sp_14"
                         android:textColor="#ff999999"
-                        android:id="@+id/wechat"
+                        android:id="@+id/tv_wx_cont"
+                        android:visibility="gone"
                         android:paddingBottom="10.0dip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -448,8 +529,25 @@
                         android:text="1234567"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent" />
-                </LinearLayout>
-                 <ImageView
+                 </LinearLayout>
+                <TextView
+                    android:textSize="14sp"
+                    android:textColor="#3f5cff"
+                    android:id="@+id/tv_add_wx"
+                    android:background="@drawable/bg_crop_blue"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="18dp"
+                    android:text="去填写"
+                    android:drawablePadding="@dimen/dp_5"
+                    app:layout_constraintBottom_toBottomOf="@+id/ll_wx_cont"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/ll_wx_cont" />
+                <ImageView
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
                      android:layout_marginRight="3.0dip"
@@ -487,7 +585,8 @@
                     <TextView
                         android:textSize="@dimen/sp_14"
                         android:textColor="#ff999999"
-                        android:id="@+id/mail"
+                        android:visibility="gone"
+                        android:id="@+id/tv_email_cont"
                         android:paddingBottom="10.0dip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -496,6 +595,23 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent" />
                 </LinearLayout>
+                <TextView
+                    android:textSize="14sp"
+                    android:textColor="#3f5cff"
+                    android:id="@+id/tv_add_email"
+                    android:background="@drawable/bg_crop_blue"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="18dp"
+                    android:text="去填写"
+                    android:drawablePadding="@dimen/dp_5"
+                    app:layout_constraintBottom_toBottomOf="@+id/ll_email_cont"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/ll_email_cont" />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

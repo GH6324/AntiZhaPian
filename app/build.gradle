@@ -53,9 +53,10 @@ dependencies {
     implementation 'com.beust:klaxon:5.5'
     implementation "com.squareup.okhttp3:okhttp:4.2.2"
     implementation 'com.github.bumptech.glide:glide:4.8.0'
-    implementation  'io.github.scwang90:refresh-layout-kernel:2.0.5'
-    implementation  'io.github.scwang90:refresh-header-classics:2.0.5'    //经典刷新头
-    implementation  'io.github.scwang90:refresh-footer-ball:2.0.5'        //球脉冲加载
+    implementation 'io.github.scwang90:refresh-layout-kernel:2.0.5'
+    implementation 'io.github.scwang90:refresh-header-classics:2.0.5'    //经典刷新头
+    implementation 'io.github.scwang90:refresh-footer-ball:2.0.5'        //球脉冲加载
+    implementation 'com.github.gzu-liyujiang.AndroidPicker:AddressPicker:4.1.6'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

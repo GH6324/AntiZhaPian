@@ -13,4 +13,10 @@
     <color name="second_click">#FF7A7A7A</color>
     <color name="div_line">#ffeaebee</color>
     <color name="page_gray">#fff4f4f4</color>
+    <color name="transparent">#00000000</color>
+    <color name="transparentColor">#555555</color>
+    <color name="colorBack">#55f03c78</color>
+    <color name="colorGray">#999999</color>
+    <color name="colorRed">#bbff2244</color>
+    <color name="colorBlue1">#55c1e9</color>
 </resources>
