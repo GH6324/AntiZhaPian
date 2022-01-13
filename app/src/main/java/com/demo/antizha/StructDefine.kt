@@ -1,13 +1,16 @@
 package com.demo.antizha
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.view.View
 import android.os.Bundle
+import android.provider.Settings
 import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import com.demo.antizha.databinding.ActivityMinePersonalBinding
+import com.demo.antizha.ui.home.HomeViewModel
 import java.util.regex.Pattern
 
 fun stringIsEmail(str:String):Boolean{
@@ -21,6 +24,9 @@ fun stringIsMobileNumber(str:String):Boolean{
 }
 class UserInfoBean(){
     var perfectProgress:Int = 0     //进度
+    var accountId: String = ""      //账号ID
+    var imei:String = ""            //设备码
+    var useorigimei:Boolean = false//是否使用原始的机器码
     var name: String = ""           //名字
     var id: String = ""             //身份证前后2个字符
     var mobileNumber: String = ""   //电话前2后3
@@ -32,8 +38,16 @@ class UserInfoBean(){
     var qq: String = ""
     var wechat: String = ""
     var email: String = ""
-    fun Init(activity: FragmentActivity){
-        val settings: SharedPreferences = activity.getSharedPreferences("setting", 0)
+    fun Init(context: Context){
+        val settings: SharedPreferences = context.getSharedPreferences("setting", 0)
+        accountId = settings.getString("account", "").toString()
+        imei = settings.getString("imei", "").toString()
+        useorigimei = settings.getBoolean("originalimei", false)
+        if (TextUtils.isEmpty(imei))
+        {
+            val timei = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID)
+            imei = if (useorigimei) timei else toHexStr(CRC64.digest(timei.toByteArray()).getBytes())
+        }
         name = settings.getString("name", "").toString()
         id = settings.getString("id", "").toString()
         mobileNumber = settings.getString("phone", "").toString()
@@ -47,9 +61,12 @@ class UserInfoBean(){
         email = settings.getString("mail", "").toString()
         CalcProgress()
     }
-    fun commit(activity: FragmentActivity){
-        val settings: SharedPreferences = activity.getSharedPreferences("setting", 0)
+    fun commit(context: Context){
+        val settings: SharedPreferences = context.getSharedPreferences("setting", 0)
         var editor: SharedPreferences.Editor = settings.edit()
+        editor.putString("account", accountId)
+        editor.putString("imei", imei)
+        editor.putBoolean("originalimei", useorigimei)
         editor.putString("name", name)
         editor.putString("id", id)
         editor.putString("phone", mobileNumber)
@@ -120,3 +137,25 @@ class City : AreaBase() {
 class Province : AreaBase() {
     var citys: List<City> = ArrayList()
 }
+
+class Dp2Px{
+    constructor(context: Context){
+        density = context.resources.displayMetrics.density
+    }
+    var density:Float = 0.0F
+    fun dp2px(value:Int):Int{
+        return (value * density + 0.5).toInt()
+    }
+}
+lateinit var dp2px: Dp2Px
+
+fun toHexStr(byteArray: ByteArray) =
+    with(StringBuilder()) {
+        byteArray.forEach {
+            val hex = it.toInt() and (0xFF)
+            val hexStr = Integer.toHexString(hex)
+            if (hexStr.length == 1) append("0").append(hexStr)
+            else append(hexStr)
+        }
+        toString()
+    }

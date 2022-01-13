@@ -1,6 +1,9 @@
 package com.demo.antizha
 
+import android.app.AlertDialog
+import android.app.Notification
 import android.os.Bundle
+import android.text.InputType
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup.LayoutParams
@@ -17,29 +20,32 @@ import com.github.gzuliyujiang.wheelpicker.entity.CityEntity
 import com.github.gzuliyujiang.wheelpicker.entity.CountyEntity
 import com.github.gzuliyujiang.wheelpicker.entity.ProvinceEntity
 import com.github.gzuliyujiang.wheelpicker.widget.LinkageWheelLayout
-const val pageBase = 1
+import android.content.DialogInterface
+import android.provider.Settings
+import android.view.ViewGroup
+
 
 class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
     companion object {
-        val pageBase = "Base"
-        val pageArea = "Area"
-        val pageAreaDetail = "AreaDetail"
-        val pageEmerg = "Emerg"
-        val pageContacts = "Contacts"
+        const val pageBase = "Base"
+        const val pageArea = "Area"
+        const val pageAreaDetail = "AreaDetail"
+        const val pageEmerg = "Emerg"
+        const val pageContacts = "Contacts"
     }
-    var pageType:String = ""
-    lateinit var personaInfolBinding: ActivityPersonaInfolBinding
+    private var pageType:String = ""
+    private lateinit var personaInfolBinding: ActivityPersonaInfolBinding
     override fun onAddressPicked(province: ProvinceEntity?, city: CityEntity?, county: CountyEntity?)
     {
-        personaInfolBinding.etArea.setText(province?.name + "." + city?.name + "." + county?.name)
+        personaInfolBinding.etArea.text = "${province?.name}.${city?.name}.${county?.name}"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         personaInfolBinding = ActivityPersonaInfolBinding.inflate(layoutInflater)
         setContentView(personaInfolBinding.root)
-        pageType = getIntent().getStringExtra("from_page_type").toString();
-        InitPage()
+        pageType = intent.getStringExtra("from_page_type").toString()
+        initPage()
 
 
         personaInfolBinding.piTitle.ivBack.setOnClickListener {
@@ -49,10 +55,10 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
             val picker = AddressPicker(this)
             picker.setAddressMode(AddressMode.PROVINCE_CITY_COUNTY)
             picker.setOnAddressPickedListener(this)
-            picker.getCancelView().setTextColor(ContextCompat.getColor(this, R.color.colorGray))
-            picker.getOkView().setTextColor(ContextCompat.getColor(this, R.color.black))
+            picker.cancelView.setTextColor(ContextCompat.getColor(this, R.color.colorGray))
+            picker.okView.setTextColor(ContextCompat.getColor(this, R.color.black))
             picker.topLineView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorBlue1))
-            val wheelLayout:LinkageWheelLayout = picker.getWheelLayout();
+            val wheelLayout:LinkageWheelLayout = picker.wheelLayout
             val colorGray :Int = ContextCompat.getColor(this, R.color.colorGray)
             wheelLayout.firstWheelView.selectedTextColor = colorGray
             wheelLayout.secondWheelView.selectedTextColor = colorGray
@@ -73,6 +79,39 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
             }
             picker.show()
         }
+        personaInfolBinding.etAccountNum.setOnClickListener {
+            if (personaInfolBinding.etAccountNum.inputType == InputType.TYPE_NULL)
+            {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("关于账号ID")
+                builder.setMessage("必须先使用官方软件注册一个账号，然后在手机的/data/data/com.hicorenational.antifraud/shared_prefs/note_national.xml"+
+                        "中找到类似提示的字符串，当然这些可以在虚拟机中执行，如果在手机里操作的话，你还得有root权限，当然你也可以选择不填，只是部分功能会受限，"+
+                        "你也可以随机生成一个，某些功能可能也能用")
+                builder.setPositiveButton("确定"){
+                        _, _ ->
+                        personaInfolBinding.etAccountNum.inputType = InputType.TYPE_CLASS_TEXT
+                        }
+                builder.setNegativeButton("取消"){
+                        _, _ ->
+                }
+                builder.setNeutralButton("随机生成"){
+                        _, _ ->
+                    var account = ""
+                    val strtemplate = "1111aaaa-aaaa-aaaa-aaaa-aaaa11111111"
+                    val nummap = "1234567890"
+                    val hexmap = "1234567890abcdefabcdef"
+                    for (i in 1..strtemplate.length){
+                        when (strtemplate[i-1]){
+                            '1'-> account += nummap[(0 until nummap.length - 1).random()]
+                            'a'-> account += hexmap[(0 until hexmap.length - 1).random()]
+                            '-'-> account += "-"
+                        }
+                    }
+                    personaInfolBinding.etAccountNum.setText(account)
+                 }
+                builder.show()
+            }
+        }
         personaInfolBinding.btnConfirm.setOnClickListener {
             when(pageType){
                 pageBase->{
@@ -87,12 +126,35 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
                         Toast.makeText(this@PersonalInfoAddActivity, "电话格式不对", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
-                    if (name != userInfoBean.name || id != userInfoBean.id || mobileNumber != userInfoBean.mobileNumber) {
+                    val accountId:String = personaInfolBinding.etAccountNum.text.toString()
+                    var changed:Boolean = false
+                    if (name != userInfoBean.name || id != userInfoBean.id || mobileNumber != userInfoBean.mobileNumber)
+                    {
                         userInfoBean.name = name
                         userInfoBean.id = id
                         userInfoBean.mobileNumber = mobileNumber
-                        userInfoBean.commit(this)
+                        changed = true
                     }
+                    if (accountId != userInfoBean.accountId) {
+                        userInfoBean.accountId = accountId
+                    }
+                    val imei = Settings.System.getString(getApplicationContext()?.getContentResolver(), Settings.Secure.ANDROID_ID)
+                    var crcimei= toHexStr(CRC64.digest(imei.toByteArray()).getBytes())
+                    val useorigimei = personaInfolBinding.sbOriginalimei.isChecked
+                    if (useorigimei && imei != userInfoBean.imei)
+                    {
+                        userInfoBean.imei = imei
+                        userInfoBean.useorigimei = useorigimei
+                        changed = true
+                    }
+                    if (!useorigimei && crcimei != userInfoBean.imei)
+                    {
+                        userInfoBean.imei = crcimei
+                        userInfoBean.useorigimei = useorigimei
+                        changed = true
+                    }
+                    if (changed)
+                        userInfoBean.commit(this)
                 }
                 pageArea->{
                     val region:String = personaInfolBinding.etArea.text.toString()
@@ -136,7 +198,7 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
             finish()
         }
     }
-    fun InitPage(){
+    private fun initPage(){
         when (pageType){
             pageBase->{
                 personaInfolBinding.piTitle.tvTitle.text = "基础信息"
@@ -144,6 +206,15 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
                 personaInfolBinding.etName.setText(userInfoBean.name)
                 personaInfolBinding.etIdNum.setText(userInfoBean.id)
                 personaInfolBinding.etPhoneNum.setText(userInfoBean.mobileNumber)
+                personaInfolBinding.etAccountNum.setText(userInfoBean.accountId)
+                personaInfolBinding.sbOriginalimei.isChecked = userInfoBean.useorigimei
+                if (TextUtils.isEmpty(userInfoBean.accountId))
+                    personaInfolBinding.etAccountNum.inputType = InputType.TYPE_NULL
+
+                val params: ViewGroup.MarginLayoutParams = personaInfolBinding.btnConfirm.layoutParams as ViewGroup.MarginLayoutParams
+                params.topMargin = dp2px.dp2px(280)
+                personaInfolBinding.btnConfirm.layoutParams = params
+                personaInfolBinding.btnConfirm.requestLayout()
             }
             pageArea->{
                 personaInfolBinding.piTitle.tvTitle.text = "地址"

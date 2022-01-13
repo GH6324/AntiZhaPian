@@ -57,8 +57,10 @@ dependencies {
     implementation 'io.github.scwang90:refresh-header-classics:2.0.5'    //经典刷新头
     implementation 'io.github.scwang90:refresh-footer-ball:2.0.5'        //球脉冲加载
     implementation 'com.github.gzu-liyujiang.AndroidPicker:AddressPicker:4.1.6'
+    implementation 'com.github.zcweng:switch-button:0.0.3@aar'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     testImplementation 'junit:junit:4.13.2'
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }

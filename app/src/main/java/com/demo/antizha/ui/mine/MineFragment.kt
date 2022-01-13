@@ -44,6 +44,10 @@ class MineFragment : Fragment() {
         else {
             phoneNumber.text = generatePhoneNumber()
         }
+        val imei: TextView = root.findViewById(R.id.tv_imei)
+        imei.text = userInfoBean.imei
+        val accountid: TextView = root.findViewById(R.id.tv_accountid)
+        accountid.text = userInfoBean.accountId
         val ver: LinearLayout = root.findViewById(R.id.ll_version)
         ver.visibility = if (TextUtils.isEmpty(userInfoBean.name)) View.VISIBLE else View.GONE
     }

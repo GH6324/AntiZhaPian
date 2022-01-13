@@ -469,6 +469,16 @@
                             android:autoLink="web"
                             android:gravity="center"
                             android:text="https://github.com/newhying/AntiZhaPian" />
+                        <TextView
+                            android:id="@+id/tv_imei"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"/>
+                        <TextView
+                            android:id="@+id/tv_accountid"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
