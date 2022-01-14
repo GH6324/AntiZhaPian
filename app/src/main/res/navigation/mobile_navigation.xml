@@ -11,7 +11,7 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.demo.antizha.ui.dashboard.DashboardFragment" />
+        android:name="com.demo.antizha.ui.web.WebFragment" />
 
     <fragment
         android:id="@+id/navigation_notifications"

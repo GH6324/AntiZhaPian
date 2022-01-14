@@ -1,18 +1,18 @@
 package com.demo.antizha
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.forEach
-import androidx.navigation.fragment.NavHostFragment
 import com.demo.antizha.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.os.Handler
 import android.os.Looper
 import androidx.fragment.app.Fragment
 import com.demo.antizha.ui.home.HomeFragment
-import com.demo.antizha.ui.dashboard.DashboardFragment
+import com.demo.antizha.ui.web.WebFragment
 import com.demo.antizha.ui.mine.MineFragment
+import com.demo.antizha.ui.Hicore
 
 class MainActivity : AppCompatActivity() {
     private var lastIndex = 0
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun initData() {
         mFragments.add(HomeFragment())
-        mFragments.add(DashboardFragment())
+        mFragments.add(WebFragment())
         mFragments.add(MineFragment())
         setFragmentPosition(0)
     }

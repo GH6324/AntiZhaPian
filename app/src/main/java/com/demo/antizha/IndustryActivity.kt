@@ -17,6 +17,59 @@ import com.demo.antizha.ui.home.ToolHolderAdapte
 import android.widget.Toast
 
 import android.content.Intent
+/* 登陆过程
+public class BaseBean implements Serializable {}
+public class RegisterBody extends BaseBean {
+    private String appVersion;
+    private String idNumber;
+    private String imei;
+    private String innerversion;
+    private int loginType;
+    private String name;
+    private int os;
+    private String osVersion;
+    private String pCode;
+    private String password;
+    private String phoneNum;
+    private String policeUserID;
+    private String region;
+    private String requestIP;
+    private String smsVerifyCode;
+    private String verificationLogID;
+}
+json = buildGson().toJson(RegisterBody)
+lowerCase = AESUtil.getMd5String(json).toLowerCase();
+lowerCase2 = AESUtil.getMd5String(lowerCase).toLowerCase();
+lowerCase3 = AESUtil.getMd5String_16(str + "").toLowerCase();
+str2 = AESUtil.encrypt(json, lowerCase2, lowerCase3);
+String replaceAll2 = str2.replaceAll("[\\s*\t\n\r]", "");
+hashMap.put("timestamp", str + "");
+hashMap.put("data", replaceAll2);
+hashMap.put("sign", lowerCase);
+@POST @Url"https://fzapp.gjfzpt.cn/hicore/api/Account/login" @Body hashMap);
+*/
+
+
+
+//请求https://fzapp.gjfzpt.cn/hicore/api/Area/checkareaversion?areaVersion=1可获得最新版本资料
+//{"data":{"provinceList":null,"areaVersion":"21","isRenew":1,"ossPath":"https://oss.gjfzpt.cn/preventfraud-static/area/areajson_21.json"},"code":0,"msg":"请求成功"}
+//获得里面的下载地址，然后可以下载到最新的地区信息
+
+//https://fzapp.gjfzpt.cn/hicore/api/Banner可获得home页的横幅信息，然后按信息里的网址下载图片
+
+//https://fzapp.gjfzpt.cn/hicore/api/Position/positions 不知道为啥这样请求职业会失败，可能是需要先登录，然后有了Cookies才可以
+
+/* 使用retrofit2进行网络访问，不知道为啥唯独取职业有问题
+    public void getNewCaseList(String str, MiddleSubscriber<APIresult<HomeNewCaseBean>> middleSubscriber) {
+        Api.getInstance().getReportService().getNewCaseList(str).c(a.b()).a(f.b.s0.e.a.a()).subscribe(middleSubscriber);
+    }
+    public void regionHttp(String str, String str2, MiddleSubscriber<APIresult<BaseAddressBean>> middleSubscriber) {
+        Api.getInstance().getReportService().getNew(str, str2).c(a.b()).a(f.b.s0.e.a.a()).subscribe(middleSubscriber);
+    }
+    public void getIndustrys(String str, MiddleSubscriber<APIresult<List<InDustryBean>>> middleSubscriber) {
+        Api.getInstance().getReportService().getIndustrys(str).c(a.b()).a(f.b.s0.e.a.a()).subscribe(middleSubscriber);
+    }
+*/
 
 
 class IndustryViewHolder : RecyclerView.ViewHolder {

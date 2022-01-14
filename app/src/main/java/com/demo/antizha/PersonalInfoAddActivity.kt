@@ -1,7 +1,6 @@
 package com.demo.antizha
 
 import android.app.AlertDialog
-import android.app.Notification
 import android.os.Bundle
 import android.text.InputType
 import android.text.TextUtils
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.demo.antizha.databinding.ActivityPersonaInfolBinding
@@ -20,9 +18,9 @@ import com.github.gzuliyujiang.wheelpicker.entity.CityEntity
 import com.github.gzuliyujiang.wheelpicker.entity.CountyEntity
 import com.github.gzuliyujiang.wheelpicker.entity.ProvinceEntity
 import com.github.gzuliyujiang.wheelpicker.widget.LinkageWheelLayout
-import android.content.DialogInterface
 import android.provider.Settings
 import android.view.ViewGroup
+import com.demo.antizha.util.CRC64
 
 
 class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
@@ -34,10 +32,14 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
         const val pageContacts = "Contacts"
     }
     private var pageType:String = ""
+    private var adcode:String = ""
     private lateinit var personaInfolBinding: ActivityPersonaInfolBinding
     override fun onAddressPicked(province: ProvinceEntity?, city: CityEntity?, county: CountyEntity?)
     {
         personaInfolBinding.etArea.text = "${province?.name}.${city?.name}.${county?.name}"
+        if (county != null) {
+            adcode = county.getCode()
+        }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -160,6 +162,7 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
                     val region:String = personaInfolBinding.etArea.text.toString()
                     if (region != userInfoBean.region){
                         userInfoBean.region = region
+                        userInfoBean.adcode = adcode
                         userInfoBean.commit(this)
                     }
                 }

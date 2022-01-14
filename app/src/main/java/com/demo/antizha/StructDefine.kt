@@ -1,16 +1,10 @@
 package com.demo.antizha
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.view.View
-import android.os.Bundle
 import android.provider.Settings
 import android.text.TextUtils
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
-import com.demo.antizha.databinding.ActivityMinePersonalBinding
-import com.demo.antizha.ui.home.HomeViewModel
+import com.demo.antizha.util.CRC64
 import java.util.regex.Pattern
 
 fun stringIsEmail(str:String):Boolean{
@@ -31,6 +25,7 @@ class UserInfoBean(){
     var id: String = ""             //身份证前后2个字符
     var mobileNumber: String = ""   //电话前2后3
     var region: String = ""         //地区
+    var adcode: String = ""         //地区码，比如 安徽省淮北市杜集区 adcode:340602
     var addr: String = ""           //详细地址
     var professionName: String = "" //职业
     var urgentContactname: String = ""  //紧急联系人姓名
@@ -52,6 +47,7 @@ class UserInfoBean(){
         id = settings.getString("id", "").toString()
         mobileNumber = settings.getString("phone", "").toString()
         region = settings.getString("region", "").toString()
+        adcode = settings.getString("adcode", "").toString()
         addr = settings.getString("address", "").toString()
         professionName = settings.getString("work", "").toString()
         urgentContactname = settings.getString("emergency_name", "").toString()
@@ -71,6 +67,7 @@ class UserInfoBean(){
         editor.putString("id", id)
         editor.putString("phone", mobileNumber)
         editor.putString("region", region)
+        editor.putString("adcode", adcode)
         editor.putString("address", addr)
         editor.putString("work", professionName)
         editor.putString("emergency_name",urgentContactname)

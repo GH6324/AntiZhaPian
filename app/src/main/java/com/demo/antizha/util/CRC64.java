@@ -1,4 +1,4 @@
-package com.demo.antizha;
+package com.demo.antizha.util;
 //CRC-64/XZ
 public class CRC64 {
 

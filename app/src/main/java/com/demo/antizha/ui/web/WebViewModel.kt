@@ -1,13 +1,13 @@
-package com.demo.antizha.ui.dashboard
+package com.demo.antizha.ui.web
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class DashboardViewModel : ViewModel() {
+class WebViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
+        value = "This is web Fragment"
     }
     val text: LiveData<String> = _text
 }
