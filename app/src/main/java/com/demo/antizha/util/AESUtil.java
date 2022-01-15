@@ -61,7 +61,7 @@ public class AESUtil {
     private static byte[] a(String str) throws Exception {
         byte[] bArr = f14424h;
         if (bArr == null || bArr.length != 32) {
-            SharedPreferences sharedPreferences = Hicore.Companion.getContext().getSharedPreferences("crypto_info", 0);
+            SharedPreferences sharedPreferences = Hicore.context.getSharedPreferences("crypto_info", 0);
             String string = sharedPreferences.getString("salt", "");
             if (!TextUtils.isEmpty(string)) {
                 f14424h = e(string);

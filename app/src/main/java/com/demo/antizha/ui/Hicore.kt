@@ -2,16 +2,31 @@ package com.demo.antizha.ui
 
 import android.app.Application
 import android.content.Context
+import java.util.Calendar
 
-class Hicore: Application() {
+class Hicore : Application() {
     companion object {
-        var  _context:Application? = null
+        lateinit var app: Hicore
+        lateinit var context: Application
+        var mLastClickTime: Long = 0
         fun getContext(): Context {
-            return _context!!
+            return context!!
         }
     }
+
     override fun onCreate() {
         super.onCreate()
-        _context = this
+        context = this
+        app = this
+    }
+
+    fun isDouble(): Boolean {
+        val timeInMillis: Long = Calendar.getInstance().timeInMillis
+        val j2: Long = timeInMillis - mLastClickTime
+        if (j2 in 0..800) {
+            return true
+        }
+        mLastClickTime = timeInMillis
+        return false
     }
 }

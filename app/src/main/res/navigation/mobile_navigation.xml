@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.demo.antizha.ui.home.HomeFragment" />
+        android:name="com.demo.antizha.ui.fragment.home.HomeFragment" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.demo.antizha.ui.web.WebFragment" />
+        android:name="com.demo.antizha.ui.fragment.web.WebFragment" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.demo.antizha.ui.mine.MineFragment" />
+        android:name="com.demo.antizha.ui.fragment.mine.MineFragment" />
 </navigation>

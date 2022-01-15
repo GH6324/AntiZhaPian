@@ -1,4 +1,4 @@
-package com.demo.antizha.util;;
+package com.demo.antizha.util;
 
 import android.text.TextUtils;
 import java.io.IOException;
@@ -26,10 +26,10 @@ public class UrlUtils {
         Parameters aVar = new Parameters();
         try {
             String[] split = str.split("&");
-            if (split != null && split.length > 0) {
+            if (split.length > 0) {
                 for (String str2 : split) {
                     String[] split2 = str2.split("=", 2);
-                    if (split2 != null && split2.length == 2) {
+                    if (split2.length == 2) {
                         aVar.a(URLDecoder.decode(split2[0], java.nio.charset.StandardCharsets.UTF_8.toString()),
                                 URLDecoder.decode(split2[1], java.nio.charset.StandardCharsets.UTF_8.toString()));
                     }

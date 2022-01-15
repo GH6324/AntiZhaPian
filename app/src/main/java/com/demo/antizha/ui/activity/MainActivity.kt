@@ -1,6 +1,6 @@
-package com.demo.antizha
+package com.demo.antizha.ui.activity
 
-import android.content.pm.PackageManager
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -9,21 +9,26 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.os.Handler
 import android.os.Looper
 import androidx.fragment.app.Fragment
-import com.demo.antizha.ui.home.HomeFragment
-import com.demo.antizha.ui.web.WebFragment
-import com.demo.antizha.ui.mine.MineFragment
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.Dp2Px
+import com.demo.antizha.R
+import com.demo.antizha.dp2px
+import com.demo.antizha.ui.fragment.home.HomeFragment
+import com.demo.antizha.ui.fragment.web.WebFragment
+import com.demo.antizha.ui.fragment.mine.MineFragment
+import com.demo.antizha.userInfoBean
+import qiu.niorgai.StatusBarCompat
 
 class MainActivity : AppCompatActivity() {
     private var lastIndex = 0
     private var mFragments = ArrayList<Fragment>()
     override fun onCreate(savedInstanceState: Bundle?) {
-        dp2px = Dp2Px(getApplicationContext())
+        dp2px = Dp2Px(applicationContext)
         val SPLASH_TIME:Long = 5000
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        StatusBarCompat.translucentStatusBar(this as Activity, true, false)
         userInfoBean.Init(this)
         binding.navView.setOnNavigationItemSelectedListener { item ->
             resetIcon(binding.navView)

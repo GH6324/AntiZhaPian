@@ -15,7 +15,7 @@ fun getDataByGet(url: String, callBackFunc: (data: String) -> Unit): Int {
             .url(url)
             .build()
 
-        var call = client.newCall(request)
+        val call = client.newCall(request)
         //异步请求
         call.enqueue(object : Callback {
             override fun onFailure(call: okhttp3.Call, e: IOException) {
@@ -35,5 +35,5 @@ fun getDataByGet(url: String, callBackFunc: (data: String) -> Unit): Int {
     } catch (e: Exception) {
         //callBackFunc("")
     }
-    return 1;
+    return 1
 }

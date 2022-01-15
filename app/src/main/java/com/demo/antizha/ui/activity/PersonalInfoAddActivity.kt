@@ -1,5 +1,6 @@
-package com.demo.antizha
+package com.demo.antizha.ui.activity
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
 import android.text.InputType
@@ -20,7 +21,9 @@ import com.github.gzuliyujiang.wheelpicker.entity.ProvinceEntity
 import com.github.gzuliyujiang.wheelpicker.widget.LinkageWheelLayout
 import android.provider.Settings
 import android.view.ViewGroup
+import com.demo.antizha.*
 import com.demo.antizha.util.CRC64
+import qiu.niorgai.StatusBarCompat
 
 
 class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
@@ -38,7 +41,7 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
     {
         personaInfolBinding.etArea.text = "${province?.name}.${city?.name}.${county?.name}"
         if (county != null) {
-            adcode = county.getCode()
+            adcode = county.code
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +49,7 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
         supportActionBar?.hide()
         personaInfolBinding = ActivityPersonaInfolBinding.inflate(layoutInflater)
         setContentView(personaInfolBinding.root)
+        StatusBarCompat.translucentStatusBar(this as Activity, true, false)
         pageType = intent.getStringExtra("from_page_type").toString()
         initPage()
 
@@ -116,7 +120,7 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
         }
         personaInfolBinding.btnConfirm.setOnClickListener {
             when(pageType){
-                pageBase->{
+                pageBase ->{
                     val name:String = personaInfolBinding.etName.text.toString()
                     val id:String = personaInfolBinding.etIdNum.text.toString()
                     val mobileNumber:String = personaInfolBinding.etPhoneNum.text.toString()
@@ -129,7 +133,7 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
                         return@setOnClickListener
                     }
                     val accountId:String = personaInfolBinding.etAccountNum.text.toString()
-                    var changed:Boolean = false
+                    var changed = false
                     if (name != userInfoBean.name || id != userInfoBean.id || mobileNumber != userInfoBean.mobileNumber)
                     {
                         userInfoBean.name = name
@@ -140,8 +144,8 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
                     if (accountId != userInfoBean.accountId) {
                         userInfoBean.accountId = accountId
                     }
-                    val imei = Settings.System.getString(getApplicationContext()?.getContentResolver(), Settings.Secure.ANDROID_ID)
-                    var crcimei= toHexStr(CRC64.digest(imei.toByteArray()).getBytes())
+                    val imei = Settings.System.getString(applicationContext?.contentResolver, Settings.Secure.ANDROID_ID)
+                    val crcimei= toHexStr(CRC64.digest(imei.toByteArray()).bytes)
                     val useorigimei = personaInfolBinding.sbOriginalimei.isChecked
                     if (useorigimei && imei != userInfoBean.imei)
                     {
@@ -158,7 +162,7 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
                     if (changed)
                         userInfoBean.commit(this)
                 }
-                pageArea->{
+                pageArea ->{
                     val region:String = personaInfolBinding.etArea.text.toString()
                     if (region != userInfoBean.region){
                         userInfoBean.region = region
@@ -166,14 +170,14 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
                         userInfoBean.commit(this)
                     }
                 }
-                pageAreaDetail->{
+                pageAreaDetail ->{
                     val address:String = personaInfolBinding.etAddress.text.toString()
                     if (address != userInfoBean.addr){
                         userInfoBean.addr = address
                         userInfoBean.commit(this)
                     }
                 }
-                pageEmerg->{
+                pageEmerg ->{
                     val emergName:String = personaInfolBinding.etEmergName.text.toString()
                     val emergPhoneNum:String = personaInfolBinding.etEmergPhoneNum.text.toString()
                     if (emergName != userInfoBean.urgentContactname || emergPhoneNum != userInfoBean.urgentContactmob) {
@@ -182,7 +186,7 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
                         userInfoBean.commit(this)
                     }
                 }
-                pageContacts->{
+                pageContacts ->{
                     val qq:String = personaInfolBinding.etQqNum.text.toString()
                     val wx:String = personaInfolBinding.etWxNum.text.toString()
                     val email:String = personaInfolBinding.etEmailNum.text.toString()
@@ -203,7 +207,7 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
     }
     private fun initPage(){
         when (pageType){
-            pageBase->{
+            pageBase ->{
                 personaInfolBinding.piTitle.tvTitle.text = "基础信息"
                 personaInfolBinding.clBaseCont.visibility = View.VISIBLE
                 personaInfolBinding.etName.setText(userInfoBean.name)
@@ -219,23 +223,23 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
                 personaInfolBinding.btnConfirm.layoutParams = params
                 personaInfolBinding.btnConfirm.requestLayout()
             }
-            pageArea->{
+            pageArea ->{
                 personaInfolBinding.piTitle.tvTitle.text = "地址"
                 personaInfolBinding.clAreaCont.visibility = View.VISIBLE
                 personaInfolBinding.etArea.text = userInfoBean.region
             }
-            pageAreaDetail->{
+            pageAreaDetail ->{
                 personaInfolBinding.piTitle.tvTitle.text = "详细地址"
                 personaInfolBinding.clAreaDetailContent.visibility = View.VISIBLE
                 personaInfolBinding.etAddress.setText(userInfoBean.addr)
             }
-            pageEmerg->{
+            pageEmerg ->{
                 personaInfolBinding.piTitle.tvTitle.text = "紧急联系人"
                 personaInfolBinding.clEmergCont.visibility = View.VISIBLE
                 personaInfolBinding.etEmergName.setText(userInfoBean.urgentContactname)
                 personaInfolBinding.etEmergPhoneNum.setText(userInfoBean.urgentContactmob)
             }
-            pageContacts->{
+            pageContacts ->{
                 personaInfolBinding.piTitle.tvTitle.text = "社交通讯信息"
                 personaInfolBinding.clContactsCont.visibility = View.VISIBLE
                 personaInfolBinding.etQqNum.setText(userInfoBean.qq)

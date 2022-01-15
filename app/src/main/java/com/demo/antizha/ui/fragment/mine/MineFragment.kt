@@ -1,17 +1,17 @@
-package com.demo.antizha.ui.mine
+package com.demo.antizha.ui.fragment.mine
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import android.text.TextUtils;
+import android.text.TextUtils
 import android.widget.LinearLayout
 import com.demo.antizha.*
+import com.demo.antizha.ui.activity.MinePersonalActivity
 
 class MineFragment : Fragment() {
 
@@ -21,7 +21,7 @@ class MineFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mineViewModel =
             ViewModelProvider(this).get(MineViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_mine, container, false)
@@ -30,6 +30,7 @@ class MineFragment : Fragment() {
          personalInfo.setOnClickListener {
             val intentInfo = Intent(activity, MinePersonalActivity::class.java)
             startActivity(intentInfo)
+
         }
         return root
     }

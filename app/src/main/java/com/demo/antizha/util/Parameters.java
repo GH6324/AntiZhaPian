@@ -60,7 +60,7 @@ public class Parameters {
         return obj;
     }
 
-    public boolean c() {
+    public boolean isEmpty() {
         return this.linkedHashMap.isEmpty();
     }
 

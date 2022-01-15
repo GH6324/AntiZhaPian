@@ -1,4 +1,4 @@
-package com.demo.antizha.ui.home
+package com.demo.antizha.ui.fragment.home
 
 import android.content.Context
 import android.os.Bundle

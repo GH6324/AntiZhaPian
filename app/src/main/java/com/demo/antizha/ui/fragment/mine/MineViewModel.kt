@@ -1,4 +1,4 @@
-package com.demo.antizha.ui.mine
+package com.demo.antizha.ui.fragment.mine
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

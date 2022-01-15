@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/homeback"
     android:orientation="vertical"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".ui.fragment.home.HomeFragment">
 
     <include
         android:id="@+id/pi_title"
@@ -20,7 +20,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".MainActivity">
+            tools:context=".ui.activity.MainActivity">
 
             <LinearLayout
                 android:id="@+id/ll_attent_tag"

@@ -8,13 +8,13 @@ import com.demo.antizha.util.CRC64
 import java.util.regex.Pattern
 
 fun stringIsEmail(str:String):Boolean{
-    return Pattern.compile("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$").matcher(str).matches();
+    return Pattern.compile("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$").matcher(str).matches()
 }
 fun stringIsUserID(str:String):Boolean{
-    return Pattern.compile("^[1-6][0-9X]$").matcher(str).matches();
+    return Pattern.compile("^[1-6][0-9X]$").matcher(str).matches()
 }
 fun stringIsMobileNumber(str:String):Boolean{
-    return Pattern.compile("^1[0-9]{4}$").matcher(str).matches();
+    return Pattern.compile("^1[0-9]{4}$").matcher(str).matches()
 }
 class UserInfoBean(){
     var perfectProgress:Int = 0     //进度
@@ -41,7 +41,7 @@ class UserInfoBean(){
         if (TextUtils.isEmpty(imei))
         {
             val timei = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID)
-            imei = if (useorigimei) timei else toHexStr(CRC64.digest(timei.toByteArray()).getBytes())
+            imei = if (useorigimei) timei else toHexStr(CRC64.digest(timei.toByteArray()).bytes)
         }
         name = settings.getString("name", "").toString()
         id = settings.getString("id", "").toString()
@@ -84,28 +84,28 @@ class UserInfoBean(){
             perfectProgress += 30
         }
         if (!TextUtils.isEmpty(userInfoBean.region)) {
-            perfectProgress += 10;
+            perfectProgress += 10
         }
         if (!TextUtils.isEmpty(userInfoBean.addr)) {
-            perfectProgress += 10;
+            perfectProgress += 10
         }
         if (!TextUtils.isEmpty(userInfoBean.professionName)) {
-            perfectProgress += 5;
+            perfectProgress += 5
         }
         if (!TextUtils.isEmpty(userInfoBean.urgentContactmob)) {
-            perfectProgress += 20;
+            perfectProgress += 20
         }
         if (!TextUtils.isEmpty(userInfoBean.qq)) {
-            perfectProgress += 10;
+            perfectProgress += 10
         }
         if (!TextUtils.isEmpty(userInfoBean.wechat)) {
-            perfectProgress += 10;
+            perfectProgress += 10
         }
         if (!TextUtils.isEmpty(userInfoBean.email)) {
-            perfectProgress += 5;
+            perfectProgress += 5
         }
         if (perfectProgress >= 100) {
-            perfectProgress = 100;
+            perfectProgress = 100
         }
     }
 }
