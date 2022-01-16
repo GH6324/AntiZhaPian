@@ -39,7 +39,6 @@ class MinePersonalActivity : AppCompatActivity(), View.OnClickListener {
         infoBinding.piTitle.ivBack.setOnClickListener {
             finish()
         }
-
     }
 
     override fun onResume() {

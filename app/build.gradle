@@ -59,7 +59,7 @@ dependencies {
     implementation 'com.github.gzu-liyujiang.AndroidPicker:AddressPicker:4.1.6'
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
     implementation 'com.github.Justson.AgentWeb:agentweb-core:v4.1.9'
-    implementation("org.greenrobot:eventbus:3.3.1")
+    implementation "org.greenrobot:eventbus:3.3.1"
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     testImplementation 'junit:junit:4.13.2'
 

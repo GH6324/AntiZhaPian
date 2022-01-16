@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        StatusBarCompat.translucentStatusBar(this as Activity, true, false)
+        StatusBarCompat.translucentStatusBar(this as Activity, true, true)
         userInfoBean.Init(this)
         binding.navView.setOnNavigationItemSelectedListener { item ->
             resetIcon(binding.navView)

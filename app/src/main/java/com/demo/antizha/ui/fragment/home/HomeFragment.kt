@@ -1,6 +1,5 @@
 package com.demo.antizha.ui.fragment.home
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,20 +14,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.Klaxon
 import com.bumptech.glide.Glide
-import com.demo.antizha.R
 import com.scwang.smart.refresh.footer.BallPulseFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import android.accounts.AccountManager
-
 import com.demo.antizha.ui.activity.PromosWebDetActivity
-
 import android.content.Intent
+import android.graphics.*
 import android.text.TextUtils
-
 import com.demo.antizha.ui.Hicore
-import com.demo.antizha.userInfoBean
-
+import com.demo.antizha.*
 
 class ToolBean(val name: String, val imageId: Int)
 
@@ -193,6 +187,9 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+        val iv: ImageView = root.findViewById(R.id.banner)
+        val bitmap = BitmapFactory.decodeResource(resources, R.mipmap.banner1)!!
+        iv.setImageBitmap(getRoundBitmapByShader(bitmap, bitmap.width, bitmap.height, dp2px.dp2px(8).toFloat(), 0.0F))
         getNewCaseApi(1, pageSize)
         return root
     }
