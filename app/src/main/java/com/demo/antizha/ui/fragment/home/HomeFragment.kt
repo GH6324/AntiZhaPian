@@ -1,5 +1,6 @@
 package com.demo.antizha.ui.fragment.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,32 +19,40 @@ import com.demo.antizha.R
 import com.scwang.smart.refresh.footer.BallPulseFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import android.accounts.AccountManager
+
+import com.demo.antizha.ui.activity.PromosWebDetActivity
+
+import android.content.Intent
+import android.text.TextUtils
+
+import com.demo.antizha.ui.Hicore
+import com.demo.antizha.userInfoBean
+
 
 class ToolBean(val name: String, val imageId: Int)
 
-class ToolViewHolder : RecyclerView.ViewHolder {
-    constructor(view: View) : super(view) {
-        name = view.findViewById(R.id.tv_name) as TextView
-        image = view.findViewById(R.id.iv_icon) as ImageView
-    }
+class ToolViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     var name: TextView
     var image: ImageView
+
+    init {
+        name = view.findViewById(R.id.tv_name) as TextView
+        image = view.findViewById(R.id.iv_icon) as ImageView
+    }
 }
 
-class ToolHolderAdapte : RecyclerView.Adapter<ToolViewHolder> {
-    private var context: Context
-    private var list: ArrayList<ToolBean>
+class ToolHolderAdapte(private var context: Context, private var list: ArrayList<ToolBean>) :
+    RecyclerView.Adapter<ToolViewHolder>() {
 
-    constructor(context: Context, list: ArrayList<ToolBean>) {
-        this.context = context
-        this.list = list
+    init {
         notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: ToolViewHolder, i: Int) {
-        holder.name.text = list.get(i).name
-        holder.image.setImageResource(list.get(i).imageId)
+        holder.name.text = list[i].name
+        holder.image.setImageResource(list[i].imageId)
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ToolViewHolder {
@@ -57,43 +66,51 @@ class ToolHolderAdapte : RecyclerView.Adapter<ToolViewHolder> {
     }
 }
 
-class NewCase(val updateTime: String, val title: String, val author: String, val cdnCover: String)
+class NewCase(val id: String, val updateTime: String, val title: String, val author: String, val cdnCover: String, val localFilePath: String)
 
-class NewCaseViewHolder : RecyclerView.ViewHolder {
-    constructor(view: View) : super(view) {
-        time = view.findViewById(R.id.iv_topic_time) as TextView
-        title = view.findViewById(R.id.iv_topic_tit) as TextView
-        image = view.findViewById(R.id.iv_topic_pic) as ImageView
-    }
+class NewCaseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     var time: TextView
     var title: TextView
     var image: ImageView
+
+    init {
+        time = view.findViewById(R.id.iv_topic_time) as TextView
+        title = view.findViewById(R.id.iv_topic_tit) as TextView
+        image = view.findViewById(R.id.iv_topic_pic) as ImageView
+    }
 }
 
-class NewCaseHolderAdapte : RecyclerView.Adapter<NewCaseViewHolder> {
-    private var context: Context
+class NewCaseHolderAdapte(
+    private var context: Context,
+    private var view: View,
+    private var recycle: RecyclerView,
     private var list: ArrayList<NewCase>
-    private var view: View
-    private var recycle: androidx.recyclerview.widget.RecyclerView
+) : RecyclerView.Adapter<NewCaseViewHolder>() {
 
-    constructor(
-        context: Context,
-        view: View,
-        recycle: androidx.recyclerview.widget.RecyclerView,
-        list: ArrayList<NewCase>
-    ) {
-        this.context = context
-        this.list = list
-        this.view = view
-        this.recycle = recycle
+    init {
         notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: NewCaseViewHolder, i: Int) {
-        holder.time.text = list.get(i).author + " " + list.get(i).updateTime.substring(0, 10)
-        holder.title.text = list.get(i).title
-        Glide.with(view).load(list.get(i).cdnCover).into(holder.image)
+        holder.time.text = list[i].author + " " + list[i].updateTime.substring(0, 10)
+        holder.title.text = list[i].title
+        Glide.with(view).load(list[i].cdnCover).into(holder.image)
+        holder.itemView.setOnClickListener (object: View.OnClickListener{
+            val url:String = list[holder.adapterPosition].localFilePath
+            val id:String = list[holder.adapterPosition].id
+            override fun onClick(v: View?) {
+                if (!Hicore.app.isDouble()) {
+                    val intent = Intent(context, PromosWebDetActivity::class.java)
+                    intent.putExtra("extra_web_title", "国家反诈中心")
+                    val adcode = if (TextUtils.isEmpty(userInfoBean.adcode)) "110105" else userInfoBean.adcode
+                    intent.putExtra("extra_web_url",url + "&nodeId=" + adcode)
+                    intent.putExtra("extra_web_id", id)
+                    intent.putExtra("extra_web_enter", 2)
+                    context.startActivity(intent)
+                }
+            }
+        })
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): NewCaseViewHolder {
@@ -108,13 +125,13 @@ class NewCaseHolderAdapte : RecyclerView.Adapter<NewCaseViewHolder> {
 
     fun addNewCase(newCase: NewCase) {
         list.add(newCase)
-        this.recycle.getLayoutParams()?.height =
+        this.recycle.layoutParams?.height =
             context.resources.displayMetrics.density.let { (100 * list.size * it + 0.5).toInt() }
     }
 
     fun addNewCase(newCases: ArrayList<NewCase>) {
         list.addAll(newCases)
-        this.recycle.getLayoutParams()?.height =
+        this.recycle.layoutParams?.height =
             context.resources.displayMetrics.density.let { (100 * list.size * it + 0.5).toInt() }
     }
 }
@@ -132,7 +149,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         ViewModelProvider(this).get(HomeViewModel::class.java).also { homeViewModel = it }
         root = inflater.inflate(R.layout.fragment_home, container, false)
 
@@ -143,31 +160,31 @@ class HomeFragment : Fragment() {
             R.drawable.iv_home_warn,
             R.drawable.iv_home_id_check
         )
-        var toolBeans = ArrayList<ToolBean>()
+        val toolBeans = ArrayList<ToolBean>()
         for ((i, text) in toolText.withIndex()) {
             val toolBean = ToolBean(text, toolimage[i])
             toolBeans.add(toolBean)
         }
 
-        val toolRecycle: RecyclerView = root.findViewById<RecyclerView>(R.id.rcy_tool);
-        toolRecycle.setLayoutManager(GridLayoutManager(root.getContext(), 4))
-        val toolAdapter = ToolHolderAdapte(root.getContext(), toolBeans)
-        toolRecycle.setAdapter(toolAdapter)
+        val toolRecycle: RecyclerView = root.findViewById(R.id.rcy_tool)
+        toolRecycle.layoutManager = GridLayoutManager(root.context, 4)
+        val toolAdapter = ToolHolderAdapte(root.context, toolBeans)
+        toolRecycle.adapter = toolAdapter
 
-        val newCaseRecycle: RecyclerView = root.findViewById<RecyclerView>(R.id.rcy_newcase);
-        newCaseRecycle.setLayoutManager(LinearLayoutManager(root.getContext()))
+        val newCaseRecycle: RecyclerView = root.findViewById(R.id.rcy_newcase)
+        newCaseRecycle.layoutManager = LinearLayoutManager(root.context)
         this.newCaseAdapter =
-            NewCaseHolderAdapte(root.getContext(), root, newCaseRecycle, ArrayList<NewCase>())
-        newCaseRecycle.setAdapter(newCaseAdapter)
+            NewCaseHolderAdapte(root.context, root, newCaseRecycle, ArrayList<NewCase>())
+        newCaseRecycle.adapter = newCaseAdapter
 
-        refreshLayout = root.findViewById<SmartRefreshLayout>(R.id.refreshLayout);
-        refreshLayout.setRefreshHeader(ClassicsHeader(root.getContext()))
-        refreshLayout.setRefreshFooter(BallPulseFooter(root.getContext()))
+        refreshLayout = root.findViewById(R.id.refreshLayout)
+        refreshLayout.setRefreshHeader(ClassicsHeader(root.context))
+        refreshLayout.setRefreshFooter(BallPulseFooter(root.context))
         refreshLayout.setOnRefreshListener { //下拉刷新
-            refreshLayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+            refreshLayout.finishRefresh(2000/*,false*/)//传入false表示刷新失败
         }
         refreshLayout.setOnLoadMoreListener { //上拉加载更多
-            refreshLayout.finishLoadMore(5000/*,false*/);//传入false表示加载失败
+            refreshLayout.finishLoadMore(5000/*,false*/)//传入false表示加载失败
             if (newCaseAdapter.itemCount < total) {
                 val nextIndex = newCaseAdapter.itemCount / pageSize + 1
                 if (pageIndex < nextIndex) {
@@ -181,17 +198,17 @@ class HomeFragment : Fragment() {
     }
 
     class NewCasePackage(val data: NewCaseData, val code: Int)
-    class NewCaseData(val total: Int, val totalPages: Int, var rows: ArrayList<NewCase>)
+    class NewCaseData(val total: Int, var rows: ArrayList<NewCase>)
 
-    fun getNewCaseApi(page: Int, row: Int) {
+    private fun getNewCaseApi(page: Int, row: Int) {
         //https://fzapp.gjfzpt.cn/hicore/api/Information/querylatestcases?Page=1&Rows=2&Sort=releasetime&Order=desc
         com.demo.antizha.getDataByGet(
             "https://fzapp.gjfzpt.cn/hicore/api/Information/querylatestcases?Page=" + page.toString() + "&Rows=" + row.toString() + "&Sort=releasetime&Order=desc",
-            callBackFunc = this::AddNewCase
+            callBackFunc = this::addNewCase
         )
     }
 
-    fun AddNewCase(data: String) {
+    private fun addNewCase(data: String) {
         val json = Klaxon().parse<NewCasePackage>(data)
         if (json != null && json.code == 0) {
             total = json.data.total
@@ -199,7 +216,7 @@ class HomeFragment : Fragment() {
             newCaseAdapter.addNewCase(json.data.rows)
             newCaseAdapter.notifyDataSetChanged()
             if (newCaseAdapter.itemCount >= total) {
-                val morecase: View = root.findViewById<View>(R.id.ly_morecase);
+                val morecase: View = root.findViewById(R.id.ly_morecase)
                 morecase.visibility = View.VISIBLE
                 refreshLayout.setEnableLoadMore(false)
             }
