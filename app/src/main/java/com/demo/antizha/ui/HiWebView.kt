@@ -3,17 +3,17 @@ package com.demo.antizha.ui
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.webkit.WebView
-import android.os.Build
 import android.content.res.Configuration
+import android.os.Build
 import android.text.TextUtils
+import android.util.AttributeSet
 import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
+import android.webkit.WebView
 import com.beust.klaxon.Klaxon
+import com.demo.antizha.OnWebListener
 import com.demo.antizha.userInfoBean
 import com.demo.antizha.util.UrlUtils
-import android.util.AttributeSet
-import com.demo.antizha.OnWebListener
 
 fun getFixedContext(context: Context): Context {
     return if (Build.VERSION.SDK_INT >= 17) context.createConfigurationContext(Configuration()) else context
@@ -99,7 +99,7 @@ class HiWebView : WebView {
         @JavascriptInterface
         fun sendWebMsg(str: String?) {
             if (this@HiWebView.mActivity != null && this@HiWebView.mOnWebListener != null &&
-                !TextUtils.isEmpty(str)
+                str != null && !TextUtils.isEmpty(str)
             ) {
                 this@HiWebView.mOnWebListener!!.shouldIntercept(UrlUtils.string2Param(str))
             }

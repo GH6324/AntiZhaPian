@@ -1,36 +1,35 @@
 package com.demo.antizha.ui.fragment.web
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.os.*
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.just.agentweb.AgentWeb
-import android.webkit.WebView
-import android.graphics.Bitmap
-import android.widget.*
-import com.just.agentweb.AbsAgentWebSettings
-import com.just.agentweb.WebViewClient
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.app.Activity
-import com.demo.antizha.util.Parameters
-import com.just.agentweb.WebChromeClient
-import android.net.ConnectivityManager
+import com.demo.antizha.OnWebListener
+import com.demo.antizha.R
+import com.demo.antizha.WebViewFrag
 import com.demo.antizha.ui.Hicore
-import android.net.Network
-import android.net.NetworkCapabilities
-import androidx.annotation.RequiresApi
-
-import android.content.Intent
-import android.os.*
-import android.webkit.WebResourceRequest
-import com.demo.antizha.*
 import com.demo.antizha.ui.activity.PromosWebDetActivity
+import com.demo.antizha.userInfoBean
+import com.demo.antizha.util.Parameters
 import com.demo.antizha.util.UrlAES
-import java.lang.Exception
+import com.just.agentweb.AbsAgentWebSettings
+import com.just.agentweb.AgentWeb
+import com.just.agentweb.WebChromeClient
+import com.just.agentweb.WebViewClient
 import java.net.URLDecoder
 
 
@@ -55,12 +54,12 @@ class WebFragment : Fragment() {
     private lateinit var mWebViewClient: WebViewClient
     private lateinit var mOnWebListener: OnWebListener
     private lateinit var mHandler: Handler
-    private var isInitWeb:Boolean = false
-    private var id:String = ""
+    private var isInitWeb: Boolean = false
+    private var id: String = ""
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         dashboardViewModel = ViewModelProvider(this).get(WebViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_web, container, false)
@@ -75,22 +74,22 @@ class WebFragment : Fragment() {
         mIvBack = root.findViewById(R.id.iv_back)
         mTvTitle = root.findViewById(R.id.tv_title)
 
-        mWebChromeClient = object : WebChromeClient(){
+        mWebChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(webView: WebView?, progress: Int) {
-                    if (progress == 100) {
-                        mProgressBar.visibility = View.GONE
-                    }
-                    else {
-                        mProgressBar.visibility = View.VISIBLE
-                        mProgressBar.progress = progress
-                    }
+                if (progress == 100) {
+                    mProgressBar.visibility = View.GONE
+                } else {
+                    mProgressBar.visibility = View.VISIBLE
+                    mProgressBar.progress = progress
+                }
             }
         }
-        mWebViewClient = object : WebViewClient(){
+        mWebViewClient = object : WebViewClient() {
             override fun doUpdateVisitedHistory(webView: WebView, url: String?, isReload: Boolean) {
                 super.doUpdateVisitedHistory(webView, url, isReload)
                 webView.clearHistory()
             }
+
             @RequiresApi(Build.VERSION_CODES.M)
             override fun onPageStarted(webView: WebView?, str: String?, bitmap: Bitmap?) {
                 super.onPageStarted(webView, str, bitmap)
@@ -98,10 +97,14 @@ class WebFragment : Fragment() {
                     switchLoadingPage(true)
                 }
             }
-            @RequiresApi(Build.VERSION_CODES.M)
-            override fun shouldOverrideUrlLoading(webView: WebView, request: WebResourceRequest): Boolean {
 
-                if (!networkConnected()){
+            @RequiresApi(Build.VERSION_CODES.M)
+            override fun shouldOverrideUrlLoading(
+                webView: WebView,
+                request: WebResourceRequest
+            ): Boolean {
+
+                if (!networkConnected()) {
                     switchLoadingPage(true)
                     return false
                 }
@@ -113,8 +116,9 @@ class WebFragment : Fragment() {
                 if (aVar != null)
                     analysisParam(aVar)
             }
+
             override fun webJsFinish() {
-                mActivity.runOnUiThread({switchLoadingPage(false)})
+                mActivity.runOnUiThread({ switchLoadingPage(false) })
             }
         }
         mHandler = object : Handler(Looper.getMainLooper()) {
@@ -134,22 +138,23 @@ class WebFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun networkConnected():Boolean {
-        val cm: ConnectivityManager = Hicore.getContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private fun networkConnected(): Boolean {
+        val cm: ConnectivityManager = Hicore.getContext()
+            .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network: Network? = cm.activeNetwork
-        if (network != null)
-        {
+        if (network != null) {
             val nc: NetworkCapabilities? = cm.getNetworkCapabilities(network)
-            if(nc!=null){
-                if(nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)){//WIFI
+            if (nc != null) {
+                if (nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {//WIFI
                     return true
-                }else if(nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)){//移动数据
+                } else if (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {//移动数据
                     return true
                 }
             }
         }
         return false
     }
+
     private fun initPage() {
         this.mIvRight.setBackgroundResource(R.drawable.iv_share_white)
         mIvBack.visibility = View.GONE
@@ -159,30 +164,33 @@ class WebFragment : Fragment() {
         initWebViewFrag()
         viewWeb()
     }
-    private fun viewWeb(){
-        val url = "https://fzapph5.gjfzpt.cn/?userid=" + userInfoBean.accountId + "&imei=" + userInfoBean.imei + "&" + (System.currentTimeMillis() / 3000)
-        agentWeb = AgentWeb.with(this).
-        setAgentWebParent(mLinearLayout, LinearLayout.LayoutParams(-1, -1)).
-        closeIndicator().setWebViewClient(mWebViewClient).
-        addJavascriptInterface("appjs", WebViewFrag.JsObject()).
-        setAgentWebWebSettings(AbsAgentWebSettings.getInstance()).
-        setMainFrameErrorView(R.layout.web_page_error, -1).createAgentWeb().ready().go(url)
+
+    private fun viewWeb() {
+        val url =
+            "https://fzapph5.gjfzpt.cn/?userid=" + userInfoBean.accountId + "&imei=" + userInfoBean.imei + "&" + (System.currentTimeMillis() / 3000)
+        agentWeb =
+            AgentWeb.with(this).setAgentWebParent(mLinearLayout, LinearLayout.LayoutParams(-1, -1))
+                .closeIndicator().setWebViewClient(mWebViewClient)
+                .addJavascriptInterface("appjs", WebViewFrag.JsObject())
+                .setAgentWebWebSettings(AbsAgentWebSettings.getInstance())
+                .setMainFrameErrorView(R.layout.web_page_error, -1).createAgentWeb().ready().go(url)
         webView = agentWeb.webCreator.webView
         agentWeb.webCreator.webView.isHorizontalScrollBarEnabled = false
         webView.webChromeClient = mWebChromeClient
         webView.settings.textZoom = 100
     }
+
     private fun initWebViewFrag() {
         switchLoadingPage(true)
         webViewFrag.init(mActivity, mOnWebListener)
     }
+
     fun switchLoadingPage(isLoading: Boolean) {
         mLinearLayout.visibility = View.VISIBLE
         if (isLoading) {
             mNetTips.text = "正在努力加载中..."
             mLlNetworkNo.visibility = View.VISIBLE
-        }
-        else{
+        } else {
             mLlNetworkNo.visibility = View.GONE
         }
     }
@@ -191,19 +199,20 @@ class WebFragment : Fragment() {
         super.onAttach(context)
         mActivity = context as Activity
     }
-    override fun onResume(){
+
+    override fun onResume() {
         super.onResume()
         if (TextUtils.isEmpty(userInfoBean.accountId))
             return
-        if (!isInitWeb)
-        {
+        if (!isInitWeb) {
             mVirtualWeb.visibility = View.GONE
             mllWebContainer.visibility = View.VISIBLE
             mProgressBar.visibility = View.VISIBLE
             isInitWeb = true
             initPage()
         }
-     }
+    }
+
     fun analysisParam(param: Parameters) {
         if (!param.isEmpty) {
             try {
@@ -211,7 +220,7 @@ class WebFragment : Fragment() {
                 if (!TextUtils.isEmpty(tid)) {
                     id = tid
                 }
-                val url: String = UrlAES.a(param.value("url"))
+                val url: String = UrlAES.urlDecrypt(param.value("url"))
                 if (!TextUtils.isEmpty(url)) {
                     val decode: String = URLDecoder.decode(param.value("title"), "UTF-8")
                     val intent = Intent(mActivity, PromosWebDetActivity::class.java)

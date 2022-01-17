@@ -2,20 +2,20 @@ package com.demo.antizha.ui.activity
 
 import android.app.Activity
 import android.os.Bundle
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import com.demo.antizha.databinding.ActivityMainBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.os.Handler
 import android.os.Looper
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.demo.antizha.Dp2Px
 import com.demo.antizha.R
+import com.demo.antizha.databinding.ActivityMainBinding
 import com.demo.antizha.dp2px
 import com.demo.antizha.ui.fragment.home.HomeFragment
-import com.demo.antizha.ui.fragment.web.WebFragment
 import com.demo.antizha.ui.fragment.mine.MineFragment
+import com.demo.antizha.ui.fragment.web.WebFragment
 import com.demo.antizha.userInfoBean
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import qiu.niorgai.StatusBarCompat
 
 class MainActivity : AppCompatActivity() {
@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private var mFragments = ArrayList<Fragment>()
     override fun onCreate(savedInstanceState: Bundle?) {
         dp2px = Dp2Px(applicationContext)
-        val SPLASH_TIME:Long = 5000
+        val SPLASH_TIME: Long = 5000
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         val binding = ActivityMainBinding.inflate(layoutInflater)
@@ -58,12 +58,14 @@ class MainActivity : AppCompatActivity() {
         }, SPLASH_TIME)
         initData()
     }
+
     private fun initData() {
         mFragments.add(HomeFragment())
         mFragments.add(WebFragment())
         mFragments.add(MineFragment())
         setFragmentPosition(0)
     }
+
     private fun setFragmentPosition(position: Int) {
         val ft = supportFragmentManager.beginTransaction()
         val currentFragment = mFragments[position]
@@ -77,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         ft.show(currentFragment)
         ft.commitAllowingStateLoss()
     }
+
     private fun resetIcon(navView: BottomNavigationView) {
         val home = navView.menu.findItem(R.id.navigation_home)
         val dashboard = navView.menu.findItem(R.id.navigation_dashboard)

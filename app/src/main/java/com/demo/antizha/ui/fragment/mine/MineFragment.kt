@@ -2,16 +2,17 @@ package com.demo.antizha.ui.fragment.mine
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import android.text.TextUtils
-import android.widget.LinearLayout
-import com.demo.antizha.*
+import com.demo.antizha.R
 import com.demo.antizha.ui.activity.MinePersonalActivity
+import com.demo.antizha.userInfoBean
 
 class MineFragment : Fragment() {
 
@@ -27,22 +28,22 @@ class MineFragment : Fragment() {
         root = inflater.inflate(R.layout.fragment_mine, container, false)
 
         val personalInfo: TextView = root.findViewById(R.id.tv_explain)
-         personalInfo.setOnClickListener {
+        personalInfo.setOnClickListener {
             val intentInfo = Intent(activity, MinePersonalActivity::class.java)
             startActivity(intentInfo)
 
         }
         return root
     }
-    override fun onResume()
-    {
+
+    override fun onResume() {
         super.onResume()
         val phoneNumber: TextView = root.findViewById(R.id.tv_phone)
         if (!TextUtils.isEmpty(userInfoBean.mobileNumber)) {
-            phoneNumber.text = getString(R.string.title_mine) + " " + userInfoBean.mobileNumber.substring(0, 3) +
-                    "******" + userInfoBean.mobileNumber.substring(userInfoBean.mobileNumber.length - 2)
-        }
-        else {
+            phoneNumber.text =
+                getString(R.string.title_mine) + " " + userInfoBean.mobileNumber.substring(0, 3) +
+                        "******" + userInfoBean.mobileNumber.substring(userInfoBean.mobileNumber.length - 2)
+        } else {
             phoneNumber.text = generatePhoneNumber()
         }
         val imei: TextView = root.findViewById(R.id.tv_imei)
@@ -52,6 +53,7 @@ class MineFragment : Fragment() {
         val ver: LinearLayout = root.findViewById(R.id.ll_version)
         ver.visibility = if (TextUtils.isEmpty(userInfoBean.name)) View.VISIBLE else View.GONE
     }
+
     private fun generatePhoneNumber(): String {   //手机号生成
         val head = getString(R.string.title_mine)
         val a = listOf(

@@ -3,38 +3,38 @@
     package="com.demo.antizha">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".ui.Hicore"
         android:allowBackup="true"
         android:icon="@mipmap/logo"
+        android:label="@string/app_name"
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
-        android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.activity.MainActivity"
-            android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.MinePersonalActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".ui.activity.IndustryActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".ui.activity.PersonalInfoAddActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".ui.activity.PromosWebDetActivity"
-            android:screenOrientation="portrait">
-        </activity>
+        <activity
+            android:name=".ui.activity.MinePersonalActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.IndustryActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.PersonalInfoAddActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.PromosWebDetActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

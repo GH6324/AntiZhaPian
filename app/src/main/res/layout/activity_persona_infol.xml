@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/page_gray">
@@ -11,7 +10,6 @@
         layout="@layout/rl_title_with_back" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:visibility="gone"
         android:id="@+id/cl_base_cont"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,6 +19,7 @@
         android:background="@drawable/bg_white_crop"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/pi_title">
 
         <TextView
@@ -165,12 +164,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            app:sb_checked="true"
-            app:sb_shadow_radius="3dp"
-            app:sb_show_indicator="false"
-            app:sb_checked_color="#34c759"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_originalimei" />
+            app:layout_constraintTop_toTopOf="@id/tv_originalimei"
+            app:sb_checked="true"
+            app:sb_checked_color="#34c759"
+            app:sb_shadow_radius="3dp"
+            app:sb_show_indicator="false" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

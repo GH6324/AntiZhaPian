@@ -5,12 +5,12 @@ import android.os.Build;
 import android.view.View;
 import android.view.Window;
 
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 /**
  * Utils for status bar
@@ -32,6 +32,7 @@ public class StatusBarCompat {
 
     /**
      * set statusBarColor
+     *
      * @param statusColor color
      * @param alpha       0 - 255
      */
@@ -53,6 +54,7 @@ public class StatusBarCompat {
 
     /**
      * change to full screen mode
+     *
      * @param hideStatusBarBackground hide status bar alpha Background when SDK > 21, true if hide it
      */
     public static void translucentStatusBar(@NonNull Activity activity, boolean hideStatusBarBackground, boolean highLight) {

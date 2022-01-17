@@ -6,7 +6,9 @@
     android:background="@color/page_gray"
     android:orientation="vertical">
 
-    <include android:id="@+id/piTitle" layout="@layout/rl_title_with_back" />
+    <include
+        android:id="@+id/piTitle"
+        layout="@layout/rl_title_with_back" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_List"

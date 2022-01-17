@@ -427,6 +427,7 @@
                                 android:src="@mipmap/arrow_gray_right" />
                         </RelativeLayout>
                     </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/ll_version"
                         android:layout_width="match_parent"
@@ -439,12 +440,14 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="原版地址：" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autoLink="web"
                             android:gravity="center"
                             android:text="https://github.com/XJP-GIT/AntiZhaPian" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -452,11 +455,12 @@
                             android:text="改版地址：" />
 
                         <TextView
-                             android:layout_width="match_parent"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autoLink="web"
                             android:gravity="center"
                             android:text="https://github.com/zhanghua000/AntiZhaPian" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -469,16 +473,18 @@
                             android:autoLink="web"
                             android:gravity="center"
                             android:text="https://github.com/newhying/AntiZhaPian" />
+
                         <TextView
                             android:id="@+id/tv_imei"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"/>
+                            android:layout_gravity="center" />
+
                         <TextView
                             android:id="@+id/tv_accountid"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"/>
+                            android:layout_gravity="center" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

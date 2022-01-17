@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources tools:ignore="MissingDefaultResource" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingDefaultResource">
     <dimen name="qb_px_1">0.83000004dip</dimen>
     <dimen name="qb_px_10">8.269989dip</dimen>
     <dimen name="qb_px_100">82.66998dip</dimen>

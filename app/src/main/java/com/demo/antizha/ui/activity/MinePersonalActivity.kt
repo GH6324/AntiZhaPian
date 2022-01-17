@@ -2,9 +2,9 @@ package com.demo.antizha.ui.activity
 //个人信息页窗口
 import android.app.Activity
 import android.content.Intent
-import android.view.View
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityMinePersonalBinding

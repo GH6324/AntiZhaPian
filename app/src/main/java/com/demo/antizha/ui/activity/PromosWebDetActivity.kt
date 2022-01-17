@@ -1,25 +1,20 @@
 package com.demo.antizha.ui.activity
 
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import com.demo.antizha.databinding.ActivityPromWebDetBinding
-import android.text.TextUtils
-import com.demo.antizha.util.Parameters
-import java.lang.Exception
-import android.widget.ProgressBar
-import com.demo.antizha.ui.HiWebView
-import android.os.Build
-import android.webkit.*
-import com.demo.antizha.ui.Hicore
-import java.util.concurrent.atomic.AtomicReference
 import android.app.Activity
+import android.os.*
+import android.text.TextUtils
+import android.view.View
+import android.webkit.*
+import android.widget.ProgressBar
+import androidx.appcompat.app.AppCompatActivity
 import com.demo.antizha.OnWebListener
 import com.demo.antizha.R
+import com.demo.antizha.databinding.ActivityPromWebDetBinding
+import com.demo.antizha.ui.HiWebView
+import com.demo.antizha.ui.Hicore
+import com.demo.antizha.util.Parameters
 import qiu.niorgai.StatusBarCompat
+import java.util.concurrent.atomic.AtomicReference
 
 
 class PromosWebDetActivity : AppCompatActivity() {

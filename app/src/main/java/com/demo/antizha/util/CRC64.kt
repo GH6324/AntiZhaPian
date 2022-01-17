@@ -1,7 +1,5 @@
 package com.demo.antizha.util
 
-import kotlin.jvm.JvmOverloads
-
 //CRC-64/XZ
 class CRC64 {
     private var crc: Long = -1
@@ -37,7 +35,8 @@ class CRC64 {
     fun update(buf: ByteArray, offset: Int = 0, len: Int = buf.size) {
         var off = offset
         val end = off + len
-        while (off < end) crc = crcTable[buf[off++].toInt() xor crc.toInt() and 0xFF] xor (crc ushr 8)
+        while (off < end) crc =
+            crcTable[buf[off++].toInt() xor crc.toInt() and 0xFF] xor (crc ushr 8)
     }
 
     val value: Long

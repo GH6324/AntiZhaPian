@@ -2,7 +2,7 @@ package com.demo.antizha.ui
 
 import android.app.Application
 import android.content.Context
-import java.util.Calendar
+import java.util.*
 
 class Hicore : Application() {
     companion object {
@@ -10,7 +10,7 @@ class Hicore : Application() {
         lateinit var context: Application
         var mLastClickTime: Long = 0
         fun getContext(): Context {
-            return context!!
+            return context
         }
     }
 

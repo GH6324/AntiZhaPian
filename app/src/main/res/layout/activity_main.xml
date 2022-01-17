@@ -2,39 +2,39 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <include
         android:id="@+id/splash"
         layout="@layout/background_splash" />
 
     <FrameLayout
-        android:visibility="gone"
         android:id="@+id/ll_frameLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="2dp"
         android:layout_weight="1"
-        android:background="#ffffff" />
+        android:background="#ffffff"
+        android:visibility="gone" />
     <!--
         app:itemBackground="@android:color/white"
         如果不设置的话，会产生一个点击水波动画
     -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:visibility="gone"
         android:id="@+id/nav_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         android:background="?android:attr/windowBackground"
+        android:visibility="gone"
+        app:itemBackground="@android:color/white"
+        app:itemIconTint="@drawable/bnav_setting"
+        app:itemTextColor="@drawable/bnav_setting"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:itemIconTint="@drawable/bnav_setting"
-        app:itemTextColor="@drawable/bnav_setting"
-        app:itemBackground="@android:color/white"
-        app:menu="@menu/bottom_nav_menu"/>
+        app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>

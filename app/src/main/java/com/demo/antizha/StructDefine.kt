@@ -6,22 +6,27 @@ import android.graphics.*
 import android.provider.Settings
 import android.text.TextUtils
 import com.demo.antizha.util.CRC64
+import java.text.SimpleDateFormat
 import java.util.regex.Pattern
 
-fun stringIsEmail(str:String):Boolean{
-    return Pattern.compile("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$").matcher(str).matches()
+fun stringIsEmail(str: String): Boolean {
+    return Pattern.compile("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$").matcher(str)
+        .matches()
 }
-fun stringIsUserID(str:String):Boolean{
+
+fun stringIsUserID(str: String): Boolean {
     return Pattern.compile("^[1-6][0-9X]$").matcher(str).matches()
 }
-fun stringIsMobileNumber(str:String):Boolean{
+
+fun stringIsMobileNumber(str: String): Boolean {
     return Pattern.compile("^1[0-9]{4}$").matcher(str).matches()
 }
-class UserInfoBean(){
-    var perfectProgress:Int = 0     //进度
+
+class UserInfoBean() {
+    var perfectProgress: Int = 0     //进度
     var accountId: String = ""      //账号ID
-    var imei:String = ""            //设备码
-    var useorigimei:Boolean = false//是否使用原始的机器码
+    var imei: String = ""            //设备码
+    var useorigimei: Boolean = false//是否使用原始的机器码
     var name: String = ""           //名字
     var id: String = ""             //身份证前后2个字符
     var mobileNumber: String = ""   //电话前2后3
@@ -34,14 +39,14 @@ class UserInfoBean(){
     var qq: String = ""
     var wechat: String = ""
     var email: String = ""
-    fun Init(context: Context){
+    fun Init(context: Context) {
         val settings: SharedPreferences = context.getSharedPreferences("setting", 0)
         accountId = settings.getString("account", "").toString()
         imei = settings.getString("imei", "").toString()
         useorigimei = settings.getBoolean("originalimei", false)
-        if (TextUtils.isEmpty(imei))
-        {
-            val timei = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID)
+        if (TextUtils.isEmpty(imei)) {
+            val timei =
+                Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID)
             imei = if (useorigimei) timei else toHexStr(CRC64.digest(timei.toByteArray()).bytes)
         }
         name = settings.getString("name", "").toString()
@@ -58,7 +63,8 @@ class UserInfoBean(){
         email = settings.getString("mail", "").toString()
         CalcProgress()
     }
-    fun commit(context: Context){
+
+    fun commit(context: Context) {
         val settings: SharedPreferences = context.getSharedPreferences("setting", 0)
         var editor: SharedPreferences.Editor = settings.edit()
         editor.putString("account", accountId)
@@ -71,15 +77,16 @@ class UserInfoBean(){
         editor.putString("adcode", adcode)
         editor.putString("address", addr)
         editor.putString("work", professionName)
-        editor.putString("emergency_name",urgentContactname)
-        editor.putString("emergency_phone",urgentContactmob)
-        editor.putString("qq",qq)
-        editor.putString("wechat",wechat)
-        editor.putString("mail",email)
+        editor.putString("emergency_name", urgentContactname)
+        editor.putString("emergency_phone", urgentContactmob)
+        editor.putString("qq", qq)
+        editor.putString("wechat", wechat)
+        editor.putString("mail", email)
         editor.apply()
         CalcProgress()
     }
-    fun CalcProgress(){
+
+    fun CalcProgress() {
         perfectProgress = 0
         if (!TextUtils.isEmpty(userInfoBean.name) && !TextUtils.isEmpty(userInfoBean.id)) {
             perfectProgress += 30
@@ -110,41 +117,48 @@ class UserInfoBean(){
         }
     }
 }
-val userInfoBean:UserInfoBean = UserInfoBean()
 
-class AddressBean(){
+val userInfoBean: UserInfoBean = UserInfoBean()
+
+class AddressBean() {
     val cityList: ArrayList<AddressBean> = ArrayList<AddressBean>()
     val code: String = ""
     val name: String = ""
     val townList: ArrayList<AddressBean> = ArrayList<AddressBean>()
 }
+
 //地区的基类
-open class AreaBase(){
+open class AreaBase() {
     var areaId: String = ""
     var areaName: String = ""
 }
+
 //区
 class District : AreaBase() {
     var cityId: String = ""
 }
+
 //市
 class City : AreaBase() {
     var counties: List<District> = ArrayList()
 }
+
 //省
 class Province : AreaBase() {
     var citys: List<City> = ArrayList()
 }
 
-class Dp2Px{
-    constructor(context: Context){
+class Dp2Px {
+    constructor(context: Context) {
         density = context.resources.displayMetrics.density
     }
-    var density:Float = 0.0F
-    fun dp2px(value:Int):Int{
+
+    var density: Float = 0.0F
+    fun dp2px(value: Int): Int {
         return (value * density + 0.5).toInt()
     }
 }
+
 lateinit var dp2px: Dp2Px
 
 fun toHexStr(byteArray: ByteArray) =
@@ -158,7 +172,13 @@ fun toHexStr(byteArray: ByteArray) =
         toString()
     }
 
-fun getRoundBitmapByShader(bitmap: Bitmap?, outWidth: Int, outHeight: Int, radius: Float, boarder: Float): Bitmap? {
+fun getRoundBitmapByShader(
+    bitmap: Bitmap?,
+    outWidth: Int,
+    outHeight: Int,
+    radius: Float,
+    boarder: Float
+): Bitmap? {
     if (bitmap == null) {
         return null
     }
@@ -194,4 +214,30 @@ fun getRoundBitmapByShader(bitmap: Bitmap?, outWidth: Int, outHeight: Int, radiu
         canvas.drawRoundRect(rect, radius, radius, boarderPaint)
     }
     return desBitmap
+}
+
+fun str2time(str: String): Long {
+    try {
+        val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(str)
+        return if (date == null) 0 else date.getTime()
+    } catch (e2: Exception) {
+        e2.printStackTrace()
+        return 0
+    }
+}
+
+fun optimizationTimeStr(str: String): String {
+    if (TextUtils.isEmpty(str)) {
+        return ""
+    }
+    val currentTimeMillis: Long = (System.currentTimeMillis() - str2time(str)) / 1000
+    if (currentTimeMillis < 30) {
+        return "刚刚"
+    } else if (currentTimeMillis < 3600) {
+        return (currentTimeMillis / 60).toString() + "分钟前"
+    } else if (currentTimeMillis >= 86400) {
+        return str.substring(0, 11)
+    } else {
+        return (currentTimeMillis / 3600).toString() + "小时前"
+    }
 }
