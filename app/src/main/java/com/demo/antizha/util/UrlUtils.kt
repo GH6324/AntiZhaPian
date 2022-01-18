@@ -6,7 +6,6 @@ import java.net.URL
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
-/* compiled from: UrlUtils.java */ /* renamed from: util.v1.c */ /* loaded from: classes3.dex */
 object UrlUtils {
     fun separateParam(str: String): Parameters {
         val aVar: Parameters?
@@ -15,12 +14,10 @@ object UrlUtils {
         } else {
             val substring = str.substring(str.indexOf('?') + 1)
             val indexOf = substring.indexOf('#')
-            if (indexOf > -1) string2Param(
-                substring.substring(
-                    0,
-                    indexOf
-                )
-            ) else string2Param(substring)
+            if (indexOf > -1)
+                string2Param(substring.substring(0, indexOf))
+            else
+                string2Param(substring)
         }
         return aVar ?: Parameters()
     }

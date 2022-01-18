@@ -28,6 +28,7 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.youth.banner.Banner
 import com.youth.banner.adapter.BannerAdapter
 import com.youth.banner.indicator.RoundLinesIndicator
+import com.youth.banner.listener.OnBannerListener
 import com.youth.banner.util.BannerUtils
 
 
@@ -145,12 +146,19 @@ class NewCaseHolderAdapte(
     }
 }
 
-enum class ImageDataType {
+enum class BanderType {
     TYPE_RES,
     TYPE_URL
 }
 
-class BanderBean(val imageRes: Int, val imageUrl: String, val imageType: ImageDataType)
+class BanderBean(
+    val imageRes: Int,
+    val imagePath: String,
+    val url: String,
+    val title: String,
+    val imageType: BanderType
+)
+
 class BanderHolder(view: View) : RecyclerView.ViewHolder(view) {
     var imageView: ImageView
 
@@ -177,8 +185,8 @@ class BanderAdapter(
 
     override fun onBindView(holder: BanderHolder, data: BanderBean, position: Int, size: Int) {
         when (data.imageType) {
-            ImageDataType.TYPE_RES -> holder.imageView.setImageResource(data.imageRes);
-            ImageDataType.TYPE_URL -> Glide.with(holder.itemView).load(data.imageUrl)
+            BanderType.TYPE_RES -> holder.imageView.setImageResource(data.imageRes);
+            BanderType.TYPE_URL -> Glide.with(holder.itemView).load(data.imagePath)
                 .into(holder.imageView)
         }
     }
@@ -210,7 +218,8 @@ class HomeFragment : Fragment() {
 
     private fun initBanner() {
         val imageList = ArrayList<BanderBean>()
-        imageList.add(BanderBean(Integer.valueOf(R.mipmap.banner1), "", ImageDataType.TYPE_RES))
+        imageList.add(BanderBean(Integer.valueOf(R.mipmap.banner1),
+            "", "", "", BanderType.TYPE_RES))
         val banner: Banner<BanderBean, BanderAdapter> = root.findViewById(R.id.banner)
         banner.addBannerLifecycleObserver(this)
         banner.setBannerRound(20f)
@@ -218,6 +227,19 @@ class HomeFragment : Fragment() {
         banner.setIndicator(RoundLinesIndicator(Hicore.getContext()))
         banderAdapter = BanderAdapter(imageList)
         banner.setAdapter(banderAdapter)
+        var mOnWebListener = object : OnBannerListener<BanderBean> {
+            override open fun OnBannerClick(data: BanderBean, position: Int) {
+                if (TextUtils.isEmpty(data.url))
+                    return
+                val intent = Intent(context, PromosWebDetActivity::class.java)
+                intent.putExtra("extra_web_title", data.title)
+                val adcode =
+                    if (TextUtils.isEmpty(userInfoBean.adcode)) "110105" else userInfoBean.adcode
+                intent.putExtra("extra_web_url", data.url + "&nodeId=" + adcode)
+                startActivity(intent)
+            }
+        }
+        banner.setOnBannerListener(mOnWebListener)
         getNewBander()
     }
 
@@ -296,18 +318,39 @@ class HomeFragment : Fragment() {
     }
 
     class NewBanderData(val data: ArrayList<NewBander>, val code: Int)
-    class NewBander(val imgPath: String, val id: Long)
+    class NewBander(
+        val createTime: String?,
+        val extraID: Long?,
+        val id: Long,
+        val imgPath: String,
+        val isShow: Int?,
+        val openType: Int?,
+        val sort: Int?,
+        val title: String?,
+        val updateTime: String?,
+        val url: String?
+    )
 
     private fun getNewBander() {
+        //var s ="""{"data":[{"title":null,"url":null,"openType":0,"imgPath":"https://oss.gjfzpt.cn/preventfraud-static/h5/files/banners/306dd120fd9cb87af9a8fbcd6d0790c7.png","sort":2,"isShow":1,"extraID":null,"startTime":null,"endTime":null,"name":null,"description":null,"id":222537046026227713,"createTime":"2021-08-06 10:52:50","updateTime":"2021-08-06 10:52:50","nodeID":0}],"code":0,"msg":"成功"}"""
+        //addNewBander(s)
         getDataByGet("https://fzapp.gjfzpt.cn/hicore/api/Banner", callBackFunc = this::addNewBander)
     }
 
     private fun addNewBander(data: String) {
         val json = Klaxon().parse<NewBanderData>(data)
-        if (json != null && json.code == 0) {
+        if (json != null && json.code == 0 && json.data.size > 0) {
             val imageList = ArrayList<BanderBean>()
             for (row in json.data) {
-                imageList.add(BanderBean(0, row.imgPath, ImageDataType.TYPE_URL))
+                imageList.add(
+                    BanderBean(
+                        0,
+                        row.imgPath,
+                        if (row.url == null) "" else row.url,
+                        if (row.title == null) "" else row.title,
+                        BanderType.TYPE_URL
+                    )
+                )
             }
             banderAdapter.setDatas(imageList)
             banderAdapter.notifyDataSetChanged()

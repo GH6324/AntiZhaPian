@@ -6,17 +6,20 @@ import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
-/* compiled from: UrlAES.java */ /* renamed from: util.v1.b */ /* loaded from: classes3.dex */
 object UrlAES {
     private const val charSet = "UTF-8"
     private const val str_AES = "AES"
     private const val DEFAULT_CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding"
 
     @Throws(java.lang.Exception::class)
-    fun cipherDecrypt(str: String?, str2: String, str3: String): String {
-        val secretKeySpec = SecretKeySpec(str2.toByteArray(charset(charSet)), str_AES)
+    fun cipherDecrypt(str: String?, keySalt: String, iv: String): String {
+        val secretKeySpec = SecretKeySpec(keySalt.toByteArray(charset(charSet)), str_AES)
         val instance = Cipher.getInstance(DEFAULT_CIPHER_ALGORITHM)
-        instance.init(2, secretKeySpec, IvParameterSpec(str3.toByteArray(charset(charSet))))
+        instance.init(
+            Cipher.DECRYPT_MODE,
+            secretKeySpec,
+            IvParameterSpec(iv.toByteArray(charset(charSet)))
+        )
         return String(instance.doFinal(Base64.decode(str, 0)), charset(charSet))
     }
 
