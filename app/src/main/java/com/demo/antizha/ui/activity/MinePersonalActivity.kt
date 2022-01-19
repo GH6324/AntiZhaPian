@@ -2,25 +2,22 @@ package com.demo.antizha.ui.activity
 //个人信息页窗口
 import android.app.Activity
 import android.content.Intent
-import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityMinePersonalBinding
 import com.demo.antizha.userInfoBean
 import qiu.niorgai.StatusBarCompat
 
 //AddressBean
-class MinePersonalActivity : AppCompatActivity(), View.OnClickListener {
+class MinePersonalActivity : BaseActivity(), View.OnClickListener {
     private lateinit var infoBinding: ActivityMinePersonalBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun initPage() {
         supportActionBar?.hide()
         infoBinding = ActivityMinePersonalBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
-        StatusBarCompat.translucentStatusBar(this as Activity, true, false)
+        StatusBarCompat.translucentStatusBar(this as Activity, true, true)
         infoBinding.piTitle.tvTitle.text = "个人信息"
         infoBinding.tvIdfineVar.setOnClickListener(this)
         infoBinding.llIdfineVar.setOnClickListener(this)

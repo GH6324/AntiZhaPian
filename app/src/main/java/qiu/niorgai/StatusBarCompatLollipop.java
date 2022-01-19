@@ -93,9 +93,12 @@ class StatusBarCompatLollipop {
 
         ViewGroup mContentView = (ViewGroup) window.findViewById(Window.ID_ANDROID_CONTENT);
         View mChildView = mContentView.getChildAt(0);
-        if (mChildView != null) {
-            mChildView.setFitsSystemWindows(false);
-            ViewCompat.requestApplyInsets(mChildView);
+        if (mContentView.getChildAt(mContentView.getChildCount() - 1) instanceof StatusBarView) {
+            mContentView.removeView(mContentView.getChildAt(mContentView.getChildCount() - 1));
+            mChildView.setPadding(0, 0, 0, 0);
+            if (mContentView.getChildAt(0) != null) {
+                mContentView.getChildAt(0).setPadding(0, 0, 0, 0);
+            }
         }
     }
 

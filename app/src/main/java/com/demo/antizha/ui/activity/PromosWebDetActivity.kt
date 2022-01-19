@@ -6,7 +6,6 @@ import android.text.TextUtils
 import android.view.View
 import android.webkit.*
 import android.widget.ProgressBar
-import androidx.appcompat.app.AppCompatActivity
 import com.demo.antizha.OnWebListener
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityPromWebDetBinding
@@ -17,13 +16,12 @@ import qiu.niorgai.StatusBarCompat
 import java.util.concurrent.atomic.AtomicReference
 
 
-class PromosWebDetActivity : AppCompatActivity() {
+class PromosWebDetActivity : BaseActivity() {
     private lateinit var promosWebDetBinding: ActivityPromWebDetBinding
     private lateinit var mHandler: Handler
     private var isVideo = false
     private var mArticleId: String = ""
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun initPage() {
         supportActionBar?.hide()
         promosWebDetBinding = ActivityPromWebDetBinding.inflate(layoutInflater)
         setContentView(promosWebDetBinding.root)
@@ -71,7 +69,7 @@ class PromosWebDetActivity : AppCompatActivity() {
                 }
             }
         }
-        initPage()
+        loadWeb()
     }
 
     // androidx.activity.ComponentActivity, android.app.Activity
@@ -83,7 +81,7 @@ class PromosWebDetActivity : AppCompatActivity() {
     }
 
     // ui.activity.BaseActivity
-    private fun initPage() {
+    private fun loadWeb() {
         promosWebDetBinding.webview.setActivity(this)
         promosWebDetBinding.piTitle.ivRight.setBackgroundResource(R.drawable.iv_share_dot)
         mArticleId = intent.getStringExtra("extra_web_id").toString()

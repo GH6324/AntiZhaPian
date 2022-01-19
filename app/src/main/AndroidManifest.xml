@@ -35,6 +35,12 @@
         <activity
             android:name=".ui.activity.PromosWebDetActivity"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.WarnSettingActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.WarnPrimessActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

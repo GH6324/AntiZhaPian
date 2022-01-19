@@ -20,8 +20,12 @@ import com.demo.antizha.R
 import com.demo.antizha.getDataByGet
 import com.demo.antizha.optimizationTimeStr
 import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.IClickListener
+import com.demo.antizha.ui.activity.PersonalInfoAddActivity
 import com.demo.antizha.ui.activity.PromosWebDetActivity
+import com.demo.antizha.ui.activity.WarnSettingActivity
 import com.demo.antizha.userInfoBean
+import com.demo.antizha.util.DialogUtils
 import com.scwang.smart.refresh.footer.BallPulseFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -32,29 +36,53 @@ import com.youth.banner.listener.OnBannerListener
 import com.youth.banner.util.BannerUtils
 
 
-class ToolBean(val name: String, val imageId: Int)
+class ToolBean(val id:Int, val name: String, val imageId: Int)
 
 class ToolViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-    var name: TextView
-    var image: ImageView
-
-    init {
-        name = view.findViewById(R.id.tv_name) as TextView
-        image = view.findViewById(R.id.iv_icon) as ImageView
-    }
+    var name: TextView = view.findViewById(R.id.tv_name) as TextView
+    var image: ImageView = view.findViewById(R.id.iv_icon) as ImageView
 }
 
-class ToolHolderAdapte(private var context: Context, private var list: ArrayList<ToolBean>) :
+class ToolHolderAdapte( private var homeFragment:HomeFragment, private var context: Context, private var list: ArrayList<ToolBean>) :
     RecyclerView.Adapter<ToolViewHolder>() {
 
     init {
         notifyDataSetChanged()
     }
-
     override fun onBindViewHolder(holder: ToolViewHolder, i: Int) {
         holder.name.text = list[i].name
         holder.image.setImageResource(list[i].imageId)
+        holder.itemView.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                if (!Hicore.app.isDouble()) {
+                    if (list.size <= 0)
+                        return
+                    val adapterPosition = holder.adapterPosition
+                    if (adapterPosition < 0)
+                        return
+                    val toolBean = list[adapterPosition]
+                    when(toolBean.id){
+                        0->{
+                            if (!userInfoBean.isVerified())
+                                DialogUtils.showNormalDialog(context,  "请先进行实名认证","", "取消", "身份验证", homeFragment as IClickListener)
+                        }
+                        1->{
+                            if (!userInfoBean.isVerified())
+                                DialogUtils.showNormalDialog(context,  "请先进行实名认证","", "取消", "身份验证", homeFragment as IClickListener)
+                        }
+                        2->{
+                            val intentInfo = Intent(homeFragment.activity, WarnSettingActivity::class.java)
+                            homeFragment.startActivity(intentInfo)
+                        }
+                        3->{
+                            if (!userInfoBean.isVerified())
+                                DialogUtils.showNormalDialog(context,  "请先进行实名认证","", "取消", "身份验证", homeFragment as IClickListener)
+                        }
+                    }
+                }
+            }
+        })
+
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ToolViewHolder {
@@ -78,16 +106,9 @@ class NewCase(
 )
 
 class NewCaseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-    var time: TextView
-    var title: TextView
-    var image: ImageView
-
-    init {
-        time = view.findViewById(R.id.iv_topic_time) as TextView
-        title = view.findViewById(R.id.iv_topic_tit) as TextView
-        image = view.findViewById(R.id.iv_topic_pic) as ImageView
-    }
+    var time: TextView = view.findViewById(R.id.iv_topic_time) as TextView
+    var title: TextView = view.findViewById(R.id.iv_topic_tit) as TextView
+    var image: ImageView = view.findViewById(R.id.iv_topic_pic) as ImageView
 }
 
 class NewCaseHolderAdapte(
@@ -160,11 +181,8 @@ class BanderBean(
 )
 
 class BanderHolder(view: View) : RecyclerView.ViewHolder(view) {
-    var imageView: ImageView
+    var imageView: ImageView = view as ImageView
 
-    init {
-        imageView = view as ImageView
-    }
 }
 
 class BanderAdapter(
@@ -185,14 +203,14 @@ class BanderAdapter(
 
     override fun onBindView(holder: BanderHolder, data: BanderBean, position: Int, size: Int) {
         when (data.imageType) {
-            BanderType.TYPE_RES -> holder.imageView.setImageResource(data.imageRes);
+            BanderType.TYPE_RES -> holder.imageView.setImageResource(data.imageRes)
             BanderType.TYPE_URL -> Glide.with(holder.itemView).load(data.imagePath)
                 .into(holder.imageView)
         }
     }
 }
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), IClickListener {
 
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var root: View
@@ -224,11 +242,11 @@ class HomeFragment : Fragment() {
         banner.addBannerLifecycleObserver(this)
         banner.setBannerRound(20f)
         banner.setLoopTime(5000)
-        banner.setIndicator(RoundLinesIndicator(Hicore.getContext()))
+        banner.indicator = RoundLinesIndicator(Hicore.getContext())
         banderAdapter = BanderAdapter(imageList)
         banner.setAdapter(banderAdapter)
-        var mOnWebListener = object : OnBannerListener<BanderBean> {
-            override open fun OnBannerClick(data: BanderBean, position: Int) {
+        val mOnWebListener = object : OnBannerListener<BanderBean> {
+            override fun OnBannerClick(data: BanderBean, position: Int) {
                 if (TextUtils.isEmpty(data.url))
                     return
                 val intent = Intent(context, PromosWebDetActivity::class.java)
@@ -253,13 +271,13 @@ class HomeFragment : Fragment() {
         )
         val toolBeans = ArrayList<ToolBean>()
         for ((i, text) in toolText.withIndex()) {
-            val toolBean = ToolBean(text, toolimage[i])
+            val toolBean = ToolBean(i, text, toolimage[i])
             toolBeans.add(toolBean)
         }
 
         val toolRecycle: RecyclerView = root.findViewById(R.id.rcy_tool)
         toolRecycle.layoutManager = GridLayoutManager(root.context, 4)
-        val toolAdapter = ToolHolderAdapte(root.context, toolBeans)
+        val toolAdapter = ToolHolderAdapte(this, root.context, toolBeans)
         toolRecycle.adapter = toolAdapter
     }
 
@@ -290,7 +308,14 @@ class HomeFragment : Fragment() {
         }
         getNewCaseApi(1, pageSize)
     }
+    override fun cancelBtn(){
 
+    }
+    override fun clickOKBtn(){
+        val intent = Intent(activity, PersonalInfoAddActivity::class.java)
+        intent.putExtra("from_page_type", PersonalInfoAddActivity.pageBase)
+        startActivity(intent)
+    }
     class NewCasePackage(val data: NewCaseData, val code: Int)
     class NewCaseData(val total: Int, var rows: ArrayList<NewCase>)
 

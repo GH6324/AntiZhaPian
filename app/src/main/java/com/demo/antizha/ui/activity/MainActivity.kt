@@ -1,11 +1,12 @@
 package com.demo.antizha.ui.activity
 
 import android.app.Activity
-import android.os.Bundle
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.view.*
+import androidx.annotation.RequiresApi
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import com.demo.antizha.Dp2Px
 import com.demo.antizha.R
@@ -18,17 +19,24 @@ import com.demo.antizha.userInfoBean
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import qiu.niorgai.StatusBarCompat
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : BaseActivity() {
     private var lastIndex = 0
     private var mFragments = ArrayList<Fragment>()
-    override fun onCreate(savedInstanceState: Bundle?) {
+    @RequiresApi(Build.VERSION_CODES.R)
+    override fun initPage() {
         dp2px = Dp2Px(applicationContext)
         val SPLASH_TIME: Long = 5000
-        super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        StatusBarCompat.translucentStatusBar(this as Activity, true, true)
+        //隐藏状态栏
+        binding.root.windowInsetsController?.hide(WindowInsets.Type.statusBars())
+        //刘海屏？反正测试的时候不加这些代码，状态栏隐藏后会有一块空白
+        val lp = window.attributes
+        lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        window.attributes = lp
+
         userInfoBean.Init(this)
         binding.navView.setOnNavigationItemSelectedListener { item ->
             resetIcon(binding.navView)
@@ -55,6 +63,8 @@ class MainActivity : AppCompatActivity() {
             binding.splash.root.visibility = View.GONE
             binding.navView.visibility = View.VISIBLE
             binding.llFrameLayout.visibility = View.VISIBLE
+            StatusBarCompat.translucentStatusBar(this, true, true)
+            binding.root.windowInsetsController?.show(WindowInsets.Type.statusBars())
         }, SPLASH_TIME)
         initData()
     }

@@ -21,4 +21,8 @@
     <color name="colorGray">#999999</color>
     <color name="colorRed">#bbff2244</color>
     <color name="colorBlue1">#55c1e9</color>
+    <color name="fraud_result_color_light">#8d99b7</color>
+    <color name="line_color">#eeeeee</color>
+    <color name="list_divider_color">#dadada</color>
+    <color name="transparent_white">#f0ffffff</color>
 </resources>

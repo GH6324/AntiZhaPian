@@ -88,33 +88,44 @@ class UserInfoBean() {
 
     fun CalcProgress() {
         perfectProgress = 0
-        if (!TextUtils.isEmpty(userInfoBean.name) && !TextUtils.isEmpty(userInfoBean.id)) {
+        if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(id)) {
             perfectProgress += 30
         }
-        if (!TextUtils.isEmpty(userInfoBean.region)) {
+        if (!TextUtils.isEmpty(region)) {
             perfectProgress += 10
         }
-        if (!TextUtils.isEmpty(userInfoBean.addr)) {
+        if (!TextUtils.isEmpty(addr)) {
             perfectProgress += 10
         }
-        if (!TextUtils.isEmpty(userInfoBean.professionName)) {
+        if (!TextUtils.isEmpty(professionName)) {
             perfectProgress += 5
         }
-        if (!TextUtils.isEmpty(userInfoBean.urgentContactmob)) {
+        if (!TextUtils.isEmpty(urgentContactmob)) {
             perfectProgress += 20
         }
-        if (!TextUtils.isEmpty(userInfoBean.qq)) {
+        if (!TextUtils.isEmpty(qq)) {
             perfectProgress += 10
         }
-        if (!TextUtils.isEmpty(userInfoBean.wechat)) {
+        if (!TextUtils.isEmpty(wechat)) {
             perfectProgress += 10
         }
-        if (!TextUtils.isEmpty(userInfoBean.email)) {
+        if (!TextUtils.isEmpty(email)) {
             perfectProgress += 5
         }
         if (perfectProgress >= 100) {
             perfectProgress = 100
         }
+    }
+    fun isVerified(): Boolean {
+        if (TextUtils.isEmpty(name))
+            return false
+        if (TextUtils.isEmpty(id))
+            return false
+        if (TextUtils.isEmpty(mobileNumber))
+            return false
+        if (TextUtils.isEmpty(accountId))
+            return false
+        return true
     }
 }
 

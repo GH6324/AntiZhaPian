@@ -2,7 +2,6 @@ package com.demo.antizha.ui.activity
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.os.Bundle
 import android.provider.Settings
 import android.text.InputType
 import android.text.TextUtils
@@ -11,11 +10,11 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.demo.antizha.*
 import com.demo.antizha.databinding.ActivityPersonaInfolBinding
 import com.demo.antizha.util.CRC64
+import com.demo.antizha.util.SpUtils
 import com.github.gzuliyujiang.wheelpicker.AddressPicker
 import com.github.gzuliyujiang.wheelpicker.annotation.AddressMode
 import com.github.gzuliyujiang.wheelpicker.contract.OnAddressPickedListener
@@ -26,7 +25,7 @@ import com.github.gzuliyujiang.wheelpicker.widget.LinkageWheelLayout
 import qiu.niorgai.StatusBarCompat
 
 
-class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
+class PersonalInfoAddActivity : BaseActivity(), OnAddressPickedListener {
     companion object {
         const val pageBase = "Base"
         const val pageArea = "Area"
@@ -49,14 +48,13 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun initPage() {
         supportActionBar?.hide()
         personaInfolBinding = ActivityPersonaInfolBinding.inflate(layoutInflater)
         setContentView(personaInfolBinding.root)
         StatusBarCompat.translucentStatusBar(this as Activity, true, false)
         pageType = intent.getStringExtra("from_page_type").toString()
-        initPage()
+        initPages()
 
 
         personaInfolBinding.piTitle.ivBack.setOnClickListener {
@@ -122,6 +120,11 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
                 }
                 builder.show()
             }
+        }
+        personaInfolBinding.btnClearpermiss.setOnClickListener {
+            SpUtils.setValue(SpUtils.primissAuto, false)
+            SpUtils.setValue(SpUtils.primissPower, false)
+            SpUtils.setValue(SpUtils.primissLock, false)
         }
         personaInfolBinding.btnConfirm.setOnClickListener {
             when (pageType) {
@@ -214,7 +217,7 @@ class PersonalInfoAddActivity : AppCompatActivity(), OnAddressPickedListener {
         }
     }
 
-    private fun initPage() {
+    private fun initPages() {
         when (pageType) {
             pageBase -> {
                 personaInfolBinding.piTitle.tvTitle.text = "基础信息"
