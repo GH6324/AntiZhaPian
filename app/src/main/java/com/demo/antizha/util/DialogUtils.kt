@@ -14,6 +14,7 @@ import com.demo.antizha.ui.IClickListener
 
 class DialogUtils {
     companion object {
+        @RequiresApi(Build.VERSION_CODES.R)
         fun showNormalDialog(context: Context?,
                              title: String?,
                              subTitle: String?,

@@ -20,10 +20,11 @@ class BaseDialog : Dialog {
     }
 
     private var mContext: Context
-    private var display: Display? = null
-    private var dm: DisplayMetrics? = null
-    private var lp: WindowManager.LayoutParams? = null
-    private var mWindow: Window? = null
+    private lateinit var display: Display
+    private lateinit var dm: DisplayMetrics
+    private lateinit var lp: WindowManager.LayoutParams
+    private lateinit var mWindow: Window
+    private lateinit var metrics: WindowMetrics
     var widthDialog = 0.0F
     var heightDialog = 0.0F
     var heightDialogdp = 0.0F
@@ -43,12 +44,11 @@ class BaseDialog : Dialog {
 
     @RequiresApi(Build.VERSION_CODES.R)
     private fun initWindowState() {
-        mWindow = window
-        lp = mWindow!!.attributes
-        val windowManager = (mContext as Activity).windowManager
-        display =  context.getDisplay()
-        dm = DisplayMetrics()
+        mWindow = window!!
+        lp = mWindow.attributes
+        display = context.getDisplay()!!
         dm  = mContext.resources.getDisplayMetrics()
+        metrics = (mContext as Activity).windowManager.getCurrentWindowMetrics()
     }
 
     fun dp2px(f2: Float): Int {
@@ -69,11 +69,12 @@ class BaseDialog : Dialog {
         return findViewById<View>(i2) as T
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     fun initOnCreate() {
         val layoutParams = lp
-        layoutParams!!.gravity = mGravityLayout
+        layoutParams.gravity = mGravityLayout
         if (widthDialog > 0.0) {
-            layoutParams.width = (display!!.width.toDouble() * widthDialog).toInt()
+            layoutParams.width = (metrics.getBounds().width().toDouble() * widthDialog).toInt()
         } else {
             val f2 = widthDialogdp
             if (f2 > 0.0f) {
@@ -81,22 +82,22 @@ class BaseDialog : Dialog {
             } else if (f2 == -2.0f) {
                 layoutParams.width = -2
             } else {
-                layoutParams.width = display!!.width
+                layoutParams.width = metrics.getBounds().width()
             }
         }
         if (heightDialog > 0.0) {
-            lp!!.height = (display!!.height.toDouble() * heightDialog).toInt()
+            lp.height = (metrics.getBounds().height().toDouble() * heightDialog).toInt()
         } else {
             val f3 = heightDialogdp
             if (f3 > 0.0f) {
-                lp!!.height = dp2px(f3)
+                lp.height = dp2px(f3)
             } else if (f3 == -2.0f) {
-                lp!!.height = -2
+                lp.height = -2
             } else {
-                lp!!.height = display!!.height - statusBarHeight
+                lp.height = metrics.getBounds().height() - statusBarHeight
             }
         }
-        mWindow!!.attributes = lp
+        mWindow.attributes = lp
     }
 
     fun setGravityLayout(i2: Int) {

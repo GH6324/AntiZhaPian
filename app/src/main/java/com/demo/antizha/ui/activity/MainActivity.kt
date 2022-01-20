@@ -1,12 +1,13 @@
 package com.demo.antizha.ui.activity
 
-import android.app.Activity
+
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.view.*
+import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
 import androidx.annotation.RequiresApi
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import com.demo.antizha.Dp2Px
 import com.demo.antizha.R
@@ -18,7 +19,6 @@ import com.demo.antizha.ui.fragment.web.WebFragment
 import com.demo.antizha.userInfoBean
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import qiu.niorgai.StatusBarCompat
-
 
 class MainActivity : BaseActivity() {
     private var lastIndex = 0

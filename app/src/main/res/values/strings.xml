@@ -26,4 +26,5 @@
     <string name="srl_header_release">释放立即刷新</string>
     <string name="srl_header_secondary">释放进入二楼</string>
     <string name="srl_header_update">上次更新 M-d HH:mm</string>
+    <string name="id_check_state">将核实请求发送至对方，对方使用被请求的手机号码注册登录本APP进行人脸识别核实身份，结果在核实记录中查看。请求有效时限为24小时\n\n该功能用于在非面对面情况下明确对方真实身份，结果仅供辅助参考，建议结合其他方法综合判断。</string>
 </resources>

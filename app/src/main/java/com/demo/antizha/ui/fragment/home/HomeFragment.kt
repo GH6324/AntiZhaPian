@@ -2,13 +2,16 @@ package com.demo.antizha.ui.fragment.home
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,9 +24,7 @@ import com.demo.antizha.getDataByGet
 import com.demo.antizha.optimizationTimeStr
 import com.demo.antizha.ui.Hicore
 import com.demo.antizha.ui.IClickListener
-import com.demo.antizha.ui.activity.PersonalInfoAddActivity
-import com.demo.antizha.ui.activity.PromosWebDetActivity
-import com.demo.antizha.ui.activity.WarnSettingActivity
+import com.demo.antizha.ui.activity.*
 import com.demo.antizha.userInfoBean
 import com.demo.antizha.util.DialogUtils
 import com.scwang.smart.refresh.footer.BallPulseFooter
@@ -34,6 +35,10 @@ import com.youth.banner.adapter.BannerAdapter
 import com.youth.banner.indicator.RoundLinesIndicator
 import com.youth.banner.listener.OnBannerListener
 import com.youth.banner.util.BannerUtils
+import com.demo.antizha.ui.activity.CheckFraudActivity
+
+
+
 
 
 class ToolBean(val id:Int, val name: String, val imageId: Int)
@@ -53,6 +58,7 @@ class ToolHolderAdapte( private var homeFragment:HomeFragment, private var conte
         holder.name.text = list[i].name
         holder.image.setImageResource(list[i].imageId)
         holder.itemView.setOnClickListener(object : View.OnClickListener {
+            @RequiresApi(Build.VERSION_CODES.R)
             override fun onClick(v: View?) {
                 if (!Hicore.app.isDouble()) {
                     if (list.size <= 0)
@@ -65,10 +71,14 @@ class ToolHolderAdapte( private var homeFragment:HomeFragment, private var conte
                         0->{
                             if (!userInfoBean.isVerified())
                                 DialogUtils.showNormalDialog(context,  "请先进行实名认证","", "取消", "身份验证", homeFragment as IClickListener)
+                            else
+                                homeFragment.startActivity(Intent(homeFragment.activity, ReportNewActivity::class.java))
                         }
                         1->{
                             if (!userInfoBean.isVerified())
                                 DialogUtils.showNormalDialog(context,  "请先进行实名认证","", "取消", "身份验证", homeFragment as IClickListener)
+                            else
+                                homeFragment.startActivity(Intent(homeFragment.activity, ReporterAidActivity::class.java))
                         }
                         2->{
                             val intentInfo = Intent(homeFragment.activity, WarnSettingActivity::class.java)
@@ -77,6 +87,8 @@ class ToolHolderAdapte( private var homeFragment:HomeFragment, private var conte
                         3->{
                             if (!userInfoBean.isVerified())
                                 DialogUtils.showNormalDialog(context,  "请先进行实名认证","", "取消", "身份验证", homeFragment as IClickListener)
+                            else
+                                homeFragment.startActivity(Intent(homeFragment.activity, CheckIDActivity::class.java))
                         }
                     }
                 }
@@ -229,6 +241,7 @@ class HomeFragment : Fragment(), IClickListener {
         root = inflater.inflate(R.layout.fragment_home, container, false)
         initBanner()
         initTool()
+        initWarnCheck()
         initNewCase()
         initRefreshLayout()
         return root
@@ -280,7 +293,16 @@ class HomeFragment : Fragment(), IClickListener {
         val toolAdapter = ToolHolderAdapte(this, root.context, toolBeans)
         toolRecycle.adapter = toolAdapter
     }
-
+    private fun initWarnCheck() {
+        val frameVirusCheck: FrameLayout = root.findViewById(R.id.fl_virus_check)
+        val frameFruadCheck: FrameLayout = root.findViewById(R.id.fl_fruad_check)
+        frameVirusCheck.setOnClickListener(View.OnClickListener { view ->
+            startActivity(Intent(activity, VirusKillingActivity::class.java))
+        })
+        frameFruadCheck.setOnClickListener(View.OnClickListener { view ->
+            startActivity(Intent(activity, CheckFraudActivity::class.java))
+        })
+    }
     private fun initNewCase() {
         val newCaseRecycle: RecyclerView = root.findViewById(R.id.rcy_newcase)
         newCaseRecycle.layoutManager = LinearLayoutManager(root.context)
@@ -357,9 +379,9 @@ class HomeFragment : Fragment(), IClickListener {
     )
 
     private fun getNewBander() {
-        //var s ="""{"data":[{"title":null,"url":null,"openType":0,"imgPath":"https://oss.gjfzpt.cn/preventfraud-static/h5/files/banners/306dd120fd9cb87af9a8fbcd6d0790c7.png","sort":2,"isShow":1,"extraID":null,"startTime":null,"endTime":null,"name":null,"description":null,"id":222537046026227713,"createTime":"2021-08-06 10:52:50","updateTime":"2021-08-06 10:52:50","nodeID":0}],"code":0,"msg":"成功"}"""
-        //addNewBander(s)
-        getDataByGet("https://fzapp.gjfzpt.cn/hicore/api/Banner", callBackFunc = this::addNewBander)
+        var s ="""{"data":[{"title":null,"url":null,"openType":0,"imgPath":"https://oss.gjfzpt.cn/preventfraud-static/h5/files/banners/306dd120fd9cb87af9a8fbcd6d0790c7.png","sort":2,"isShow":1,"extraID":null,"startTime":null,"endTime":null,"name":null,"description":null,"id":222537046026227713,"createTime":"2021-08-06 10:52:50","updateTime":"2021-08-06 10:52:50","nodeID":0}],"code":0,"msg":"成功"}"""
+        addNewBander(s)
+        //getDataByGet("https://fzapp.gjfzpt.cn/hicore/api/Banner", callBackFunc = this::addNewBander)
     }
 
     private fun addNewBander(data: String) {
