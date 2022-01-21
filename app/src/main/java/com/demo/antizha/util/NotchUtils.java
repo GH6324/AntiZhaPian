@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
+import android.view.DisplayCutout;
 import android.view.View;
 import android.view.WindowInsets;
 
@@ -17,24 +18,13 @@ public class NotchUtils {
 	public static boolean isNotch(Activity activity) {
 		if (Build.VERSION.SDK_INT >= 28) {
 			View decorView = activity.getWindow().getDecorView();
-			Class clazz = null;
-			try {
-				clazz = decorView.getClass();
-				Method getRootWindowInsetsM = clazz.getMethod("getRootWindowInsets");
-				getRootWindowInsetsM.setAccessible(true);
-				Object result1 = getRootWindowInsetsM.invoke(decorView);
-
-				WindowInsets windowInsets = (WindowInsets) result1;
-				Class windowInsetsClazz = windowInsets.getClass();
-				Method getDisplayCutoutM = windowInsetsClazz.getMethod("getDisplayCutout");
-				getDisplayCutoutM.setAccessible(true);
-
-				Object result2 = getDisplayCutoutM.invoke(windowInsets);
-				if (result2 != null){
-					return true;
+			if (decorView != null && android.os.Build.VERSION.SDK_INT >= 28){
+				WindowInsets windowInsets = decorView.getRootWindowInsets();
+				if (windowInsets != null) {
+					DisplayCutout DisplayCutout = windowInsets.getDisplayCutout();
+					if (DisplayCutout != null)
+						return true;
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 

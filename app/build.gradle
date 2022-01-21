@@ -10,8 +10,8 @@ android {
         applicationId "com.demo.antizha"
         minSdkVersion 22
         targetSdkVersion 31
-        versionCode 1
-        versionName '1.0.6'
+        versionCode 82
+        versionName "1.1.20"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         applicationIdSuffix 'fork'

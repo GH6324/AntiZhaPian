@@ -9,18 +9,17 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import com.demo.antizha.Dp2Px
-import com.demo.antizha.R
+import com.demo.antizha.*
 import com.demo.antizha.databinding.ActivityMainBinding
-import com.demo.antizha.dp2px
 import com.demo.antizha.ui.fragment.home.HomeFragment
 import com.demo.antizha.ui.fragment.mine.MineFragment
 import com.demo.antizha.ui.fragment.web.WebFragment
-import com.demo.antizha.userInfoBean
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import qiu.niorgai.StatusBarCompat
 
+
 class MainActivity : BaseActivity() {
+    private lateinit var binding: ActivityMainBinding
     private var lastIndex = 0
     private var mFragments = ArrayList<Fragment>()
     @RequiresApi(Build.VERSION_CODES.R)
@@ -28,7 +27,7 @@ class MainActivity : BaseActivity() {
         dp2px = Dp2Px(applicationContext)
         val SPLASH_TIME: Long = 5000
         supportActionBar?.hide()
-        val binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         //隐藏状态栏
         binding.root.windowInsetsController?.hide(WindowInsets.Type.statusBars())
@@ -37,7 +36,7 @@ class MainActivity : BaseActivity() {
         lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         window.attributes = lp
 
-        userInfoBean.Init(this)
+        UserInfoBean.Init()
         binding.navView.setOnNavigationItemSelectedListener { item ->
             resetIcon(binding.navView)
             when (item.itemId) {

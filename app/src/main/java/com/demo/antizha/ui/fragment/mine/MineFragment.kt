@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.demo.antizha.R
 import com.demo.antizha.ui.activity.MinePersonalActivity
-import com.demo.antizha.userInfoBean
+import com.demo.antizha.UserInfoBean
 
 class MineFragment : Fragment() {
 
@@ -39,19 +39,19 @@ class MineFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         val phoneNumber: TextView = root.findViewById(R.id.tv_phone)
-        if (!TextUtils.isEmpty(userInfoBean.mobileNumber)) {
+        if (!TextUtils.isEmpty(UserInfoBean.mobileNumber)) {
             phoneNumber.text =
-                getString(R.string.title_mine) + " " + userInfoBean.mobileNumber.substring(0, 3) +
-                        "******" + userInfoBean.mobileNumber.substring(userInfoBean.mobileNumber.length - 2)
+                getString(R.string.title_mine) + " " + UserInfoBean.mobileNumber.substring(0, 3) +
+                        "******" + UserInfoBean.mobileNumber.substring(UserInfoBean.mobileNumber.length - 2)
         } else {
             phoneNumber.text = generatePhoneNumber()
         }
         val imei: TextView = root.findViewById(R.id.tv_imei)
-        imei.text = userInfoBean.imei
+        imei.text = UserInfoBean.imei
         val accountid: TextView = root.findViewById(R.id.tv_accountid)
-        accountid.text = userInfoBean.accountId
+        accountid.text = UserInfoBean.accountId
         val ver: LinearLayout = root.findViewById(R.id.ll_version)
-        ver.visibility = if (TextUtils.isEmpty(userInfoBean.name)) View.VISIBLE else View.GONE
+        ver.visibility = if (TextUtils.isEmpty(UserInfoBean.name)) View.VISIBLE else View.GONE
     }
 
     private fun generatePhoneNumber(): String {   //手机号生成

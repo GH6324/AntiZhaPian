@@ -20,12 +20,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.Klaxon
 import com.bumptech.glide.Glide
 import com.demo.antizha.R
+import com.demo.antizha.UserInfoBean
 import com.demo.antizha.getDataByGet
 import com.demo.antizha.optimizationTimeStr
 import com.demo.antizha.ui.Hicore
 import com.demo.antizha.ui.IClickListener
 import com.demo.antizha.ui.activity.*
-import com.demo.antizha.userInfoBean
 import com.demo.antizha.util.DialogUtils
 import com.scwang.smart.refresh.footer.BallPulseFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
@@ -35,25 +35,24 @@ import com.youth.banner.adapter.BannerAdapter
 import com.youth.banner.indicator.RoundLinesIndicator
 import com.youth.banner.listener.OnBannerListener
 import com.youth.banner.util.BannerUtils
-import com.demo.antizha.ui.activity.CheckFraudActivity
 
 
-
-
-
-class ToolBean(val id:Int, val name: String, val imageId: Int)
+class ToolBean(val id: Int, val name: String, val imageId: Int)
 
 class ToolViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     var name: TextView = view.findViewById(R.id.tv_name) as TextView
     var image: ImageView = view.findViewById(R.id.iv_icon) as ImageView
 }
 
-class ToolHolderAdapte( private var homeFragment:HomeFragment, private var context: Context, private var list: ArrayList<ToolBean>) :
+class ToolHolderAdapte(private var homeFragment: HomeFragment,
+                       private var context: Context,
+                       private var list: ArrayList<ToolBean>) :
     RecyclerView.Adapter<ToolViewHolder>() {
 
     init {
         notifyDataSetChanged()
     }
+
     override fun onBindViewHolder(holder: ToolViewHolder, i: Int) {
         holder.name.text = list[i].name
         holder.image.setImageResource(list[i].imageId)
@@ -67,28 +66,47 @@ class ToolHolderAdapte( private var homeFragment:HomeFragment, private var conte
                     if (adapterPosition < 0)
                         return
                     val toolBean = list[adapterPosition]
-                    when(toolBean.id){
-                        0->{
-                            if (!userInfoBean.isVerified())
-                                DialogUtils.showNormalDialog(context,  "请先进行实名认证","", "取消", "身份验证", homeFragment as IClickListener)
+                    when (toolBean.id) {
+                        0 -> {
+                            if (!UserInfoBean.isVerified())
+                                DialogUtils.showNormalDialog(context,
+                                    "请先进行实名认证",
+                                    "",
+                                    "取消",
+                                    "身份验证",
+                                    homeFragment as IClickListener)
                             else
-                                homeFragment.startActivity(Intent(homeFragment.activity, ReportNewActivity::class.java))
+                                homeFragment.startActivity(Intent(homeFragment.activity,
+                                    ReportNewActivity::class.java))
                         }
-                        1->{
-                            if (!userInfoBean.isVerified())
-                                DialogUtils.showNormalDialog(context,  "请先进行实名认证","", "取消", "身份验证", homeFragment as IClickListener)
+                        1 -> {
+                            if (!UserInfoBean.isVerified())
+                                DialogUtils.showNormalDialog(context,
+                                    "请先进行实名认证",
+                                    "",
+                                    "取消",
+                                    "身份验证",
+                                    homeFragment as IClickListener)
                             else
-                                homeFragment.startActivity(Intent(homeFragment.activity, ReporterAidActivity::class.java))
+                                homeFragment.startActivity(Intent(homeFragment.activity,
+                                    ReporterAidActivity::class.java))
                         }
-                        2->{
-                            val intentInfo = Intent(homeFragment.activity, WarnSettingActivity::class.java)
+                        2 -> {
+                            val intentInfo =
+                                Intent(homeFragment.activity, WarnSettingActivity::class.java)
                             homeFragment.startActivity(intentInfo)
                         }
-                        3->{
-                            if (!userInfoBean.isVerified())
-                                DialogUtils.showNormalDialog(context,  "请先进行实名认证","", "取消", "身份验证", homeFragment as IClickListener)
+                        3 -> {
+                            if (!UserInfoBean.isVerified())
+                                DialogUtils.showNormalDialog(context,
+                                    "请先进行实名认证",
+                                    "",
+                                    "取消",
+                                    "身份验证",
+                                    homeFragment as IClickListener)
                             else
-                                homeFragment.startActivity(Intent(homeFragment.activity, CheckIDActivity::class.java))
+                                homeFragment.startActivity(Intent(homeFragment.activity,
+                                    CheckIDActivity::class.java))
                         }
                     }
                 }
@@ -146,7 +164,7 @@ class NewCaseHolderAdapte(
                     val intent = Intent(context, PromosWebDetActivity::class.java)
                     intent.putExtra("extra_web_title", "国家反诈中心")
                     val adcode =
-                        if (TextUtils.isEmpty(userInfoBean.adcode)) "110105" else userInfoBean.adcode
+                        if (TextUtils.isEmpty(UserInfoBean.adcode)) "110105" else UserInfoBean.adcode
                     intent.putExtra("extra_web_url", url + "&nodeId=" + adcode)
                     intent.putExtra("extra_web_id", id)
                     intent.putExtra("extra_web_enter", 2)
@@ -265,7 +283,7 @@ class HomeFragment : Fragment(), IClickListener {
                 val intent = Intent(context, PromosWebDetActivity::class.java)
                 intent.putExtra("extra_web_title", data.title)
                 val adcode =
-                    if (TextUtils.isEmpty(userInfoBean.adcode)) "110105" else userInfoBean.adcode
+                    if (TextUtils.isEmpty(UserInfoBean.adcode)) "110105" else UserInfoBean.adcode
                 intent.putExtra("extra_web_url", data.url + "&nodeId=" + adcode)
                 startActivity(intent)
             }
@@ -293,6 +311,7 @@ class HomeFragment : Fragment(), IClickListener {
         val toolAdapter = ToolHolderAdapte(this, root.context, toolBeans)
         toolRecycle.adapter = toolAdapter
     }
+
     private fun initWarnCheck() {
         val frameVirusCheck: FrameLayout = root.findViewById(R.id.fl_virus_check)
         val frameFruadCheck: FrameLayout = root.findViewById(R.id.fl_fruad_check)
@@ -303,6 +322,7 @@ class HomeFragment : Fragment(), IClickListener {
             startActivity(Intent(activity, CheckFraudActivity::class.java))
         })
     }
+
     private fun initNewCase() {
         val newCaseRecycle: RecyclerView = root.findViewById(R.id.rcy_newcase)
         newCaseRecycle.layoutManager = LinearLayoutManager(root.context)
@@ -330,14 +350,18 @@ class HomeFragment : Fragment(), IClickListener {
         }
         getNewCaseApi(1, pageSize)
     }
-    override fun cancelBtn(){
+
+    override fun cancelBtn() {
 
     }
-    override fun clickOKBtn(){
+
+    override fun clickOKBtn() {
         val intent = Intent(activity, PersonalInfoAddActivity::class.java)
         intent.putExtra("from_page_type", PersonalInfoAddActivity.pageBase)
         startActivity(intent)
     }
+
+    class BasePackage(val code: Int)
     class NewCasePackage(val data: NewCaseData, val code: Int)
     class NewCaseData(val total: Int, var rows: ArrayList<NewCase>)
 
@@ -345,11 +369,16 @@ class HomeFragment : Fragment(), IClickListener {
         //https://fzapp.gjfzpt.cn/hicore/api/Information/querylatestcases?Page=1&Rows=2&Sort=releasetime&Order=desc
         getDataByGet(
             "https://fzapp.gjfzpt.cn/hicore/api/Information/querylatestcases?Page=" + page.toString() + "&Rows=" + row.toString() + "&Sort=releasetime&Order=desc",
-            callBackFunc = this::addNewCase
+            addHead = true, callBackFunc = this::addNewCase
         )
     }
 
     private fun addNewCase(data: String) {
+        if (data[0] != '{')
+            return
+        val base = Klaxon().parse<BasePackage>(data)
+        if (base != null && base.code != 0)
+            return
         val json = Klaxon().parse<NewCasePackage>(data)
         if (json != null && json.code == 0) {
             total = json.data.total
@@ -379,12 +408,22 @@ class HomeFragment : Fragment(), IClickListener {
     )
 
     private fun getNewBander() {
-        var s ="""{"data":[{"title":null,"url":null,"openType":0,"imgPath":"https://oss.gjfzpt.cn/preventfraud-static/h5/files/banners/306dd120fd9cb87af9a8fbcd6d0790c7.png","sort":2,"isShow":1,"extraID":null,"startTime":null,"endTime":null,"name":null,"description":null,"id":222537046026227713,"createTime":"2021-08-06 10:52:50","updateTime":"2021-08-06 10:52:50","nodeID":0}],"code":0,"msg":"成功"}"""
-        addNewBander(s)
-        //getDataByGet("https://fzapp.gjfzpt.cn/hicore/api/Banner", callBackFunc = this::addNewBander)
+        if (TextUtils.isEmpty(UserInfoBean.acctoken)) {
+            var s =
+                """{"data":[{"title":null,"url":null,"openType":0,"imgPath":"https://oss.gjfzpt.cn/preventfraud-static/h5/files/banners/306dd120fd9cb87af9a8fbcd6d0790c7.png","sort":2,"isShow":1,"extraID":null,"startTime":null,"endTime":null,"name":null,"description":null,"id":222537046026227713,"createTime":"2021-08-06 10:52:50","updateTime":"2021-08-06 10:52:50","nodeID":0}],"code":0,"msg":"成功"}"""
+            addNewBander(s)
+        } else
+            getDataByGet("https://fzapp.gjfzpt.cn/hicore/api/Banner",
+                addHead = true,
+                callBackFunc = this::addNewBander)
     }
 
     private fun addNewBander(data: String) {
+        if (data[0] != '{')
+            return
+        val base = Klaxon().parse<BasePackage>(data)
+        if (base != null && base.code != 0)
+            return
         val json = Klaxon().parse<NewBanderData>(data)
         if (json != null && json.code == 0 && json.data.size > 0) {
             val imageList = ArrayList<BanderBean>()

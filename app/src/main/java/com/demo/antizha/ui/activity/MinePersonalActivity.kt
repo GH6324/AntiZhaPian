@@ -6,7 +6,7 @@ import android.text.TextUtils
 import android.view.View
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityMinePersonalBinding
-import com.demo.antizha.userInfoBean
+import com.demo.antizha.*
 import qiu.niorgai.StatusBarCompat
 
 //AddressBean
@@ -44,10 +44,10 @@ class MinePersonalActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun onSuccRequest() {
-        infoBinding.tvProgress.text = "已完善" + userInfoBean.perfectProgress + "%"
-        infoBinding.pbProgress.progress = userInfoBean.perfectProgress
+        infoBinding.tvProgress.text = "已完善" + UserInfoBean.perfectProgress + "%"
+        infoBinding.pbProgress.progress = UserInfoBean.perfectProgress
 
-        if (!TextUtils.isEmpty(userInfoBean.name) && !TextUtils.isEmpty(userInfoBean.id)) {
+        if (!TextUtils.isEmpty(UserInfoBean.name) && !TextUtils.isEmpty(UserInfoBean.id)) {
             infoBinding.tvIdfineVar.visibility = View.GONE
             infoBinding.llIdfineVar.visibility = View.VISIBLE
             infoBinding.userName.visibility = View.VISIBLE
@@ -56,48 +56,48 @@ class MinePersonalActivity : BaseActivity(), View.OnClickListener {
             infoBinding.llIdfineVar.visibility = View.GONE
             infoBinding.userName.visibility = View.GONE
         }
-        if (!TextUtils.isEmpty(userInfoBean.name)) {
-            infoBinding.userName.text = "*" + userInfoBean.name
+        if (!TextUtils.isEmpty(UserInfoBean.name)) {
+            infoBinding.userName.text = "*" + UserInfoBean.name
         } else {
             infoBinding.userName.text = ""
         }
-        if (!TextUtils.isEmpty(userInfoBean.id)) {
-            infoBinding.userID.text = userInfoBean.id[0] + "****************" + userInfoBean.id[1]
+        if (!TextUtils.isEmpty(UserInfoBean.id)) {
+            infoBinding.userID.text = UserInfoBean.id[0] + "****************" + UserInfoBean.id[1]
         } else {
             infoBinding.userID.text = ""
         }
-        infoBinding.area.text = userInfoBean.region
-        infoBinding.areaDetail.text = userInfoBean.addr
-        infoBinding.tvJob.text = userInfoBean.professionName
-        if (TextUtils.isEmpty(userInfoBean.urgentContactname) || TextUtils.isEmpty(userInfoBean.urgentContactmob)) {
+        infoBinding.area.text = UserInfoBean.region
+        infoBinding.areaDetail.text = UserInfoBean.addr
+        infoBinding.tvJob.text = UserInfoBean.professionName
+        if (TextUtils.isEmpty(UserInfoBean.urgentContactname) || TextUtils.isEmpty(UserInfoBean.urgentContactmob)) {
             infoBinding.tvEmergCont.text = "添加紧急联系人"
             infoBinding.tvEmergPhone.visibility = View.GONE
             infoBinding.tvAddEmerg.visibility = View.VISIBLE
         } else {
-            infoBinding.tvEmergCont.text = userInfoBean.urgentContactname
+            infoBinding.tvEmergCont.text = UserInfoBean.urgentContactname
             infoBinding.tvEmergPhone.visibility = View.VISIBLE
-            infoBinding.tvEmergPhone.text = "手机号：" + userInfoBean.urgentContactmob
+            infoBinding.tvEmergPhone.text = "手机号：" + UserInfoBean.urgentContactmob
             infoBinding.tvAddEmerg.visibility = View.GONE
         }
-        if (!TextUtils.isEmpty(userInfoBean.qq)) {
+        if (!TextUtils.isEmpty(UserInfoBean.qq)) {
             infoBinding.tvQqCont.visibility = View.VISIBLE
-            infoBinding.tvQqCont.text = userInfoBean.qq
+            infoBinding.tvQqCont.text = UserInfoBean.qq
             infoBinding.tvAddQq.visibility = View.GONE
         } else {
             infoBinding.tvQqCont.visibility = View.GONE
             infoBinding.tvAddQq.visibility = View.VISIBLE
         }
-        if (!TextUtils.isEmpty(userInfoBean.wechat)) {
+        if (!TextUtils.isEmpty(UserInfoBean.wechat)) {
             infoBinding.tvWxCont.visibility = View.VISIBLE
-            infoBinding.tvWxCont.text = userInfoBean.wechat
+            infoBinding.tvWxCont.text = UserInfoBean.wechat
             infoBinding.tvAddWx.visibility = View.GONE
         } else {
             infoBinding.tvWxCont.visibility = View.GONE
             infoBinding.tvAddWx.visibility = View.VISIBLE
         }
-        if (!TextUtils.isEmpty(userInfoBean.email)) {
+        if (!TextUtils.isEmpty(UserInfoBean.email)) {
             infoBinding.tvEmailCont.visibility = View.VISIBLE
-            infoBinding.tvEmailCont.text = userInfoBean.email
+            infoBinding.tvEmailCont.text = UserInfoBean.email
             infoBinding.tvAddEmail.visibility = View.GONE
         } else {
             infoBinding.tvEmailCont.visibility = View.GONE

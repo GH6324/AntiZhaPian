@@ -12,8 +12,8 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import com.beust.klaxon.Klaxon
 import com.demo.antizha.OnWebListener
-import com.demo.antizha.userInfoBean
 import com.demo.antizha.util.UrlUtils
+import com.demo.antizha.*
 
 fun getFixedContext(context: Context): Context {
     return if (Build.VERSION.SDK_INT >= 17) context.createConfigurationContext(Configuration()) else context
@@ -109,18 +109,18 @@ class HiWebView : WebView {
     companion object {
         fun getH5Data(): String {
             val hashMap = HashMap<Any, Any>()
-            hashMap["deviceid"] = userInfoBean.imei
+            hashMap["deviceid"] = UserInfoBean.imei
             hashMap["os-version"] = "0"
-            hashMap["market"] = "oss"
+            hashMap["market"] = Hicore.app.getChannel()
             hashMap["app-version"] = "1.1.20"
             hashMap["app-version-code"] =
                 "82" //hashMap.put("app-version-code", SystemUtils.m() + "");     public static int m() {return 82;}
             hashMap["haveLiuhai"] = "" + 0
-            hashMap["userid"] = userInfoBean.accountId
-            hashMap["pcode"] = userInfoBean.adcode
-            hashMap["nodeId"] = userInfoBean.adcode
-            hashMap["nodeCode"] = userInfoBean.adcode
-            val regions = TextUtils.split(userInfoBean.region, "\\.")
+            hashMap["userid"] = UserInfoBean.accountId
+            hashMap["pcode"] = UserInfoBean.adcode
+            hashMap["nodeId"] = UserInfoBean.adcode
+            hashMap["nodeCode"] = UserInfoBean.adcode
+            val regions = TextUtils.split(UserInfoBean.region, "\\.")
             if (regions.size == 3) {
                 hashMap["pname"] = regions[2]
                 hashMap["nodeName"] = regions[2]

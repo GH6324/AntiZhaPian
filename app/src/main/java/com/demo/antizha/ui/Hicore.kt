@@ -2,6 +2,8 @@ package com.demo.antizha.ui
 
 import android.app.Application
 import android.content.Context
+import android.content.pm.PackageManager
+import java.lang.Exception
 import java.util.*
 
 class Hicore : Application() {
@@ -28,5 +30,13 @@ class Hicore : Application() {
         }
         mLastClickTime = timeInMillis
         return false
+    }
+    fun getChannel(): String {
+        try {
+            return app.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA).metaData.getString("CHANNEL").toString()
+        } catch (e2: Exception) {
+            e2.printStackTrace()
+            return "oss"
+        }
     }
 }

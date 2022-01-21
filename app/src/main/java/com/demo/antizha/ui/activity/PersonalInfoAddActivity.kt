@@ -11,9 +11,12 @@ import android.view.ViewGroup.LayoutParams
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.demo.antizha.*
+import com.demo.antizha.UserInfoBean
 import com.demo.antizha.databinding.ActivityPersonaInfolBinding
 import com.demo.antizha.util.CRC64
+import com.demo.antizha.R
+import com.demo.antizha.ui.Hicore
+import com.demo.antizha.util.AESUtil
 import com.demo.antizha.util.SpUtils
 import com.github.gzuliyujiang.wheelpicker.AddressPicker
 import com.github.gzuliyujiang.wheelpicker.annotation.AddressMode
@@ -23,6 +26,7 @@ import com.github.gzuliyujiang.wheelpicker.entity.CountyEntity
 import com.github.gzuliyujiang.wheelpicker.entity.ProvinceEntity
 import com.github.gzuliyujiang.wheelpicker.widget.LinkageWheelLayout
 import qiu.niorgai.StatusBarCompat
+import java.util.regex.Pattern
 
 
 class PersonalInfoAddActivity : BaseActivity(), OnAddressPickedListener {
@@ -144,56 +148,56 @@ class PersonalInfoAddActivity : BaseActivity(), OnAddressPickedListener {
                     }
                     val accountId: String = personaInfolBinding.etAccountNum.text.toString()
                     var changed = false
-                    if (name != userInfoBean.name || id != userInfoBean.id || mobileNumber != userInfoBean.mobileNumber) {
-                        userInfoBean.name = name
-                        userInfoBean.id = id
-                        userInfoBean.mobileNumber = mobileNumber
+                    if (name != UserInfoBean.name || id != UserInfoBean.id || mobileNumber != UserInfoBean.mobileNumber) {
+                        UserInfoBean.name = name
+                        UserInfoBean.id = id
+                        UserInfoBean.mobileNumber = mobileNumber
                         changed = true
                     }
-                    if (accountId != userInfoBean.accountId) {
-                        userInfoBean.accountId = accountId
+                    if (accountId != UserInfoBean.accountId) {
+                        UserInfoBean.accountId = accountId
                     }
                     val imei = Settings.System.getString(
                         applicationContext?.contentResolver,
                         Settings.Secure.ANDROID_ID
                     )
-                    val crcimei = toHexStr(CRC64.digest(imei.toByteArray()).bytes)
+                    val crcimei = AESUtil.byteArray2HexStr(CRC64.digest(imei.toByteArray()).bytes)
                     val useorigimei = personaInfolBinding.sbOriginalimei.isChecked
-                    if (useorigimei && imei != userInfoBean.imei) {
-                        userInfoBean.imei = imei
-                        userInfoBean.useorigimei = useorigimei
+                    if (useorigimei && imei != UserInfoBean.imei) {
+                        UserInfoBean.imei = imei
+                        UserInfoBean.useorigimei = useorigimei
                         changed = true
                     }
-                    if (!useorigimei && crcimei != userInfoBean.imei) {
-                        userInfoBean.imei = crcimei
-                        userInfoBean.useorigimei = useorigimei
+                    if (!useorigimei && crcimei != UserInfoBean.imei) {
+                        UserInfoBean.imei = crcimei
+                        UserInfoBean.useorigimei = useorigimei
                         changed = true
                     }
                     if (changed)
-                        userInfoBean.commit(this)
+                        UserInfoBean.commit()
                 }
                 pageArea -> {
                     val region: String = personaInfolBinding.etArea.text.toString()
-                    if (region != userInfoBean.region) {
-                        userInfoBean.region = region
-                        userInfoBean.adcode = adcode
-                        userInfoBean.commit(this)
+                    if (region != UserInfoBean.region) {
+                        UserInfoBean.region = region
+                        UserInfoBean.adcode = adcode
+                        UserInfoBean.commit()
                     }
                 }
                 pageAreaDetail -> {
                     val address: String = personaInfolBinding.etAddress.text.toString()
-                    if (address != userInfoBean.addr) {
-                        userInfoBean.addr = address
-                        userInfoBean.commit(this)
+                    if (address != UserInfoBean.addr) {
+                        UserInfoBean.addr = address
+                        UserInfoBean.commit()
                     }
                 }
                 pageEmerg -> {
                     val emergName: String = personaInfolBinding.etEmergName.text.toString()
                     val emergPhoneNum: String = personaInfolBinding.etEmergPhoneNum.text.toString()
-                    if (emergName != userInfoBean.urgentContactname || emergPhoneNum != userInfoBean.urgentContactmob) {
-                        userInfoBean.urgentContactname = emergName
-                        userInfoBean.urgentContactmob = emergPhoneNum
-                        userInfoBean.commit(this)
+                    if (emergName != UserInfoBean.urgentContactname || emergPhoneNum != UserInfoBean.urgentContactmob) {
+                        UserInfoBean.urgentContactname = emergName
+                        UserInfoBean.urgentContactmob = emergPhoneNum
+                        UserInfoBean.commit()
                     }
                 }
                 pageContacts -> {
@@ -205,59 +209,70 @@ class PersonalInfoAddActivity : BaseActivity(), OnAddressPickedListener {
                             .show()
                         return@setOnClickListener
                     }
-                    if (qq != userInfoBean.qq || wx != userInfoBean.wechat || email != userInfoBean.email) {
-                        userInfoBean.qq = qq
-                        userInfoBean.wechat = wx
-                        userInfoBean.email = email
-                        userInfoBean.commit(this)
+                    if (qq != UserInfoBean.qq || wx != UserInfoBean.wechat || email != UserInfoBean.email) {
+                        UserInfoBean.qq = qq
+                        UserInfoBean.wechat = wx
+                        UserInfoBean.email = email
+                        UserInfoBean.commit()
                     }
                 }
             }
             finish()
         }
     }
+    fun stringIsEmail(str: String): Boolean {
+        return Pattern.compile("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$").matcher(str)
+            .matches()
+    }
 
+    fun stringIsUserID(str: String): Boolean {
+        return Pattern.compile("^[1-6][0-9X]$").matcher(str).matches()
+    }
+
+    fun stringIsMobileNumber(str: String): Boolean {
+        return Pattern.compile("^1[0-9]{4}$").matcher(str).matches()
+    }
     private fun initPages() {
         when (pageType) {
             pageBase -> {
                 personaInfolBinding.piTitle.tvTitle.text = "基础信息"
                 personaInfolBinding.clBaseCont.visibility = View.VISIBLE
-                personaInfolBinding.etName.setText(userInfoBean.name)
-                personaInfolBinding.etIdNum.setText(userInfoBean.id)
-                personaInfolBinding.etPhoneNum.setText(userInfoBean.mobileNumber)
-                personaInfolBinding.etAccountNum.setText(userInfoBean.accountId)
-                personaInfolBinding.sbOriginalimei.isChecked = userInfoBean.useorigimei
-                if (TextUtils.isEmpty(userInfoBean.accountId))
+                personaInfolBinding.etName.setText(UserInfoBean.name)
+                personaInfolBinding.etIdNum.setText(UserInfoBean.id)
+                personaInfolBinding.etPhoneNum.setText(UserInfoBean.mobileNumber)
+                personaInfolBinding.etAccountNum.setText(UserInfoBean.accountId)
+                personaInfolBinding.sbOriginalimei.isChecked = UserInfoBean.useorigimei
+                if (TextUtils.isEmpty(UserInfoBean.accountId))
                     personaInfolBinding.etAccountNum.inputType = InputType.TYPE_NULL
 
                 val params: ViewGroup.MarginLayoutParams =
                     personaInfolBinding.btnConfirm.layoutParams as ViewGroup.MarginLayoutParams
-                params.topMargin = dp2px.dp2px(280)
+                params.topMargin = (280 * Hicore.context.resources.displayMetrics.density + 0.5f).toInt()
                 personaInfolBinding.btnConfirm.layoutParams = params
                 personaInfolBinding.btnConfirm.requestLayout()
             }
             pageArea -> {
                 personaInfolBinding.piTitle.tvTitle.text = "地址"
                 personaInfolBinding.clAreaCont.visibility = View.VISIBLE
-                personaInfolBinding.etArea.text = userInfoBean.region
+                personaInfolBinding.etArea.text = UserInfoBean.region
             }
             pageAreaDetail -> {
                 personaInfolBinding.piTitle.tvTitle.text = "详细地址"
                 personaInfolBinding.clAreaDetailContent.visibility = View.VISIBLE
-                personaInfolBinding.etAddress.setText(userInfoBean.addr)
+                personaInfolBinding.etAddress.setText(UserInfoBean.addr)
             }
             pageEmerg -> {
                 personaInfolBinding.piTitle.tvTitle.text = "紧急联系人"
                 personaInfolBinding.clEmergCont.visibility = View.VISIBLE
-                personaInfolBinding.etEmergName.setText(userInfoBean.urgentContactname)
-                personaInfolBinding.etEmergPhoneNum.setText(userInfoBean.urgentContactmob)
+                personaInfolBinding.etEmergName.setText(UserInfoBean.urgentContactname)
+                personaInfolBinding.etEmergPhoneNum.setText(UserInfoBean.urgentContactmob)
             }
             pageContacts -> {
                 personaInfolBinding.piTitle.tvTitle.text = "社交通讯信息"
                 personaInfolBinding.clContactsCont.visibility = View.VISIBLE
-                personaInfolBinding.etQqNum.setText(userInfoBean.qq)
-                personaInfolBinding.etWxNum.setText(userInfoBean.wechat)
-                personaInfolBinding.etEmailNum.setText(userInfoBean.email)
+                personaInfolBinding.etQqNum.setText(UserInfoBean.qq)
+                personaInfolBinding.etWxNum.setText(UserInfoBean.wechat)
+                personaInfolBinding.etEmailNum.setText(UserInfoBean.email)
             }
         }
     }

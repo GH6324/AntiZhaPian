@@ -23,7 +23,7 @@ import com.demo.antizha.R
 import com.demo.antizha.WebViewFrag
 import com.demo.antizha.ui.Hicore
 import com.demo.antizha.ui.activity.PromosWebDetActivity
-import com.demo.antizha.userInfoBean
+import com.demo.antizha.UserInfoBean
 import com.demo.antizha.util.Parameters
 import com.demo.antizha.util.UrlAES
 import com.just.agentweb.AbsAgentWebSettings
@@ -167,7 +167,7 @@ class WebFragment : Fragment() {
 
     private fun viewWeb() {
         val url =
-            "https://fzapph5.gjfzpt.cn/?userid=" + userInfoBean.accountId + "&imei=" + userInfoBean.imei + "&" + (System.currentTimeMillis() / 3000)
+            "https://fzapph5.gjfzpt.cn/?userid=" + UserInfoBean.accountId + "&imei=" + UserInfoBean.imei + "&" + (System.currentTimeMillis() / 3000)
         agentWeb =
             AgentWeb.with(this).setAgentWebParent(mLinearLayout, LinearLayout.LayoutParams(-1, -1))
                 .closeIndicator().setWebViewClient(mWebViewClient)
@@ -202,7 +202,7 @@ class WebFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (TextUtils.isEmpty(userInfoBean.accountId))
+        if (TextUtils.isEmpty(UserInfoBean.accountId))
             return
         if (!isInitWeb) {
             mVirtualWeb.visibility = View.GONE

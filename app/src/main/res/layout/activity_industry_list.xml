@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/piTitle"
+        android:id="@+id/pi_title"
         layout="@layout/rl_title_with_back" />
 
     <androidx.recyclerview.widget.RecyclerView
