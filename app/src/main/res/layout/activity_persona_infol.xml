@@ -19,7 +19,7 @@
         android:background="@drawable/bg_white_crop"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/pi_title">
 
         <TextView
@@ -439,7 +439,7 @@
         android:id="@+id/btn_confirm"
         style="@style/buttonCrop"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="280dp"
+        android:layout_marginTop="200dp"
         android:layout_marginRight="20dp"
         android:gravity="center"
         android:text="确定"

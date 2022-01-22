@@ -7,7 +7,6 @@ import android.os.Build
 import android.util.DisplayMetrics
 import android.view.*
 import androidx.annotation.RequiresApi
-import java.lang.Exception
 
 
 class BaseDialog : Dialog {
@@ -29,13 +28,14 @@ class BaseDialog : Dialog {
     var heightDialog = 0.0F
     var heightDialogdp = 0.0F
     var widthDialogdp = 0.0F
-    var mGravityLayout:Int = 0
+    var mGravityLayout: Int = 0
 
     @RequiresApi(Build.VERSION_CODES.R)
     constructor(context: Context) : super(context) {
         mContext = context
         initWindowState()
     }
+
     @RequiresApi(Build.VERSION_CODES.R)
     constructor(context: Context, i2: Int) : super(context, i2) {
         mContext = context
@@ -47,7 +47,7 @@ class BaseDialog : Dialog {
         mWindow = window!!
         lp = mWindow.attributes
         display = context.getDisplay()!!
-        dm  = mContext.resources.getDisplayMetrics()
+        dm = mContext.resources.getDisplayMetrics()
         metrics = (mContext as Activity).windowManager.getCurrentWindowMetrics()
     }
 
@@ -111,4 +111,4 @@ class BaseDialog : Dialog {
             mGravityLayout = 17
         }
     }
- }
+}

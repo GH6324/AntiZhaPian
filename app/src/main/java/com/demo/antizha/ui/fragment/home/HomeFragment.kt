@@ -315,10 +315,10 @@ class HomeFragment : Fragment(), IClickListener {
     private fun initWarnCheck() {
         val frameVirusCheck: FrameLayout = root.findViewById(R.id.fl_virus_check)
         val frameFruadCheck: FrameLayout = root.findViewById(R.id.fl_fruad_check)
-        frameVirusCheck.setOnClickListener(View.OnClickListener { view ->
+        frameVirusCheck.setOnClickListener(View.OnClickListener { _ ->
             startActivity(Intent(activity, VirusKillingActivity::class.java))
         })
-        frameFruadCheck.setOnClickListener(View.OnClickListener { view ->
+        frameFruadCheck.setOnClickListener(View.OnClickListener { _ ->
             startActivity(Intent(activity, CheckFraudActivity::class.java))
         })
     }

@@ -3,24 +3,20 @@ package com.demo.antizha
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.*
-import android.os.Environment
 import android.provider.Settings
 import android.text.TextUtils
 import com.beust.klaxon.Klaxon
-import com.demo.antizha.util.CRC64
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
-
 import com.demo.antizha.ui.Hicore
-import com.demo.antizha.ui.fragment.home.HomeFragment
+import com.demo.antizha.util.CRC64
 import org.w3c.dom.Document
 import org.w3c.dom.NodeList
-import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileInputStream
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.xml.parsers.DocumentBuilder
 import javax.xml.parsers.DocumentBuilderFactory
+import kotlin.collections.ArrayList
 
 
 object UserInfoBean {
@@ -40,10 +36,10 @@ object UserInfoBean {
     var qq: String = ""
     var wechat: String = ""
     var email: String = ""
-    var acctoken:String = ""           //用户TOKEN只能正常注册登录后获得，否则服务器会拒绝
-    var longitude:String = ""
-    var latitude:String = ""
-    var refTudeTime:String = ""
+    var acctoken: String = ""           //用户TOKEN只能正常注册登录后获得，否则服务器会拒绝
+    var longitude: String = ""
+    var latitude: String = ""
+    var refTudeTime: String = ""
     fun Init() {
         val context: Context = Hicore.context
         val settings: SharedPreferences = context.getSharedPreferences("setting", 0)
@@ -71,16 +67,11 @@ object UserInfoBean {
         latitude = settings.getString("latitude", "").toString()
         refTudeTime = settings.getString("refTudeTime", "").toString()
 
-        if (TextUtils.isEmpty(region))
-        {
+        if (TextUtils.isEmpty(region)) {
             region = "北京市.北京市.东城区"
             adcode = "110101"
-            var Url = "https://api.map.baidu.com/geocoder/v2/?ak=2ae1130ce176b453fb29e59a69b18407&callback=renderOption&output=xml&address=北京市.北京市.东城区&city=北京市"
-            val gettude = getLongitudeLatitude()
-            getDataByGet(Url, addHead = false, callBackFunc = gettude::back)
-            commit()
-        }
-        else
+            checkLongitudeLatitude()
+        } else
             checkLongitudeLatitude()
         getToken()
         CalcProgress()
@@ -142,6 +133,7 @@ object UserInfoBean {
             perfectProgress = 100
         }
     }
+
     fun isVerified(): Boolean {
         if (TextUtils.isEmpty(name))
             return false
@@ -153,47 +145,47 @@ object UserInfoBean {
             return false
         return true
     }
-    class getLongitudeLatitude{
-        fun back(data:String){
-            val iStream: ByteArrayInputStream = ByteArrayInputStream(data.toByteArray(Charsets.UTF_8))
-            val factory: DocumentBuilderFactory = DocumentBuilderFactory.newInstance()
-            val builder: DocumentBuilder = factory.newDocumentBuilder()
-            val document: Document = builder.parse(iStream)
-            val lngList: NodeList = document.getElementsByTagName("lng")
-            val latList: NodeList = document.getElementsByTagName("lat")
-            val random = Random()
-            var flongitude = lngList.item(0).getTextContent().toFloat()
-            flongitude = flongitude + (random.nextInt(200) - 100).toFloat() / 1000.0F
-            var flatitude = latList.item(0).getTextContent().toFloat() + (random.nextInt(200) - 100).toFloat() / 1000.0F
-            flatitude = flatitude + (random.nextInt(200) - 100).toFloat() / 1000.0F
-            longitude = flongitude.toString()
-            latitude = flatitude.toString()
-            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd") // HH:mm:ss
-            val date = Date(System.currentTimeMillis())
-            refTudeTime = simpleDateFormat.format(date)
-            commit()
-        }
-    }
-    fun checkLongitudeLatitude(){
+
+    fun checkLongitudeLatitude() {
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd") // HH:mm:ss
-        val date = Date(System.currentTimeMillis())
-        val dateString = simpleDateFormat.format(date)
-        if (!dateString.equals(refTudeTime))
-        {
+        val currentDate = Date(System.currentTimeMillis())
+        val dateString = simpleDateFormat.format(currentDate)
+        if (!dateString.equals(refTudeTime)) {
             val regions = TextUtils.split(region, "\\.")
-            if (regions.size == 3) {
-                var Url = "address=" + region + "&city=" + regions[1]
-                //Url = URLEncoder.encode(Url, "UTF-8")
-                Url = "https://api.map.baidu.com/geocoder/v2/?ak=2ae1130ce176b453fb29e59a69b18407&callback=renderOption&output=xml&" + Url
-                val gettude = getLongitudeLatitude()
-                getDataByGet(Url, addHead = false, callBackFunc = gettude::back)
+            if (regions.size != 3)
+                return
+            val provinces: List<CProvince>? = parseAddress()
+            if (provinces == null)
+                return
+            for (province in provinces) {
+                if (!province.name.equals(regions[0]))
+                    continue
+                for (city in province.cityList) {
+                    if (!city.name.equals(regions[1]))
+                        continue
+                    for (town in city.townList) {
+                        if (town.name.equals(regions[2])) {
+                            val random = Random()
+                            var flongitude =
+                                town.longitude.toFloat() + (random.nextInt(200) - 100).toFloat() / 1000.0F
+                            var flatitude =
+                                town.latitude.toFloat() + (random.nextInt(200) - 100).toFloat() / 1000.0F
+                            longitude = flongitude.toString()
+                            latitude = flatitude.toString()
+                            refTudeTime = dateString
+                            commit()
+                        }
+                    }
+                }
             }
         }
     }
-    fun getToken(){
+
+    fun getToken() {
         try {
-            val path = Hicore.context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.getPath();
-            val file = File(path , "anote_national.xml")
+            val path =
+                Hicore.context.getExternalFilesDir(null)?.getPath();
+            val file = File(path, "anote_national.xml")
             //file.exists()总是返回false
             if (!file.canRead())
                 return
@@ -202,13 +194,12 @@ object UserInfoBean {
             val builder: DocumentBuilder = factory.newDocumentBuilder()
             val document: Document = builder.parse(iStream)
             val stringList: NodeList = document.getElementsByTagName("string")
-            for (i in 0 .. stringList.getLength() -1)
-            {
+            for (i in 0..stringList.getLength() - 1) {
                 val node = stringList.item(i)
                 val nodeName = node.attributes.item(0).getTextContent()
-                if (nodeName.equals("sp_user_bean"))
-                {
+                if (nodeName.equals("sp_user_bean")) {
                     class TokenPackage(val token: String)
+
                     val value = node.getTextContent()
                     val token = Klaxon().parse<TokenPackage>(value)
                     if (token != null) {
@@ -220,35 +211,37 @@ object UserInfoBean {
 
         }
     }
-}
 
-class AddressBean() {
-    val cityList: ArrayList<AddressBean> = ArrayList<AddressBean>()
-    val code: String = ""
-    val name: String = ""
-    val townList: ArrayList<AddressBean> = ArrayList<AddressBean>()
-}
+    //地区的基类
+    open class AreaBase() {
+        var code: String = ""
+        var name: String = ""
+    }
 
-//地区的基类
-open class AreaBase() {
-    var areaId: String = ""
-    var areaName: String = ""
-}
-
+    //为了避免和库里的命名重了，加个C
 //区
-class District : AreaBase() {
-    var cityId: String = ""
+    class CDistrict : AreaBase() {
+        var longitude: String = ""
+        var latitude: String = ""
+    }
+
+    //市
+    class CCity : AreaBase() {
+        var townList: List<CDistrict> = ArrayList()
+    }
+
+    //省
+    class CProvince : AreaBase() {
+        var cityList: List<CCity> = ArrayList()
+    }
+
+    fun parseAddress(): List<CProvince>? {
+        val inputStream = Hicore.app.getResources().getAssets().open("address.txt");
+        return Klaxon().parseArray<CProvince>(inputStream)
+    }
+
 }
 
-//市
-class City : AreaBase() {
-    var counties: List<District> = ArrayList()
-}
-
-//省
-class Province : AreaBase() {
-    var citys: List<City> = ArrayList()
-}
 
 class Dp2Px {
     constructor(context: Context) {

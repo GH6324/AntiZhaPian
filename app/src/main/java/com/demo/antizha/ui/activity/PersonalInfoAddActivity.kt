@@ -2,34 +2,32 @@ package com.demo.antizha.ui.activity
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.text.InputType
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams
-import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.core.content.ContextCompat
+import androidx.annotation.RequiresApi
+import cn.qqtheme.framework.entity.City
+import cn.qqtheme.framework.entity.County
+import cn.qqtheme.framework.entity.Province
+import cn.qqtheme.framework.picker.AddressPicker
+import com.demo.antizha.R
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.databinding.ActivityPersonaInfolBinding
-import com.demo.antizha.util.CRC64
-import com.demo.antizha.R
 import com.demo.antizha.ui.Hicore
 import com.demo.antizha.util.AESUtil
+import com.demo.antizha.util.CRC64
 import com.demo.antizha.util.SpUtils
-import com.github.gzuliyujiang.wheelpicker.AddressPicker
-import com.github.gzuliyujiang.wheelpicker.annotation.AddressMode
-import com.github.gzuliyujiang.wheelpicker.contract.OnAddressPickedListener
-import com.github.gzuliyujiang.wheelpicker.entity.CityEntity
-import com.github.gzuliyujiang.wheelpicker.entity.CountyEntity
-import com.github.gzuliyujiang.wheelpicker.entity.ProvinceEntity
-import com.github.gzuliyujiang.wheelpicker.widget.LinkageWheelLayout
 import qiu.niorgai.StatusBarCompat
 import java.util.regex.Pattern
 
 
-class PersonalInfoAddActivity : BaseActivity(), OnAddressPickedListener {
+class PersonalInfoAddActivity : BaseActivity(), AddressPicker.OnAddressPickListener {
     companion object {
         const val pageBase = "Base"
         const val pageArea = "Area"
@@ -40,7 +38,16 @@ class PersonalInfoAddActivity : BaseActivity(), OnAddressPickedListener {
 
     private var pageType: String = ""
     private var adcode: String = ""
+    private var provinces: ArrayList<Province> = ArrayList<Province>()
     private lateinit var personaInfolBinding: ActivityPersonaInfolBinding
+    override fun onAddressPicked(province: Province?, city: City?, county: County?) {
+        personaInfolBinding.etArea.text = "${province?.name}.${city?.name}.${county?.name}"
+        if (county != null) {
+            adcode = county.areaId
+        }
+    }
+
+    /*AddressPicker新版本代码
     override fun onAddressPicked(
         province: ProvinceEntity?,
         city: CityEntity?,
@@ -51,7 +58,8 @@ class PersonalInfoAddActivity : BaseActivity(), OnAddressPickedListener {
             adcode = county.code
         }
     }
-
+    */
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun initPage() {
         supportActionBar?.hide()
         personaInfolBinding = ActivityPersonaInfolBinding.inflate(layoutInflater)
@@ -65,6 +73,7 @@ class PersonalInfoAddActivity : BaseActivity(), OnAddressPickedListener {
             finish()
         }
         personaInfolBinding.etArea.setOnClickListener {
+            /*
             val picker = AddressPicker(this)
             picker.setAddressMode(AddressMode.PROVINCE_CITY_COUNTY)
             picker.setOnAddressPickedListener(this)
@@ -90,6 +99,24 @@ class PersonalInfoAddActivity : BaseActivity(), OnAddressPickedListener {
                 val regions = TextUtils.split(region, "\\.")
                 if (regions.size == 3) {
                     picker.setDefaultValue(regions[0], regions[1], regions[2])
+                }
+            }
+            picker.show()
+            */
+            val picker = AddressPicker(this, provinces)
+            picker.setHideProvince(false)
+            picker.setHideCounty(false)
+            picker.setTextColor(mActivity!!.getResources().getColor(R.color.colorGray, null))
+            picker.setSubmitTextColor(mActivity!!.getResources().getColor(R.color.black, null))
+            picker.setCancelTextColor(mActivity!!.getResources().getColor(R.color.colorGray, null))
+            picker.setDividerColor(mActivity!!.getResources().getColor(R.color.colorGray, null))
+            picker.setColumnWeight(0.25f, 0.5f, 0.25f)
+            picker.setOnAddressPickListener(this)
+            val region: String = personaInfolBinding.etArea.text.toString()
+            if (!TextUtils.isEmpty(region)) {
+                val regions = TextUtils.split(region, "\\.")
+                if (regions.size == 3) {
+                    picker.setSelectedItem(regions[0], regions[1], regions[2])
                 }
             }
             picker.show()
@@ -220,6 +247,33 @@ class PersonalInfoAddActivity : BaseActivity(), OnAddressPickedListener {
             finish()
         }
     }
+
+    fun initProvinceList() {
+        var provs = UserInfoBean.parseAddress()
+        if (provs != null) {
+            for (prov in provs) {
+                var province = Province()
+                province.areaId = prov.code
+                province.areaName = prov.name
+                for (cit in prov.cityList) {
+                    var city = City()
+                    city.areaId = cit.code
+                    city.areaName = cit.name
+                    city.provinceId = prov.code
+                    for (town in cit.townList) {
+                        var county = County()
+                        county.areaId = town.code
+                        county.areaName = town.name
+                        county.cityId = cit.code
+                        city.counties.add(county)
+                    }
+                    province.cities.add(city)
+                }
+                provinces.add(province)
+            }
+        }
+    }
+
     fun stringIsEmail(str: String): Boolean {
         return Pattern.compile("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$").matcher(str)
             .matches()
@@ -232,6 +286,7 @@ class PersonalInfoAddActivity : BaseActivity(), OnAddressPickedListener {
     fun stringIsMobileNumber(str: String): Boolean {
         return Pattern.compile("^1[0-9]{4}$").matcher(str).matches()
     }
+
     private fun initPages() {
         when (pageType) {
             pageBase -> {
@@ -247,7 +302,8 @@ class PersonalInfoAddActivity : BaseActivity(), OnAddressPickedListener {
 
                 val params: ViewGroup.MarginLayoutParams =
                     personaInfolBinding.btnConfirm.layoutParams as ViewGroup.MarginLayoutParams
-                params.topMargin = (280 * Hicore.context.resources.displayMetrics.density + 0.5f).toInt()
+                params.topMargin =
+                    (280 * Hicore.context.resources.displayMetrics.density + 0.5f).toInt()
                 personaInfolBinding.btnConfirm.layoutParams = params
                 personaInfolBinding.btnConfirm.requestLayout()
             }
@@ -255,6 +311,10 @@ class PersonalInfoAddActivity : BaseActivity(), OnAddressPickedListener {
                 personaInfolBinding.piTitle.tvTitle.text = "地址"
                 personaInfolBinding.clAreaCont.visibility = View.VISIBLE
                 personaInfolBinding.etArea.text = UserInfoBean.region
+                if (provinces.size == 0)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        initProvinceList()
+                    }, 10)
             }
             pageAreaDetail -> {
                 personaInfolBinding.piTitle.tvTitle.text = "详细地址"
