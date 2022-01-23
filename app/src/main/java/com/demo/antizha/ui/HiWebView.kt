@@ -10,10 +10,11 @@ import android.util.AttributeSet
 import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
 import android.webkit.WebView
-import com.beust.klaxon.Klaxon
-import com.demo.antizha.OnWebListener
-import com.demo.antizha.util.UrlUtils
 import com.demo.antizha.*
+import com.demo.antizha.ui.activity.BaseActivity
+import com.demo.antizha.util.SystemUtils
+import com.demo.antizha.util.UrlUtils
+import com.google.gson.Gson
 
 fun getFixedContext(context: Context): Context {
     return if (Build.VERSION.SDK_INT >= 17) context.createConfigurationContext(Configuration()) else context
@@ -112,10 +113,9 @@ class HiWebView : WebView {
             hashMap["deviceid"] = UserInfoBean.imei
             hashMap["os-version"] = "0"
             hashMap["market"] = Hicore.app.getChannel()
-            hashMap["app-version"] = "1.1.20"
-            hashMap["app-version-code"] =
-                "82" //hashMap.put("app-version-code", SystemUtils.m() + "");     public static int m() {return 82;}
-            hashMap["haveLiuhai"] = "" + 0
+            hashMap["app-version"] = SystemUtils.getAppVer()
+            hashMap["app-version-code"] = SystemUtils.getAppVerCode().toString()
+            hashMap["haveLiuhai"] = BaseActivity.liuhaiHeight.toString()
             hashMap["userid"] = UserInfoBean.accountId
             hashMap["pcode"] = UserInfoBean.adcode
             hashMap["nodeId"] = UserInfoBean.adcode
@@ -126,7 +126,7 @@ class HiWebView : WebView {
                 hashMap["nodeName"] = regions[2]
                 hashMap["nodeProvince"] = regions[0]
             }
-            return Klaxon().toJsonString(hashMap)
+            return Gson().toJson(hashMap)
         }
     }
 

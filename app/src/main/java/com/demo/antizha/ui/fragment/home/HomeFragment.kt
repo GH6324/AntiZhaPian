@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.beust.klaxon.Klaxon
 import com.bumptech.glide.Glide
 import com.demo.antizha.R
 import com.demo.antizha.UserInfoBean
@@ -27,6 +26,7 @@ import com.demo.antizha.ui.Hicore
 import com.demo.antizha.ui.IClickListener
 import com.demo.antizha.ui.activity.*
 import com.demo.antizha.util.DialogUtils
+import com.google.gson.Gson
 import com.scwang.smart.refresh.footer.BallPulseFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -361,8 +361,7 @@ class HomeFragment : Fragment(), IClickListener {
         startActivity(intent)
     }
 
-    class BasePackage(val code: Int)
-    class NewCasePackage(val data: NewCaseData, val code: Int)
+    class NewCasePackage(val data: NewCaseData?, val code: Int)
     class NewCaseData(val total: Int, var rows: ArrayList<NewCase>)
 
     private fun getNewCaseApi(page: Int, row: Int) {
@@ -376,11 +375,8 @@ class HomeFragment : Fragment(), IClickListener {
     private fun addNewCase(data: String) {
         if (data[0] != '{')
             return
-        val base = Klaxon().parse<BasePackage>(data)
-        if (base != null && base.code != 0)
-            return
-        val json = Klaxon().parse<NewCasePackage>(data)
-        if (json != null && json.code == 0) {
+        val json = Gson().fromJson(data, NewCasePackage::class.java)
+        if (json != null && json.code == 0 && json.data != null) {
             total = json.data.total
             refreshLayout.finishLoadMore()
             newCaseAdapter.addNewCase(json.data.rows)
@@ -393,7 +389,7 @@ class HomeFragment : Fragment(), IClickListener {
         }
     }
 
-    class NewBanderData(val data: ArrayList<NewBander>, val code: Int)
+    class NewBanderData(val data: ArrayList<NewBander>?, val code: Int)
     class NewBander(
         val createTime: String?,
         val extraID: Long?,
@@ -421,11 +417,8 @@ class HomeFragment : Fragment(), IClickListener {
     private fun addNewBander(data: String) {
         if (data[0] != '{')
             return
-        val base = Klaxon().parse<BasePackage>(data)
-        if (base != null && base.code != 0)
-            return
-        val json = Klaxon().parse<NewBanderData>(data)
-        if (json != null && json.code == 0 && json.data.size > 0) {
+        val json = Gson().fromJson(data, NewBanderData::class.java)
+        if (json != null && json.code == 0 && json.data != null && json.data.size > 0) {
             val imageList = ArrayList<BanderBean>()
             for (row in json.data) {
                 imageList.add(

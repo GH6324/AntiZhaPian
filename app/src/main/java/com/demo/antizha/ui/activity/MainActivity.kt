@@ -9,19 +9,22 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import com.demo.antizha.*
+import com.demo.antizha.Dp2Px
+import com.demo.antizha.R
+import com.demo.antizha.UserInfoBean
 import com.demo.antizha.databinding.ActivityMainBinding
+import com.demo.antizha.dp2px
 import com.demo.antizha.ui.fragment.home.HomeFragment
 import com.demo.antizha.ui.fragment.mine.MineFragment
 import com.demo.antizha.ui.fragment.web.WebFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import qiu.niorgai.StatusBarCompat
 
-
 class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private var lastIndex = 0
     private var mFragments = ArrayList<Fragment>()
+
     @RequiresApi(Build.VERSION_CODES.R)
     override fun initPage() {
         dp2px = Dp2Px(applicationContext)
@@ -33,7 +36,8 @@ class MainActivity : BaseActivity() {
         binding.root.windowInsetsController?.hide(WindowInsets.Type.statusBars())
         //刘海屏？反正测试的时候不加这些代码，状态栏隐藏后会有一块空白
         val lp = window.attributes
-        lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        lp.layoutInDisplayCutoutMode =
+            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         window.attributes = lp
 
         UserInfoBean.Init()

@@ -3,17 +3,31 @@ package com.demo.antizha
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.*
+import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
-import com.beust.klaxon.Klaxon
+import androidx.annotation.RequiresApi
 import com.demo.antizha.ui.Hicore
 import com.demo.antizha.util.CRC64
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.TypeAdapter
+import com.google.gson.reflect.TypeToken
+import com.google.gson.stream.JsonReader
+import com.google.gson.stream.JsonWriter
 import org.w3c.dom.Document
 import org.w3c.dom.NodeList
 import java.io.File
 import java.io.FileInputStream
+import java.io.IOException
+import java.io.InputStreamReader
+import java.nio.charset.StandardCharsets
+import java.security.InvalidKeyException
+import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 import javax.xml.parsers.DocumentBuilder
 import javax.xml.parsers.DocumentBuilderFactory
 import kotlin.collections.ArrayList
@@ -22,6 +36,8 @@ import kotlin.collections.ArrayList
 object UserInfoBean {
     var perfectProgress: Int = 0     //进度
     var accountId: String = ""      //账号ID
+    var clusterID: Long = 0
+    var exp: Long = 0            //token的过期时间
     var imei: String = ""            //设备码
     var useorigimei: Boolean = false//是否使用原始的机器码
     var name: String = ""           //名字
@@ -37,9 +53,9 @@ object UserInfoBean {
     var wechat: String = ""
     var email: String = ""
     var acctoken: String = ""           //用户TOKEN只能正常注册登录后获得，否则服务器会拒绝
-    var longitude: String = ""
-    var latitude: String = ""
-    var refTudeTime: String = ""
+    var longitude: String = ""          //设置地区的经度，每天会略做随机修改
+    var latitude: String = ""           //设置地区的纬度，每天会略做随机修改
+    var refTudeTime: String = ""        //上次刷新经纬度的日期，和当前不同就该刷新了
     fun Init() {
         val context: Context = Hicore.context
         val settings: SharedPreferences = context.getSharedPreferences("setting", 0)
@@ -66,7 +82,8 @@ object UserInfoBean {
         longitude = settings.getString("longitude", "").toString()
         latitude = settings.getString("latitude", "").toString()
         refTudeTime = settings.getString("refTudeTime", "").toString()
-
+        clusterID = 365268909
+        exp = (System.currentTimeMillis() + 86400000L * 30L) / 1000
         if (TextUtils.isEmpty(region)) {
             region = "北京市.北京市.东城区"
             adcode = "110101"
@@ -80,7 +97,7 @@ object UserInfoBean {
     fun commit() {
         val context: Context = Hicore.context
         val settings: SharedPreferences = context.getSharedPreferences("setting", 0)
-        var editor: SharedPreferences.Editor = settings.edit()
+        val editor: SharedPreferences.Editor = settings.edit()
         editor.putString("account", accountId)
         editor.putString("imei", imei)
         editor.putBoolean("originalimei", useorigimei)
@@ -166,9 +183,9 @@ object UserInfoBean {
                     for (town in city.townList) {
                         if (town.name.equals(regions[2])) {
                             val random = Random()
-                            var flongitude =
+                            val flongitude =
                                 town.longitude.toFloat() + (random.nextInt(200) - 100).toFloat() / 1000.0F
-                            var flatitude =
+                            val flatitude =
                                 town.latitude.toFloat() + (random.nextInt(200) - 100).toFloat() / 1000.0F
                             longitude = flongitude.toString()
                             latitude = flatitude.toString()
@@ -184,7 +201,7 @@ object UserInfoBean {
     fun getToken() {
         try {
             val path =
-                Hicore.context.getExternalFilesDir(null)?.getPath();
+                Hicore.context.getExternalFilesDir(null)?.getPath()
             val file = File(path, "anote_national.xml")
             //file.exists()总是返回false
             if (!file.canRead())
@@ -201,7 +218,7 @@ object UserInfoBean {
                     class TokenPackage(val token: String)
 
                     val value = node.getTextContent()
-                    val token = Klaxon().parse<TokenPackage>(value)
+                    val token = Gson().fromJson(value, TokenPackage::class.java)
                     if (token != null) {
                         acctoken = token.token
                     }
@@ -211,6 +228,95 @@ object UserInfoBean {
 
         }
     }
+
+    private fun hmacSha1(seed: ByteArray, input: ByteArray): ByteArray? {
+        val secretKeySpec = SecretKeySpec(seed, "HmacSHA256")
+        return try {
+            val instance: Mac = Mac.getInstance("HmacSHA256")
+            instance.init(secretKeySpec)
+            instance.doFinal(input)
+        } catch (unused: InvalidKeyException) {
+            null
+        } catch (unused: NoSuchAlgorithmException) {
+            null
+        }
+    }
+
+    class TokenModel {
+        var ClusterID: Long = 0
+        lateinit var ID: String
+        lateinit var MobileNumber: String
+        lateinit var RegionCode: String
+        var Role: String = "Client"
+        var TokenType: Int = 1
+    }
+
+    open class PayLoad(name: String, value: Any) {
+        var name: String = name
+        var value: Any = value
+    }
+
+    class PayLoads {
+        var sub: ArrayList<PayLoad> = ArrayList<PayLoad>()
+        lateinit var TokenModel: String
+        var exp: Long = 0
+        var iss: String = "PreventFraudAPI"
+        var aud: String = "PreventFraudAPP"
+    }
+
+    class PayLoadAdapter : TypeAdapter<PayLoads>() {
+        @Throws(IOException::class)
+        override fun write(out: JsonWriter, value: PayLoads) {
+            out.beginObject()
+            for (payLoad in value.sub) {
+                if (payLoad.value is String) {
+                    out.name(payLoad.name).value(payLoad.value as String)
+                } else if (payLoad.value is Long) {
+                    out.name(payLoad.name).value(payLoad.value as Long)
+                } else if (payLoad.value is Int) {
+                    out.name(payLoad.name).value(payLoad.value as Int)
+                }
+            }
+            out.endObject()
+        }
+
+        @Throws(IOException::class)
+        override fun read(`in`: JsonReader?): PayLoads? {
+            // TODO Auto-generated method stub
+            return null
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun makeToken(): String {       //伪造TOKEN的算法应该是正确的，但是没有正确的seed，算不出正确的TOKEN
+        val headerJson = """{"alg":"HS256","typ":"JWT"}"""
+        val header = Base64.getUrlEncoder().withoutPadding().encodeToString(headerJson.toByteArray(
+            StandardCharsets.UTF_8))
+
+        val gsonBuilder = GsonBuilder().registerTypeAdapter(PayLoads::class.java, PayLoadAdapter())
+        val gson = gsonBuilder.create()
+
+        val tm = TokenModel()
+        tm.ClusterID = clusterID
+        tm.ID = accountId
+        tm.MobileNumber = mobileNumber
+        tm.RegionCode = adcode
+
+        val pl = PayLoads()
+        pl.sub.add(PayLoad("TokenModel", gson.toJson(tm)))
+        pl.sub.add(PayLoad("exp", exp))
+        pl.sub.add(PayLoad("iss", "PreventFraudAPI"))
+        pl.sub.add(PayLoad("aud", "PreventFraudAPP"))
+
+        val payLoadJson = gson.toJson(pl)
+        val payload = Base64.getUrlEncoder().withoutPadding()
+            .encodeToString(payLoadJson.toByteArray(StandardCharsets.UTF_8))
+        val seed = "hicore2020051518".toByteArray(charset("UTF_8"))
+        val value = (header + "." + payload).toByteArray(charset("UTF_8"))
+        val sign = Base64.getUrlEncoder().withoutPadding().encodeToString(hmacSha1(seed, value))
+        return String.format("Bearer %s.%s.%s", header, payload, sign)
+    }
+
 
     //地区的基类
     open class AreaBase() {
@@ -236,10 +342,10 @@ object UserInfoBean {
     }
 
     fun parseAddress(): List<CProvince>? {
-        val inputStream = Hicore.app.getResources().getAssets().open("address.txt");
-        return Klaxon().parseArray<CProvince>(inputStream)
+        val inputStream = Hicore.app.getResources().getAssets().open("address.txt")
+        return Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
+            object : TypeToken<List<CProvince>>() {}.type)
     }
-
 }
 
 

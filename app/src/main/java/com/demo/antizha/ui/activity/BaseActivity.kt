@@ -14,10 +14,13 @@ import qiu.niorgai.StatusBarCompat
 
 
 abstract class BaseActivity : AppCompatActivity() {
+    companion object {
+        var haveLiuhai = false
+        var liuhaiHeight = 0
+    }
+
     var mActivity: Activity? = null
     var typ_ME: Typeface? = null
-    var haveLiuhai = false
-    var liuhaiHeight = 0
 
     abstract fun initPage()
 
