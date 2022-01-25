@@ -8,11 +8,11 @@ import android.provider.Settings
 import android.text.TextUtils
 import androidx.annotation.RequiresApi
 import com.demo.antizha.ui.Hicore
+import com.demo.antizha.util.AddressBean
 import com.demo.antizha.util.CRC64
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.TypeAdapter
-import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
 import org.w3c.dom.Document
@@ -20,7 +20,6 @@ import org.w3c.dom.NodeList
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
-import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import java.security.InvalidKeyException
 import java.security.NoSuchAlgorithmException
@@ -171,7 +170,7 @@ object UserInfoBean {
             val regions = TextUtils.split(region, "\\.")
             if (regions.size != 3)
                 return
-            val provinces: List<CProvince>? = parseAddress()
+            val provinces: List<AddressBean.HiProvince> = AddressBean.getHiProvince()
             if (provinces == null)
                 return
             for (province in provinces) {
@@ -319,33 +318,7 @@ object UserInfoBean {
 
 
     //地区的基类
-    open class AreaBase() {
-        var code: String = ""
-        var name: String = ""
-    }
 
-    //为了避免和库里的命名重了，加个C
-//区
-    class CDistrict : AreaBase() {
-        var longitude: String = ""
-        var latitude: String = ""
-    }
-
-    //市
-    class CCity : AreaBase() {
-        var townList: List<CDistrict> = ArrayList()
-    }
-
-    //省
-    class CProvince : AreaBase() {
-        var cityList: List<CCity> = ArrayList()
-    }
-
-    fun parseAddress(): List<CProvince>? {
-        val inputStream = Hicore.app.getResources().getAssets().open("address.txt")
-        return Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
-            object : TypeToken<List<CProvince>>() {}.type)
-    }
 }
 
 

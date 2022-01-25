@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include android:id="@+id/pi_title" layout="@layout/rl_title_with_back" />
+    <include
+        android:id="@+id/pi_title"
+        layout="@layout/rl_title_with_back" />
 
     <ScrollView
         android:id="@+id/myScrollView"

@@ -18,10 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.demo.antizha.R
-import com.demo.antizha.UserInfoBean
-import com.demo.antizha.getDataByGet
-import com.demo.antizha.optimizationTimeStr
+import com.demo.antizha.*
 import com.demo.antizha.ui.Hicore
 import com.demo.antizha.ui.IClickListener
 import com.demo.antizha.ui.activity.*
@@ -368,15 +365,17 @@ class HomeFragment : Fragment(), IClickListener {
         //https://fzapp.gjfzpt.cn/hicore/api/Information/querylatestcases?Page=1&Rows=2&Sort=releasetime&Order=desc
         getDataByGet(
             "https://fzapp.gjfzpt.cn/hicore/api/Information/querylatestcases?Page=" + page.toString() + "&Rows=" + row.toString() + "&Sort=releasetime&Order=desc",
-            addHead = true, callBackFunc = this::addNewCase
+            addHead = true, "newcase" + page.toString() + ".txt", callBackFunc = this::addNewCase
         )
     }
 
-    private fun addNewCase(data: String) {
+    private fun addNewCase(data: String, saveFile: String) {
         if (data[0] != '{')
             return
         val json = Gson().fromJson(data, NewCasePackage::class.java)
         if (json != null && json.code == 0 && json.data != null) {
+            if (!TextUtils.isEmpty(saveFile))
+                saveBuff2File(data, saveFile)
             total = json.data.total
             refreshLayout.finishLoadMore()
             newCaseAdapter.addNewCase(json.data.rows)
@@ -405,20 +404,22 @@ class HomeFragment : Fragment(), IClickListener {
 
     private fun getNewBander() {
         if (TextUtils.isEmpty(UserInfoBean.acctoken)) {
-            var s =
+            val s =
                 """{"data":[{"title":null,"url":null,"openType":0,"imgPath":"https://oss.gjfzpt.cn/preventfraud-static/h5/files/banners/306dd120fd9cb87af9a8fbcd6d0790c7.png","sort":2,"isShow":1,"extraID":null,"startTime":null,"endTime":null,"name":null,"description":null,"id":222537046026227713,"createTime":"2021-08-06 10:52:50","updateTime":"2021-08-06 10:52:50","nodeID":0}],"code":0,"msg":"成功"}"""
-            addNewBander(s)
+            addNewBander(s, "")
         } else
             getDataByGet("https://fzapp.gjfzpt.cn/hicore/api/Banner",
-                addHead = true,
+                addHead = true, "bander.txt",
                 callBackFunc = this::addNewBander)
     }
 
-    private fun addNewBander(data: String) {
+    private fun addNewBander(data: String, saveFile: String) {
         if (data[0] != '{')
             return
         val json = Gson().fromJson(data, NewBanderData::class.java)
         if (json != null && json.code == 0 && json.data != null && json.data.size > 0) {
+            if (!TextUtils.isEmpty(saveFile))
+                saveBuff2File(data, saveFile)
             val imageList = ArrayList<BanderBean>()
             for (row in json.data) {
                 imageList.add(

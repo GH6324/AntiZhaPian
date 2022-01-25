@@ -15,19 +15,18 @@ import androidx.annotation.RequiresApi
 import cn.qqtheme.framework.entity.City
 import cn.qqtheme.framework.entity.County
 import cn.qqtheme.framework.entity.Province
-import cn.qqtheme.framework.picker.AddressPicker
-import com.demo.antizha.R
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.databinding.ActivityPersonaInfolBinding
 import com.demo.antizha.ui.Hicore
 import com.demo.antizha.util.AESUtil
+import com.demo.antizha.util.AddressBean
 import com.demo.antizha.util.CRC64
 import com.demo.antizha.util.SpUtils
 import qiu.niorgai.StatusBarCompat
 import java.util.regex.Pattern
 
 
-class PersonalInfoAddActivity : BaseActivity(), AddressPicker.OnAddressPickListener {
+class PersonalInfoAddActivity : BaseActivity() {
     companion object {
         const val pageBase = "Base"
         const val pageArea = "Area"
@@ -39,11 +38,14 @@ class PersonalInfoAddActivity : BaseActivity(), AddressPicker.OnAddressPickListe
     private var pageType: String = ""
     private var adcode: String = ""
     private var provinces: ArrayList<Province> = ArrayList<Province>()
-    private lateinit var personaInfolBinding: ActivityPersonaInfolBinding
-    override fun onAddressPicked(province: Province?, city: City?, county: County?) {
-        personaInfolBinding.etArea.text = "${province?.name}.${city?.name}.${county?.name}"
-        if (county != null) {
-            adcode = county.areaId
+    private lateinit var infoBinding: ActivityPersonaInfolBinding
+
+    inner class AddressListener : AddressBean.HiAddressListener() {
+        override fun onAddressPicked(province: Province?, city: City?, county: County?) {
+            infoBinding.etArea.text = "${province?.name}.${city?.name}.${county?.name}"
+            if (county != null) {
+                adcode = county.areaId
+            }
         }
     }
 
@@ -62,17 +64,17 @@ class PersonalInfoAddActivity : BaseActivity(), AddressPicker.OnAddressPickListe
     @RequiresApi(Build.VERSION_CODES.M)
     override fun initPage() {
         supportActionBar?.hide()
-        personaInfolBinding = ActivityPersonaInfolBinding.inflate(layoutInflater)
-        setContentView(personaInfolBinding.root)
+        infoBinding = ActivityPersonaInfolBinding.inflate(layoutInflater)
+        setContentView(infoBinding.root)
         StatusBarCompat.translucentStatusBar(this as Activity, true, false)
         pageType = intent.getStringExtra("from_page_type").toString()
         initPages()
 
 
-        personaInfolBinding.piTitle.ivBack.setOnClickListener {
+        infoBinding.piTitle.ivBack.setOnClickListener {
             finish()
         }
-        personaInfolBinding.etArea.setOnClickListener {
+        infoBinding.etArea.setOnClickListener {
             /*
             val picker = AddressPicker(this)
             picker.setAddressMode(AddressMode.PROVINCE_CITY_COUNTY)
@@ -103,26 +105,15 @@ class PersonalInfoAddActivity : BaseActivity(), AddressPicker.OnAddressPickListe
             }
             picker.show()
             */
-            val picker = AddressPicker(this, provinces)
-            picker.setHideProvince(false)
-            picker.setHideCounty(false)
-            picker.setTextColor(mActivity!!.getResources().getColor(R.color.colorGray, null))
-            picker.setSubmitTextColor(mActivity!!.getResources().getColor(R.color.black, null))
-            picker.setCancelTextColor(mActivity!!.getResources().getColor(R.color.colorGray, null))
-            picker.setDividerColor(mActivity!!.getResources().getColor(R.color.colorGray, null))
-            picker.setColumnWeight(0.25f, 0.5f, 0.25f)
-            picker.setOnAddressPickListener(this)
-            val region: String = personaInfolBinding.etArea.text.toString()
-            if (!TextUtils.isEmpty(region)) {
-                val regions = TextUtils.split(region, "\\.")
-                if (regions.size == 3) {
-                    picker.setSelectedItem(regions[0], regions[1], regions[2])
-                }
-            }
+            val picker =
+                AddressBean.createAddressPicker(this,
+                    infoBinding.etArea.text.toString(),
+                    false,
+                    AddressListener())
             picker.show()
         }
-        personaInfolBinding.etAccountNum.setOnClickListener {
-            if (personaInfolBinding.etAccountNum.inputType == InputType.TYPE_NULL) {
+        infoBinding.etAccountNum.setOnClickListener {
+            if (infoBinding.etAccountNum.inputType == InputType.TYPE_NULL) {
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("关于账号ID")
                 builder.setMessage(
@@ -131,7 +122,7 @@ class PersonalInfoAddActivity : BaseActivity(), AddressPicker.OnAddressPickListe
                             "你也可以随机生成一个，某些功能可能也能用"
                 )
                 builder.setPositiveButton("确定") { _, _ ->
-                    personaInfolBinding.etAccountNum.inputType = InputType.TYPE_CLASS_TEXT
+                    infoBinding.etAccountNum.inputType = InputType.TYPE_CLASS_TEXT
                 }
                 builder.setNegativeButton("取消") { _, _ ->
                 }
@@ -147,22 +138,22 @@ class PersonalInfoAddActivity : BaseActivity(), AddressPicker.OnAddressPickListe
                             '-' -> account += "-"
                         }
                     }
-                    personaInfolBinding.etAccountNum.setText(account)
+                    infoBinding.etAccountNum.setText(account)
                 }
                 builder.show()
             }
         }
-        personaInfolBinding.btnClearpermiss.setOnClickListener {
+        infoBinding.btnClearpermiss.setOnClickListener {
             SpUtils.setValue(SpUtils.primissAuto, false)
             SpUtils.setValue(SpUtils.primissPower, false)
             SpUtils.setValue(SpUtils.primissLock, false)
         }
-        personaInfolBinding.btnConfirm.setOnClickListener {
+        infoBinding.btnConfirm.setOnClickListener {
             when (pageType) {
                 pageBase -> {
-                    val name: String = personaInfolBinding.etName.text.toString()
-                    val id: String = personaInfolBinding.etIdNum.text.toString()
-                    val mobileNumber: String = personaInfolBinding.etPhoneNum.text.toString()
+                    val name: String = infoBinding.etName.text.toString()
+                    val id: String = infoBinding.etIdNum.text.toString()
+                    val mobileNumber: String = infoBinding.etPhoneNum.text.toString()
                     if (!TextUtils.isEmpty(id) && !stringIsUserID(id)) {
                         Toast.makeText(this@PersonalInfoAddActivity, "身份证格式不对", Toast.LENGTH_SHORT)
                             .show()
@@ -173,7 +164,7 @@ class PersonalInfoAddActivity : BaseActivity(), AddressPicker.OnAddressPickListe
                             .show()
                         return@setOnClickListener
                     }
-                    val accountId: String = personaInfolBinding.etAccountNum.text.toString()
+                    val accountId: String = infoBinding.etAccountNum.text.toString()
                     var changed = false
                     if (name != UserInfoBean.name || id != UserInfoBean.id || mobileNumber != UserInfoBean.mobileNumber) {
                         UserInfoBean.name = name
@@ -189,7 +180,7 @@ class PersonalInfoAddActivity : BaseActivity(), AddressPicker.OnAddressPickListe
                         Settings.Secure.ANDROID_ID
                     )
                     val crcimei = AESUtil.byteArray2HexStr(CRC64.digest(imei.toByteArray()).bytes)
-                    val useorigimei = personaInfolBinding.sbOriginalimei.isChecked
+                    val useorigimei = infoBinding.sbOriginalimei.isChecked
                     if (useorigimei && imei != UserInfoBean.imei) {
                         UserInfoBean.imei = imei
                         UserInfoBean.useorigimei = useorigimei
@@ -204,7 +195,7 @@ class PersonalInfoAddActivity : BaseActivity(), AddressPicker.OnAddressPickListe
                         UserInfoBean.commit()
                 }
                 pageArea -> {
-                    val region: String = personaInfolBinding.etArea.text.toString()
+                    val region: String = infoBinding.etArea.text.toString()
                     if (region != UserInfoBean.region) {
                         UserInfoBean.region = region
                         UserInfoBean.adcode = adcode
@@ -212,15 +203,15 @@ class PersonalInfoAddActivity : BaseActivity(), AddressPicker.OnAddressPickListe
                     }
                 }
                 pageAreaDetail -> {
-                    val address: String = personaInfolBinding.etAddress.text.toString()
+                    val address: String = infoBinding.etAddress.text.toString()
                     if (address != UserInfoBean.addr) {
                         UserInfoBean.addr = address
                         UserInfoBean.commit()
                     }
                 }
                 pageEmerg -> {
-                    val emergName: String = personaInfolBinding.etEmergName.text.toString()
-                    val emergPhoneNum: String = personaInfolBinding.etEmergPhoneNum.text.toString()
+                    val emergName: String = infoBinding.etEmergName.text.toString()
+                    val emergPhoneNum: String = infoBinding.etEmergPhoneNum.text.toString()
                     if (emergName != UserInfoBean.urgentContactname || emergPhoneNum != UserInfoBean.urgentContactmob) {
                         UserInfoBean.urgentContactname = emergName
                         UserInfoBean.urgentContactmob = emergPhoneNum
@@ -228,9 +219,9 @@ class PersonalInfoAddActivity : BaseActivity(), AddressPicker.OnAddressPickListe
                     }
                 }
                 pageContacts -> {
-                    val qq: String = personaInfolBinding.etQqNum.text.toString()
-                    val wx: String = personaInfolBinding.etWxNum.text.toString()
-                    val email: String = personaInfolBinding.etEmailNum.text.toString()
+                    val qq: String = infoBinding.etQqNum.text.toString()
+                    val wx: String = infoBinding.etWxNum.text.toString()
+                    val email: String = infoBinding.etEmailNum.text.toString()
                     if (!TextUtils.isEmpty(email) && !stringIsEmail(email)) {
                         Toast.makeText(this@PersonalInfoAddActivity, "邮箱格式不对", Toast.LENGTH_SHORT)
                             .show()
@@ -245,32 +236,6 @@ class PersonalInfoAddActivity : BaseActivity(), AddressPicker.OnAddressPickListe
                 }
             }
             finish()
-        }
-    }
-
-    fun initProvinceList() {
-        var provs = UserInfoBean.parseAddress()
-        if (provs != null) {
-            for (prov in provs) {
-                var province = Province()
-                province.areaId = prov.code
-                province.areaName = prov.name
-                for (cit in prov.cityList) {
-                    var city = City()
-                    city.areaId = cit.code
-                    city.areaName = cit.name
-                    city.provinceId = prov.code
-                    for (town in cit.townList) {
-                        var county = County()
-                        county.areaId = town.code
-                        county.areaName = town.name
-                        county.cityId = cit.code
-                        city.counties.add(county)
-                    }
-                    province.cities.add(city)
-                }
-                provinces.add(province)
-            }
         }
     }
 
@@ -290,49 +255,49 @@ class PersonalInfoAddActivity : BaseActivity(), AddressPicker.OnAddressPickListe
     private fun initPages() {
         when (pageType) {
             pageBase -> {
-                personaInfolBinding.piTitle.tvTitle.text = "基础信息"
-                personaInfolBinding.clBaseCont.visibility = View.VISIBLE
-                personaInfolBinding.etName.setText(UserInfoBean.name)
-                personaInfolBinding.etIdNum.setText(UserInfoBean.id)
-                personaInfolBinding.etPhoneNum.setText(UserInfoBean.mobileNumber)
-                personaInfolBinding.etAccountNum.setText(UserInfoBean.accountId)
-                personaInfolBinding.sbOriginalimei.isChecked = UserInfoBean.useorigimei
+                infoBinding.piTitle.tvTitle.text = "基础信息"
+                infoBinding.clBaseCont.visibility = View.VISIBLE
+                infoBinding.etName.setText(UserInfoBean.name)
+                infoBinding.etIdNum.setText(UserInfoBean.id)
+                infoBinding.etPhoneNum.setText(UserInfoBean.mobileNumber)
+                infoBinding.etAccountNum.setText(UserInfoBean.accountId)
+                infoBinding.sbOriginalimei.isChecked = UserInfoBean.useorigimei
                 if (TextUtils.isEmpty(UserInfoBean.accountId))
-                    personaInfolBinding.etAccountNum.inputType = InputType.TYPE_NULL
+                    infoBinding.etAccountNum.inputType = InputType.TYPE_NULL
 
                 val params: ViewGroup.MarginLayoutParams =
-                    personaInfolBinding.btnConfirm.layoutParams as ViewGroup.MarginLayoutParams
+                    infoBinding.btnConfirm.layoutParams as ViewGroup.MarginLayoutParams
                 params.topMargin =
                     (280 * Hicore.context.resources.displayMetrics.density + 0.5f).toInt()
-                personaInfolBinding.btnConfirm.layoutParams = params
-                personaInfolBinding.btnConfirm.requestLayout()
+                infoBinding.btnConfirm.layoutParams = params
+                infoBinding.btnConfirm.requestLayout()
             }
             pageArea -> {
-                personaInfolBinding.piTitle.tvTitle.text = "地址"
-                personaInfolBinding.clAreaCont.visibility = View.VISIBLE
-                personaInfolBinding.etArea.text = UserInfoBean.region
+                infoBinding.piTitle.tvTitle.text = "地址"
+                infoBinding.clAreaCont.visibility = View.VISIBLE
+                infoBinding.etArea.text = UserInfoBean.region
                 if (provinces.size == 0)
                     Handler(Looper.getMainLooper()).postDelayed({
-                        initProvinceList()
+                        provinces = AddressBean.getProvince()
                     }, 10)
             }
             pageAreaDetail -> {
-                personaInfolBinding.piTitle.tvTitle.text = "详细地址"
-                personaInfolBinding.clAreaDetailContent.visibility = View.VISIBLE
-                personaInfolBinding.etAddress.setText(UserInfoBean.addr)
+                infoBinding.piTitle.tvTitle.text = "详细地址"
+                infoBinding.clAreaDetailContent.visibility = View.VISIBLE
+                infoBinding.etAddress.setText(UserInfoBean.addr)
             }
             pageEmerg -> {
-                personaInfolBinding.piTitle.tvTitle.text = "紧急联系人"
-                personaInfolBinding.clEmergCont.visibility = View.VISIBLE
-                personaInfolBinding.etEmergName.setText(UserInfoBean.urgentContactname)
-                personaInfolBinding.etEmergPhoneNum.setText(UserInfoBean.urgentContactmob)
+                infoBinding.piTitle.tvTitle.text = "紧急联系人"
+                infoBinding.clEmergCont.visibility = View.VISIBLE
+                infoBinding.etEmergName.setText(UserInfoBean.urgentContactname)
+                infoBinding.etEmergPhoneNum.setText(UserInfoBean.urgentContactmob)
             }
             pageContacts -> {
-                personaInfolBinding.piTitle.tvTitle.text = "社交通讯信息"
-                personaInfolBinding.clContactsCont.visibility = View.VISIBLE
-                personaInfolBinding.etQqNum.setText(UserInfoBean.qq)
-                personaInfolBinding.etWxNum.setText(UserInfoBean.wechat)
-                personaInfolBinding.etEmailNum.setText(UserInfoBean.email)
+                infoBinding.piTitle.tvTitle.text = "社交通讯信息"
+                infoBinding.clContactsCont.visibility = View.VISIBLE
+                infoBinding.etQqNum.setText(UserInfoBean.qq)
+                infoBinding.etWxNum.setText(UserInfoBean.wechat)
+                infoBinding.etEmailNum.setText(UserInfoBean.email)
             }
         }
     }

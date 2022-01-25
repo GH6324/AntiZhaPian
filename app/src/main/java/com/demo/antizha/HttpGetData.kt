@@ -2,16 +2,19 @@ package com.demo.antizha
 
 import android.os.Handler
 import android.os.Looper
+import com.demo.antizha.ui.Hicore
 import com.demo.antizha.util.RequestParamInterceptor
 import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.HttpUrl
 import okhttp3.Response
-import java.io.IOException
+import java.io.*
 
 
-fun getDataByGet(url: String, addHead:Boolean, callBackFunc: (data: String) -> Unit): Int {
+fun getDataByGet(url: String,
+                 addHead: Boolean,
+                 saveFile: String,
+                 callBackFunc: (data: String, saveFile: String) -> Unit): Int {
     try {
         val builder = OkHttpClient.Builder()
         if (addHead)
@@ -25,7 +28,7 @@ fun getDataByGet(url: String, addHead:Boolean, callBackFunc: (data: String) -> U
         //异步请求
         call.enqueue(object : Callback {
             override fun onFailure(call: okhttp3.Call, e: IOException) {
-                callBackFunc(" ")
+                callBackFunc(" ", "")
             }
 
             @Throws(IOException::class)
@@ -33,7 +36,7 @@ fun getDataByGet(url: String, addHead:Boolean, callBackFunc: (data: String) -> U
                 //更新界面必须在UI线程里调用，所以需要用Handler
                 Handler(Looper.getMainLooper()).postDelayed({
                     //notifyDataSetChanged必须在UI线程里调用，所以需要用Handler
-                    callBackFunc("" + response.body?.string())
+                    callBackFunc("" + response.body?.string(), saveFile)
                 }, 0)
 
             }
@@ -42,4 +45,26 @@ fun getDataByGet(url: String, addHead:Boolean, callBackFunc: (data: String) -> U
         //callBackFunc("")
     }
     return 1
+}
+
+fun saveBuff2File(data: String, saveFile: String) {
+    val path = Hicore.context.getExternalFilesDir(null)?.getPath()
+    val file = File(path, saveFile)
+    val fileWriter = FileOutputStream(file, false)
+    fileWriter.write(data.toByteArray(charset("UTF_8")))
+    fileWriter.close()
+}
+
+fun loadBuff4File(readFile: String): String {
+    val path = Hicore.context.getExternalFilesDir(null)?.getPath()
+    val file = File(path, readFile)
+    //file.exists()总是返回false
+    if (!file.canRead())
+        return ""
+    val inStream = FileInputStream(file)
+    val inputReader = InputStreamReader(inStream, charset("UTF_8"))
+    inputReader.encoding
+    val buff = inputReader.readText()
+    inStream.close()
+    return buff
 }

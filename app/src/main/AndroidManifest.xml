@@ -5,7 +5,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
 
     <application
@@ -16,7 +17,10 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data android:name="CHANNEL" android:value="oss"/>
+        <meta-data
+            android:name="CHANNEL"
+            android:value="oss" />
+
         <activity
             android:name=".ui.activity.MainActivity"
             android:exported="true"
@@ -60,6 +64,10 @@
         <activity
             android:name=".ui.activity.VirusKillingActivity"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.TagFlowLaoutActivity"
+            android:screenOrientation="portrait"></activity>
+
     </application>
 
 </manifest>
