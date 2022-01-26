@@ -36,8 +36,8 @@ abstract class BaseActivity : AppCompatActivity() {
         adjustFontScale(this)
         setStatusBar();
         initPage()
-        haveLiuhai = NotchUtils.isNotch(this);
-        liuhaiHeight = NotchUtils.getNotchHeight(this);
+        haveLiuhai = NotchUtils.haveLiuhai(this);
+        liuhaiHeight = NotchUtils.liuhaiHeight(this);
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

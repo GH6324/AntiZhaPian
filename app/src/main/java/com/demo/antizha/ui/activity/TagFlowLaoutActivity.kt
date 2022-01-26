@@ -77,7 +77,7 @@ class TagFlowLaoutActivity : BaseActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    fun initTagAdapter(reportZPBean: ReportZPBean, i: Int) {
+    fun initTagAdapter(reportZPBean: ReportZPBean, idx: Int) {
         val inflate: View = LayoutInflater.from(mActivity)
             .inflate(R.layout.layout_tag_flow, null as ViewGroup?, false)
         infoBinding.llParent.addView(inflate)
@@ -86,8 +86,8 @@ class TagFlowLaoutActivity : BaseActivity() {
         val tagFlowLayout = inflate.findViewById<FlowLayout>(R.id.flow_layout)
         tagFlowLayout.tag = false
         inflate.findViewById<TextView>(R.id.tag_title).setText(reportZPBean.name)
-        tvDivBg.visibility = if (i % 4 == 0) View.VISIBLE else View.GONE
-        if (reportZPBean.children == null || reportZPBean.children!!.size === 0) {
+        tvDivBg.visibility = if (idx % 4 == 0) View.VISIBLE else View.GONE
+        if (reportZPBean.children == null || reportZPBean.children!!.size == 0) {
             val arrayList = ArrayList<ReportZPEleBean>()
             val reportZPEleBean = ReportZPEleBean()
             reportZPEleBean.id = reportZPBean.id

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="buttonCrop" parent="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:textSize">@dimen/button_font_size_one</item>
         <item name="android:textColor">@drawable/button_textcolor</item>
@@ -9,6 +10,7 @@
         <item name="android:layout_marginLeft">@dimen/dp_15</item>
         <item name="android:layout_marginRight">@dimen/dp_15</item>
     </style>
+
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@style/anim_theme</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -16,12 +18,16 @@
         <item name="colorPrimary">#2e8abb</item>
         <item name="colorPrimaryDark">#2946e6</item>
     </style>
+
     <style name="AppTheme_AppBarOverlay" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar"></style>
+
     <style name="AppTheme_NoActionBar" parent="@style/AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme_PopupOverlay" parent="@style/ThemeOverlay.AppCompat.Light"></style>
+
     <style name="Base.ThemeOverlay.AppCompat.Light" parent="@style/Platform.ThemeOverlay.AppCompat.Light">
         <item name="android:colorForeground">@color/foreground_material_light</item>
         <item name="android:colorBackground">@color/background_material_light</item>
@@ -53,10 +59,12 @@
         <item name="colorSwitchThumbNormal">@color/switch_thumb_material_light</item>
         <item name="isLightTheme">true</item>
     </style>
+
     <style name="anim_theme">
         <item name="android:activityOpenEnterAnimation">@anim/slide_right_in</item>
         <item name="android:activityCloseExitAnimation">@anim/slide_right_out</item>
     </style>
+
     <style name="base_dialog_style" parent="@android:style/Theme.Dialog">
         <item name="android:backgroundDimAmount">0.5</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -67,5 +75,15 @@
         <item name="android:background">@android:color/transparent</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="button" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:textSize">@dimen/button_font_size_one</item>
+        <item name="android:textColor">@drawable/button_textcolor</item>
+        <item name="android:background">@drawable/button_bg</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dp_40</item>
+        <item name="android:layout_marginLeft">@dimen/dp_15</item>
+        <item name="android:layout_marginRight">@dimen/dp_15</item>
     </style>
 </resources>

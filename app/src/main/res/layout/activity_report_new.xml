@@ -242,35 +242,52 @@
                 android:orientation="vertical"
                 app:layout_constraintTop_toBottomOf="@id/ll_case_num2">
 
-                <include layout="@layout/layout_elec_call" />
+                <include
+                    android:id="@+id/ly_call"
+                    layout="@layout/layout_elec_call" />
 
                 <include layout="@layout/layout_elec_line" />
 
-                <include layout="@layout/layout_elec_sms" />
+                <include
+                    android:id="@+id/ly_sms"
+                    layout="@layout/layout_elec_sms" />
 
                 <include layout="@layout/layout_elec_line" />
 
-                <include layout="@layout/layout_elec_app" />
+                <include
+                    android:id="@+id/ly_app"
+                    layout="@layout/layout_elec_app" />
 
                 <include layout="@layout/layout_elec_line" />
 
-                <include layout="@layout/layout_elec_picture" />
+                <include
+                    android:id="@+id/ly_picture"
+                    layout="@layout/layout_elec_picture" />
 
                 <include layout="@layout/layout_elec_line" />
 
-                <include layout="@layout/layout_elec_audio" />
+                <include
+                    android:id="@+id/ly_audio"
+                    layout="@layout/layout_elec_audio" />
 
                 <include layout="@layout/layout_elec_video" />
 
-                <include layout="@layout/layout_elec_url" />
+                <include
+                    android:id="@+id/ly_url"
+                    layout="@layout/layout_elec_url" />
 
                 <include layout="@layout/layout_elec_line" />
 
-                <include layout="@layout/layout_elec_contact" />
+                <include
+                    android:id="@+id/ly_contact"
+                    layout="@layout/layout_elec_contact" />
 
                 <include layout="@layout/layout_elec_line" />
 
-                <include layout="@layout/layout_elec_deal" />
+                <include
+                    android:id="@+id/ly_deal"
+                    layout="@layout/layout_elec_deal" />
+
             </LinearLayout>
 
             <TextView

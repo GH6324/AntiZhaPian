@@ -171,8 +171,6 @@ object UserInfoBean {
             if (regions.size != 3)
                 return
             val provinces: List<AddressBean.HiProvince> = AddressBean.getHiProvince()
-            if (provinces == null)
-                return
             for (province in provinces) {
                 if (!province.name.equals(regions[0]))
                     continue

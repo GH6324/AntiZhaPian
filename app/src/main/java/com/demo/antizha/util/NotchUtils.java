@@ -1,201 +1,132 @@
 package com.demo.antizha.util;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 import android.app.Activity;
-import android.content.Context;
 import android.os.Build;
-import android.text.TextUtils;
 import android.view.DisplayCutout;
 import android.view.View;
 import android.view.WindowInsets;
 
+import com.demo.antizha.ui.Hicore;
+
+import java.lang.reflect.Method;
+
+
 public class NotchUtils {
-	/**
-	 * 是否是刘海屏
-	 */
-	public static boolean isNotch(Activity activity) {
-		if (Build.VERSION.SDK_INT >= 28) {
-			View decorView = activity.getWindow().getDecorView();
-			if (decorView != null && android.os.Build.VERSION.SDK_INT >= 28){
-				WindowInsets windowInsets = decorView.getRootWindowInsets();
-				if (windowInsets != null) {
-					DisplayCutout DisplayCutout = windowInsets.getDisplayCutout();
-					if (DisplayCutout != null)
-						return true;
-				}
-			}
-		}
 
-		String brand = android.os.Build.BRAND;
+    public static int liuhaiHeight(Activity activity) {
+        if (!haveLiuhai(activity)) {
+            return 0;
+        }
+        calcLiuhaiHeight();
+        return 0;
+    }
 
-		if (TextUtils.isEmpty(brand)) {
-			return false;
-		}
+    public static boolean haveLiuhai(Activity activity) {
+        return "1".equals(getPropertie("ro.miui.notch")) || isHuaWeiNotch() || isOppoNotch() || isVivoNotch() || getDisplayCutout(activity) != null;
+    }
 
-		if (brand.equalsIgnoreCase("xiaomi")) {
-			return isXiaomiNotch(activity);
-		} else if (brand.equalsIgnoreCase("HONOR") || brand.equalsIgnoreCase("HUAWEI")) {
-			return isHuaWeiNotch(activity);
-		} else if (brand.equalsIgnoreCase("OPPO")) {
-			return isOppoNotch(activity);
-		} else if (brand.equalsIgnoreCase("vivo")) {
-			return isVivoNotch(activity);
-		} else if (brand.equalsIgnoreCase("Meizu")) {
-			return isMeizuNotch(activity);
-		}
+    public static int xiaomiliuhaiHeight() {
+        int identifier = Hicore.app.getResources().getIdentifier("notch_height", "dimen", "android");
+        if (identifier > 0) {
+            return Hicore.app.getResources().getDimensionPixelSize(identifier);
+        }
+        return 0;
+    }
 
-		return false;
-	}
+    public static boolean isHuaWeiNotch() {
+        try {
+            ClassLoader classLoader = Hicore.app.getClassLoader();
+            Class class_HwNotchSizeUtil = classLoader.loadClass("com.huawei.android.util.HwNotchSizeUtil");
+            Method method_hasNotch = class_HwNotchSizeUtil.getMethod("hasNotchInScreen");
+            return (boolean) method_hasNotch.invoke(class_HwNotchSizeUtil);
+        } catch (Exception unused) {
+            return false;
+        }
+    }
 
-	/**
-	 * 获取刘海屏区域的宽度
-	 */
-	public static int getNotchWidth(Context context) {
-		String brand = android.os.Build.BRAND;
+    public static boolean isOppoNotch() {
+        return Hicore.app.getPackageManager().hasSystemFeature("com.oppo.feature.screen.heteromorphism");
+    }
 
-		if (brand.equalsIgnoreCase("xiaomi")) {
-			int resourceId = context.getResources().getIdentifier("notch_width", "dimen", "android");
-			if (resourceId > 0) {
-				return context.getResources().getDimensionPixelSize(resourceId);
-			}
-		} else if (brand.equalsIgnoreCase("HONOR") || brand.equalsIgnoreCase("HUAWEI")) {
-			int[] getNotchSize = getHuaweiNotchSize(context);
-			if (getNotchSize[0] > 0) {
-				return getNotchSize[0];
-			}
-		} else if (brand.equalsIgnoreCase("OPPO")) {
-			String property = SystemProperties.getString("ro.oppo.screen.heteromorphism");
-			// 378,0:702,80
-			String[] array = property.split(":");
-			String[] array_1 = array[0].split(",");
-			String[] array_2 = array[1].split(",");
-			int width = Integer.parseInt(array_2[0]) - Integer.parseInt(array_1[0]);
-			return width;
-		} else if (brand.equalsIgnoreCase("vivo")) {
+    public static boolean isVivoNotch() {
+        try {
+            ClassLoader classLoader = Hicore.app.getClassLoader();
+            Class class_FtFeature = classLoader.loadClass("android.util.FtFeature");
+            Method method_Feature = class_FtFeature.getMethod("isFeatureSupport", Integer.TYPE);
+            return ((Boolean) method_Feature.invoke(class_FtFeature, new Object[]{32}));
+        } catch (Exception unused) {
+            return false;
+        }
+    }
 
-		}
+    public static boolean isHuawei() {
+        return "huawei".equals(Build.MANUFACTURER.toLowerCase());
+    }
 
-		return -1;
-	}
+    public static boolean isOppo() {
+        return "oppo".equals(Build.MANUFACTURER.toLowerCase());
+    }
 
-	/**
-	 * 获取刘海屏区域的高度
-	 */
-	public static int getNotchHeight(Context context) {
-		String brand = android.os.Build.BRAND;
+    public static boolean isVivo() {
+        return "vivo".equals(Build.MANUFACTURER.toLowerCase());
+    }
 
-		if (brand.equalsIgnoreCase("xiaomi")) {
-			int resourceId = context.getResources().getIdentifier("notch_height", "dimen", "android");
-			if (resourceId > 0) {
-				return context.getResources().getDimensionPixelSize(resourceId);
-			}
-		} else if (brand.equalsIgnoreCase("HONOR") || brand.equalsIgnoreCase("HUAWEI")) {
-			int[] getNotchSize = getHuaweiNotchSize(context);
-			if (getNotchSize[1] > 0) {
-				return getNotchSize[1];
-			}
-		} else if (brand.equalsIgnoreCase("OPPO")) {
-			String property = SystemProperties.getString("ro.oppo.screen.heteromorphism");
-			// 378,0:702,80
-			String[] array = property.split(":");
-			String[] array_1 = array[0].split(",");
-			String[] array_2 = array[1].split(",");
-			int height = Integer.parseInt(array_2[1]) - Integer.parseInt(array_1[1]);
-			return height;
-		}
+    public static boolean isXiaomi() {
+        return "Xiaomi".equals(Build.MANUFACTURER.toLowerCase());
+    }
 
-		return -1;
-	}
+    private static int calcLiuhaiHeight() {
+        if (isXiaomi()) {
+            return xiaomiliuhaiHeight();
+        }
+        if (isHuawei()) {
+            return getHuaweiNotchSize()[0];
+        }
+        if (isOppo()) {
+            return 80;
+        }
+        if (isVivo()) {
+            return dp2px(27.0f);
+        }
+        return 0;
+    }
 
-	/**
-	 * 获取华为刘海屏的宽高
-	 */
-	private static int[] getHuaweiNotchSize(Context context) {
-		int[] ret = new int[] { 0, 0 };
-		try {
-			ClassLoader cl = context.getClassLoader();
-			Class HwNotchSizeUtil = cl.loadClass("com.huawei.android.util.HwNotchSizeUtil");
-			Method get = HwNotchSizeUtil.getMethod("getNotchSize");
-			ret = (int[]) get.invoke(HwNotchSizeUtil);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			return ret;
-		}
-	}
+    public static int[] getHuaweiNotchSize() {
+        try {
+            ClassLoader classLoader = Hicore.app.getClassLoader();
+            Class class_HwNotchSizeUtil = classLoader.loadClass("com.huawei.android.util.HwNotchSizeUtil");
+            Method method_getNotchSize = class_HwNotchSizeUtil.getMethod("getNotchSize");
+            return (int[]) method_getNotchSize.invoke(class_HwNotchSizeUtil);
+        } catch (Exception unused) {
+            int[] iArr = {0, 0};
+            return iArr;
+        }
+    }
 
-	/**
-	 * 是否为华为的刘海屏
-	 */
-	private static boolean isHuaWeiNotch(Context context) {
-		boolean ret = false;
-		try {
-			ClassLoader cl = context.getClassLoader();
-			Class HwNotchSizeUtil = cl.loadClass("com.huawei.android.util.HwNotchSizeUtil");
-			Method get = HwNotchSizeUtil.getMethod("hasNotchInScreen");
-			ret = (Boolean) get.invoke(HwNotchSizeUtil);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			return ret;
-		}
-	}
+    public static DisplayCutout getDisplayCutout(Activity activity) {
+        WindowInsets rootWindowInsets;
+        View decorView = activity.getWindow().getDecorView();
+        if (decorView == null || Build.VERSION.SDK_INT < 28 || (rootWindowInsets = decorView.getRootWindowInsets()) == null) {
+            return null;
+        }
+        return rootWindowInsets.getDisplayCutout();
+    }
 
-	/**
-	 * 是否为vivo的刘海屏
-	 */
-	private static boolean isVivoNotch(Context context) {
-		boolean ret = false;
-		try {
-			ClassLoader cl = context.getClassLoader();
-			Class ftFeature = cl.loadClass("android.util.FtFeature");
-			Method get = ftFeature.getMethod("isFeatureSupport", int.class);
-			ret = (Boolean) get.invoke(ftFeature, 0x00000020);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			return ret;
-		}
-	}
+    public static int dp2px(float f) {
+        return (int) ((f * Hicore.app.getResources().getDisplayMetrics().density) + 0.5f);
+    }
 
-	/**
-	 * 是否为oppo的刘海屏
-	 */
-	private static boolean isOppoNotch(Context context) {
-		try {
-			return context.getPackageManager().hasSystemFeature("com.oppo.feature.screen.heteromorphism");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	/**
-	 * 是否为小米的刘海屏
-	 */
-	private static boolean isXiaomiNotch(Context context) {
-		try {
-			return (SystemProperties.getInt("ro.miui.notch") == 1);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	/**
-	 * 是否为魅族的刘海屏
-	 */
-	private static boolean isMeizuNotch(Context context) {
-		boolean fringeDevice = false;
-		try {
-			Class clazz = Class.forName("flyme.config.FlymeFeature");
-			Field field = clazz.getDeclaredField("IS_FRINGE_DEVICE");
-			fringeDevice = (Boolean) field.get(null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return fringeDevice;
-	}
+    public static String getPropertie(String key) {
+        if (!isXiaomi()) {
+            return "0";
+        }
+        try {
+            ClassLoader classLoader = Hicore.app.getClassLoader();
+            Class class_SysProp = classLoader.loadClass("android.os.SystemProperties");
+            Method method_SysProp = class_SysProp.getMethod("get", String.class, String.class);
+            return (String) (method_SysProp.invoke(class_SysProp, key, "0"));
+        } catch (Exception unused) {
+            return "0";
+        }
+    }
 }
