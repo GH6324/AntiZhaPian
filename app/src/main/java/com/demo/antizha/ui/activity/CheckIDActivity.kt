@@ -15,7 +15,6 @@ import com.demo.antizha.util.DialogUtils
 class CheckIDActivity: BaseActivity(), IClickListener {
     private lateinit var infoBinding: ActivityIdCheckBinding
     override fun initPage() {
-        supportActionBar?.hide()
         infoBinding = ActivityIdCheckBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         StatusBarCompat.translucentStatusBar(this as Activity, true, true)

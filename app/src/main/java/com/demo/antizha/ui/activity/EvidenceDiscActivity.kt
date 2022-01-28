@@ -8,10 +8,8 @@ import com.demo.antizha.databinding.ActivityEvidenceBinding
 class EvidenceDiscActivity : BaseActivity() {
     private lateinit var infoBinding: ActivityEvidenceBinding
     override fun initPage() {
-        supportActionBar?.hide()
         infoBinding = ActivityEvidenceBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
-        val intent = intent
         val szTitle = intent.getStringExtra("title")
         infoBinding.piTitle.tvTitle.text = szTitle
         infoBinding.edDescribe.setText(intent.getStringExtra("disc"))
@@ -20,7 +18,7 @@ class EvidenceDiscActivity : BaseActivity() {
         }
         infoBinding.piTitle.ivBack.setOnClickListener {
             val intent = Intent()
-            setResult(RESULT_OK, intent)
+            setResult(RESULT_CANCELED, intent)
             finish()
         }
         infoBinding.btnCommit.setOnClickListener {

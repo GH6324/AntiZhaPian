@@ -34,6 +34,7 @@ abstract class BaseActivity : AppCompatActivity() {
         this.mActivity = this
         this.typ_ME = Typeface.createFromAsset(getAssets(), "DIN-Medium.otf")
         adjustFontScale(this)
+        supportActionBar?.hide()
         setStatusBar();
         initPage()
         haveLiuhai = NotchUtils.haveLiuhai(this);
@@ -61,4 +62,5 @@ abstract class BaseActivity : AppCompatActivity() {
         }
         StatusBarCompat.translucentStatusBar(this, true, true)
     }
+
 }

@@ -38,7 +38,6 @@ fun getDataByGet(url: String,
                     //notifyDataSetChanged必须在UI线程里调用，所以需要用Handler
                     callBackFunc("" + response.body?.string(), saveFile)
                 }, 0)
-
             }
         })
     } catch (e: Exception) {

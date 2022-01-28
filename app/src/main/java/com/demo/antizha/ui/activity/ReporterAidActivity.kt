@@ -8,7 +8,6 @@ import qiu.niorgai.StatusBarCompat
 class ReporterAidActivity:BaseActivity() {
     private lateinit var infoBinding: ActivityAidReportBinding
     override fun initPage() {
-        supportActionBar?.hide()
         infoBinding = ActivityAidReportBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "报案助手"

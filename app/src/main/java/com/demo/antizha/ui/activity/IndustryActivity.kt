@@ -60,7 +60,6 @@ class IndustryHolderAdapte(private var context: Context, private var list: Array
 
 class IndustryActivity : BaseActivity() {
     override fun initPage() {
-        supportActionBar?.hide()
         val industryListBinding = ActivityIndustryListBinding.inflate(layoutInflater)
         setContentView(industryListBinding.root)
         industryListBinding.piTitle.tvTitle.text = "行业"

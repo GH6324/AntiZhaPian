@@ -19,7 +19,6 @@ class CheckFraudActivity: BaseActivity() {
     private lateinit var onViewClickListener: OnClickListener
     @RequiresApi(Build.VERSION_CODES.N)
     override fun initPage() {
-        supportActionBar?.hide()
         infoBinding = ActivityCheckFraudBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         StatusBarCompat.translucentStatusBar(this , true, false)

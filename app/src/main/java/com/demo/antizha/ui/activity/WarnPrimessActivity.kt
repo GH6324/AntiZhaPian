@@ -22,7 +22,6 @@ class WarnPrimessActivity: BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun initPage(){
-        supportActionBar?.hide()
         infoBinding = ActivityWarnPrimessBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         StatusBarCompat.translucentStatusBar(this as Activity, true, false)

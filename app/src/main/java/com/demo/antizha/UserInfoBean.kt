@@ -29,7 +29,6 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import javax.xml.parsers.DocumentBuilder
 import javax.xml.parsers.DocumentBuilderFactory
-import kotlin.collections.ArrayList
 
 
 object UserInfoBean {
@@ -199,7 +198,7 @@ object UserInfoBean {
         try {
             val path =
                 Hicore.context.getExternalFilesDir(null)?.getPath()
-            val file = File(path, "anote_national.xml")
+            val file = File(path, "note_national.xml")
             //file.exists()总是返回false
             if (!file.canRead())
                 return
@@ -208,7 +207,7 @@ object UserInfoBean {
             val builder: DocumentBuilder = factory.newDocumentBuilder()
             val document: Document = builder.parse(iStream)
             val stringList: NodeList = document.getElementsByTagName("string")
-            for (i in 0..stringList.getLength() - 1) {
+            for (i in 0 until stringList.getLength()) {
                 val node = stringList.item(i)
                 val nodeName = node.attributes.item(0).getTextContent()
                 if (nodeName.equals("sp_user_bean")) {
@@ -287,8 +286,8 @@ object UserInfoBean {
     @RequiresApi(Build.VERSION_CODES.O)
     fun makeToken(): String {       //伪造TOKEN的算法应该是正确的，但是没有正确的seed，算不出正确的TOKEN
         val headerJson = """{"alg":"HS256","typ":"JWT"}"""
-        val header = Base64.getUrlEncoder().withoutPadding().encodeToString(headerJson.toByteArray(
-            StandardCharsets.UTF_8))
+        val header = Base64.getUrlEncoder().withoutPadding().encodeToString(
+            headerJson.toByteArray(StandardCharsets.UTF_8))
 
         val gsonBuilder = GsonBuilder().registerTypeAdapter(PayLoads::class.java, PayLoadAdapter())
         val gson = gsonBuilder.create()

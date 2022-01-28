@@ -51,7 +51,6 @@ class TagFlowLaoutActivity : BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun initPage() {
-        supportActionBar?.hide()
         infoBinding = ActivityTagflowBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "诈骗类型"
@@ -60,7 +59,7 @@ class TagFlowLaoutActivity : BaseActivity() {
             val intent = Intent()
             intent.putExtra("tagString", "")
             intent.putExtra("tagId", 0)
-            setResult(RESULT_OK, intent)
+            setResult(RESULT_CANCELED, intent)
             finish()
         }
     }

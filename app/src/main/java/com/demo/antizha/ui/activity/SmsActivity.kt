@@ -9,7 +9,6 @@ class SmsActivity : BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun initPage() {
-        supportActionBar?.hide()
         infoBinding = ActivityCallBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "添加诈骗短信"

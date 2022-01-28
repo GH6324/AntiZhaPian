@@ -7,12 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.demo.antizha.R
-import com.demo.antizha.ui.activity.MinePersonalActivity
 import com.demo.antizha.UserInfoBean
+import com.demo.antizha.ui.activity.AboutUsActivity
+import com.demo.antizha.ui.activity.MinePersonalActivity
+import com.demo.antizha.ui.activity.SettingActivity
 
 class MineFragment : Fragment() {
 
@@ -27,11 +30,20 @@ class MineFragment : Fragment() {
             ViewModelProvider(this).get(MineViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_mine, container, false)
 
-        val personalInfo: TextView = root.findViewById(R.id.tv_explain)
-        personalInfo.setOnClickListener {
+        val explain: TextView = root.findViewById(R.id.tv_explain)
+        explain.setOnClickListener {
             val intentInfo = Intent(activity, MinePersonalActivity::class.java)
             startActivity(intentInfo)
-
+        }
+        val setting: RelativeLayout = root.findViewById(R.id.ll_setting)
+        setting.setOnClickListener {
+            val intentInfo = Intent(activity, SettingActivity::class.java)
+            startActivity(intentInfo)
+        }
+        val ablout: RelativeLayout = root.findViewById(R.id.ll_ablout_app)
+        ablout.setOnClickListener {
+            val intentInfo = Intent(activity, AboutUsActivity::class.java)
+            startActivity(intentInfo)
         }
         return root
     }

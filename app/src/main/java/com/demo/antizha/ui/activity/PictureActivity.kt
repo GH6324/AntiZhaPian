@@ -61,12 +61,10 @@ class PictureSelectAdapter(resId: Int, var medias: ArrayList<String>) :
         }
         ivFoot.setVisibility(View.GONE)
         try {
-            if (this.uploadStateInfos != null) {
-                val indexOf = medias.indexOf(localMedia)
-                val size = uploadStateInfos.size
-                if (size > 0 && indexOf < size) {
-                    showUploadState(tvUploadState, this.uploadStateInfos.get(indexOf))
-                }
+            val indexOf = medias.indexOf(localMedia)
+            val size = uploadStateInfos.size
+            if (size > 0 && indexOf < size) {
+                showUploadState(tvUploadState, this.uploadStateInfos.get(indexOf))
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -78,8 +76,8 @@ class PictureSelectAdapter(resId: Int, var medias: ArrayList<String>) :
     }
 
     // com.chad.library.adapter.base.BaseQuickAdapter
-    override fun onBindViewHolder(baseViewHolder: BaseViewHolder, i: Int) {
-        super.onBindViewHolder(baseViewHolder, i)
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+        super.onBindViewHolder(holder, position)
         //baseViewHolder.itemView.setOnClickListener(`View$OnClickListenerC0347a`(baseViewHolder))
     }
 
@@ -139,7 +137,6 @@ class PictureActivity : BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun initPage() {
-        supportActionBar?.hide()
         infoBinding = ActivityPictureBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "添加图片"

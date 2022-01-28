@@ -84,7 +84,6 @@ class VirusKillingActivity : BaseActivity() {
     private val apkNames:ArrayList<String> = ArrayList<String>()
     @RequiresApi(Build.VERSION_CODES.M)
     override fun initPage() {
-        supportActionBar?.hide()
         infoBinding = ActivityVirusKillingBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "APP自检"

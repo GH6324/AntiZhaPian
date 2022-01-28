@@ -14,7 +14,6 @@ class MinePersonalActivity : BaseActivity(), View.OnClickListener {
     private lateinit var infoBinding: ActivityMinePersonalBinding
 
     override fun initPage() {
-        supportActionBar?.hide()
         infoBinding = ActivityMinePersonalBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         StatusBarCompat.translucentStatusBar(this as Activity, true, true)

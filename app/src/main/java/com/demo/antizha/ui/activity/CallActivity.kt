@@ -2,6 +2,9 @@ package com.demo.antizha.ui.activity
 
 import android.content.Intent
 import android.os.Build
+import android.os.Parcel
+import android.os.Parcelable
+import android.os.Parcelable.Creator
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.text.TextUtils
@@ -12,9 +15,9 @@ import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityCallBinding
-import java.io.Serializable
 
-class CallBean : Serializable {
+
+class CallBean : Parcelable {
     var crime_time: String? = null
     var duration: Long = 0
     var isInput = false
@@ -43,6 +46,46 @@ class CallBean : Serializable {
         duration = j
         isInput = !isSelect
     }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    constructor(source: Parcel) {
+        crime_time = source.readString()
+        duration = source.readLong()
+        isInput = source.readBoolean()
+        isSelect = source.readBoolean()
+        number = source.readString()
+        plcae = source.readString()
+        suspectInfoID = source.readString()
+        type = source.readInt()
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString(crime_time)
+        dest.writeLong(duration)
+        dest.writeBoolean(isInput)
+        dest.writeBoolean(isSelect)
+        dest.writeString(number)
+        dest.writeString(plcae)
+        dest.writeString(suspectInfoID)
+        dest.writeInt(type)
+    }
+
+    companion object CREATOR : Creator<CallBean> {
+        @RequiresApi(Build.VERSION_CODES.Q)
+        override fun createFromParcel(parcel: Parcel): CallBean {
+            return CallBean(parcel)
+        }
+
+        override fun newArray(size: Int): Array<CallBean?> {
+            return arrayOfNulls(size)
+        }
+    }
+
 }
 
 class CallActivity : BaseActivity() {
@@ -54,7 +97,6 @@ class CallActivity : BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun initPage() {
-        supportActionBar?.hide()
         infoBinding = ActivityCallBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "添加诈骗电话"
@@ -64,7 +106,7 @@ class CallActivity : BaseActivity() {
         initData()
         infoBinding.piTitle.ivBack.setOnClickListener {
             val intent = Intent()
-            setResult(RESULT_OK, intent)
+            setResult(RESULT_CANCELED, intent)
             finish()
         }
         infoBinding.lyComplete.btnCommit.setOnClickListener {
@@ -85,7 +127,7 @@ class CallActivity : BaseActivity() {
             callBeans.addAll(selectCallBeans)
             callBeans.addAll(inputCallBeans)
             val intent = Intent()
-            intent.putExtra("call", callBeans as Serializable)
+            intent.putParcelableArrayListExtra("call", callBeans)
             setResult(RESULT_OK, intent)
             finish()
         }
@@ -100,7 +142,7 @@ class CallActivity : BaseActivity() {
     fun initData() {
         var list: ArrayList<CallBean>?
         try {
-            list = intent.getSerializableExtra("call") as ArrayList<CallBean>?
+            list = intent.getParcelableArrayListExtra<CallBean>("call")
         } catch (e: Exception) {
             e.printStackTrace()
             list = null
@@ -144,14 +186,12 @@ class CallActivity : BaseActivity() {
         }
         ivClear.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View) {
-                if (view == null)
-                    return
                 if (etContents.size == 1) {
                     etContents[0].setText("")
                     return
                 }
-                for ((i, ivClear) in ivClears.withIndex()) {
-                    if (ivClear === view) {
+                for ((i, ivclear) in ivClears.withIndex()) {
+                    if (ivclear === view) {
                         etContents.removeAt(i)
                         ivClears.removeAt(i)
                         infoBinding.llInputPart.removeViewAt(i)

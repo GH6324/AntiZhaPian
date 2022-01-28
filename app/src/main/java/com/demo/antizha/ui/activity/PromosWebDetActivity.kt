@@ -22,7 +22,6 @@ class PromosWebDetActivity : BaseActivity() {
     private var isVideo = false
     private var mArticleId: String = ""
     override fun initPage() {
-        supportActionBar?.hide()
         promosWebDetBinding = ActivityPromWebDetBinding.inflate(layoutInflater)
         setContentView(promosWebDetBinding.root)
         promosWebDetBinding.piTitle.ivBack.setOnClickListener {

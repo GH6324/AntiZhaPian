@@ -11,7 +11,7 @@ import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityWeburlBinding
-import com.demo.antizha.util.ToastUtil
+import com.hjq.toast.ToastUtils
 import java.util.*
 
 
@@ -23,7 +23,6 @@ class WebsiteActivity : BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun initPage() {
-        supportActionBar?.hide()
         infoBinding = ActivityWeburlBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "添加诈骗网址"
@@ -41,7 +40,7 @@ class WebsiteActivity : BaseActivity() {
         })
         infoBinding.piTitle.ivBack.setOnClickListener {
             val intent = Intent()
-            setResult(RESULT_OK, intent)
+            setResult(RESULT_CANCELED, intent)
             finish()
         }
         infoBinding.lyComplete.btnCommit.setOnClickListener {
@@ -83,7 +82,7 @@ class WebsiteActivity : BaseActivity() {
         if (etContents.size < MAX_COUNT) {
             return false
         }
-        ToastUtil.showMessage("最多可添加" + MAX_COUNT.toString() + "条网址")
+        ToastUtils.show("最多可添加" + MAX_COUNT.toString() + "条网址")
         return true
     }
 
@@ -100,8 +99,6 @@ class WebsiteActivity : BaseActivity() {
 
     inner class OnClearClickListener : View.OnClickListener {
         override fun onClick(view: View) {
-            if (view == null)
-                return
             if (etContents.size == 1) {
                 etContents[0].setText("")
                 return

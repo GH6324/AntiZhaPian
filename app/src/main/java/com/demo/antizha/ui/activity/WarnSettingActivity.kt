@@ -16,7 +16,6 @@ class WarnSettingActivity : BaseActivity() {
     private lateinit var infoBinding: ActivityWarnSettingBinding
     private var currentAnimation = ""
     override fun initPage() {
-        supportActionBar?.hide()
         infoBinding = ActivityWarnSettingBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         StatusBarCompat.translucentStatusBar(this as Activity, true, false)

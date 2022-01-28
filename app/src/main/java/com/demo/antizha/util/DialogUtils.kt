@@ -1,5 +1,6 @@
 package com.demo.antizha.util
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.os.Build
@@ -12,10 +13,13 @@ import androidx.annotation.RequiresApi
 import com.demo.antizha.R
 import com.demo.antizha.ui.BaseDialog
 import com.demo.antizha.ui.IClickListener
+import com.demo.antizha.ui.ProgressDialogBar
 
 
 class DialogUtils {
     companion object {
+        var progressDialogBar: ProgressDialogBar? = null
+
         @RequiresApi(Build.VERSION_CODES.R)
         fun showNormalDialog(context: Context?,
                              title: String?,
@@ -160,6 +164,36 @@ class DialogUtils {
                 }
             })
             return baseDialog
+        }
+
+        fun showProgressDialog(str: String?, z: Boolean, activity: Activity?) {
+            if (activity != null) {
+                try {
+                    if (!activity.isFinishing) {
+                        if (progressDialogBar == null) {
+                            progressDialogBar = ProgressDialogBar.create(activity)!!
+                        }
+                        progressDialogBar!!.setProgress(str)
+                        progressDialogBar!!.setCanceledOnTouchOutside(false)
+                        progressDialogBar!!.setCancelable(z)
+                        progressDialogBar!!.show()
+                    }
+                } catch (unused: Exception) {
+                }
+            }
+        }
+
+        fun destroyProgressDialog() {
+            try {
+                if (progressDialogBar != null) {
+                    if (progressDialogBar!!.isShowing) {
+                        progressDialogBar!!.dismiss()
+                    }
+                    progressDialogBar = null
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }

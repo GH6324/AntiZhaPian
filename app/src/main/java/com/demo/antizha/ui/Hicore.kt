@@ -3,8 +3,13 @@ package com.demo.antizha.ui
 import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
-import java.lang.Exception
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
+import android.util.TypedValue
+import android.view.Gravity
+import com.hjq.toast.ToastUtils
 import java.util.*
+
 
 class Hicore : Application() {
     companion object {
@@ -16,10 +21,42 @@ class Hicore : Application() {
         }
     }
 
-    override fun onCreate() {
+    class MyToastStyle : com.hjq.toast.style.BlackToastStyle() {
+        override fun getHorizontalPadding(context: Context): Int {
+            return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                30f,
+                context.resources.displayMetrics)
+                .toInt()
+        }
+
+        override fun getVerticalPadding(context: Context): Int {
+            return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                14f,
+                context.resources.displayMetrics)
+                .toInt()
+        }
+
+        override fun getBackgroundDrawable(context: Context): Drawable? {
+            val drawable = GradientDrawable()
+            // 设置颜色
+            drawable.setColor(-0x78000000)
+            // 设置圆角
+            drawable.cornerRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                30f,
+                context.resources.displayMetrics)
+            return drawable
+        }
+    }
+
+    override
+
+    fun onCreate() {
         super.onCreate()
         context = this
         app = this
+        ToastUtils.init(this)
+        ToastUtils.setGravity(Gravity.CENTER)
+        ToastUtils.setStyle(MyToastStyle())
     }
 
     fun isDouble(): Boolean {
@@ -31,9 +68,11 @@ class Hicore : Application() {
         mLastClickTime = timeInMillis
         return false
     }
+
     fun getChannel(): String {
         try {
-            return app.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA).metaData.getString("CHANNEL").toString()
+            return app.getPackageManager().getApplicationInfo(packageName,
+                PackageManager.GET_META_DATA).metaData.getString("CHANNEL").toString()
         } catch (e2: Exception) {
             e2.printStackTrace()
             return "oss"

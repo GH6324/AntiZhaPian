@@ -58,15 +58,15 @@ class BaseDialog : Dialog {
     val statusBarHeight: Int
         get() = try {
             val cls = Class.forName("com.android.internal.R\$dimen")
-            context.resources.getDimensionPixelSize(cls.getField("status_bar_height")[cls.newInstance()].toString()
-                .toInt())
+            val tfield = cls.getField("status_bar_height")
+            context.resources.getDimensionPixelSize(tfield[cls.newInstance()]!!.toString().toInt())
         } catch (e2: Exception) {
             e2.printStackTrace()
             0
         }
 
     fun <T : View?> getViewById(i2: Int): T {
-        return findViewById<View>(i2) as T
+        return findViewById<T>(i2)
     }
 
     @RequiresApi(Build.VERSION_CODES.R)

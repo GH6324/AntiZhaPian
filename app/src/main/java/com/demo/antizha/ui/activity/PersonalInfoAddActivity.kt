@@ -63,7 +63,6 @@ class PersonalInfoAddActivity : BaseActivity() {
     */
     @RequiresApi(Build.VERSION_CODES.M)
     override fun initPage() {
-        supportActionBar?.hide()
         infoBinding = ActivityPersonaInfolBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         StatusBarCompat.translucentStatusBar(this as Activity, true, false)
@@ -131,10 +130,10 @@ class PersonalInfoAddActivity : BaseActivity() {
                     val strtemplate = "1111aaaa-aaaa-aaaa-aaaa-aaaa11111111"
                     val nummap = "1234567890"
                     val hexmap = "1234567890abcdefabcdef"
-                    for (i in 1..strtemplate.length) {
-                        when (strtemplate[i - 1]) {
-                            '1' -> account += nummap[(0 until nummap.length - 1).random()]
-                            'a' -> account += hexmap[(0 until hexmap.length - 1).random()]
+                    for (i in 0 until strtemplate.length) {
+                        when (strtemplate[i]) {
+                            '1' -> account += nummap[(0 until nummap.length).random()]
+                            'a' -> account += hexmap[(0 until hexmap.length).random()]
                             '-' -> account += "-"
                         }
                     }

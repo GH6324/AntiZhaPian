@@ -10,13 +10,11 @@
         android:id="@+id/splash"
         layout="@layout/background_splash" />
 
-    <FrameLayout
-        android:id="@+id/ll_frameLayout"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="2dp"
         android:layout_weight="1"
-        android:background="#ffffff"
         android:visibility="gone" />
     <!--
         app:itemBackground="@android:color/white"
