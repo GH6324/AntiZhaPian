@@ -19,11 +19,7 @@ import com.hjq.toast.ToastUtils
 import com.nex3z.flowlayout.FlowLayout
 import java.io.InputStreamReader
 
-
-class SocialType(val text: String)
-class SocialTypeData(val code: Int, var data: ArrayList<SocialType>)
-
-class SocialAccountEditActivity : BaseActivity() {
+class TradAccountEditActivity : BaseActivity() {
     private lateinit var infoBinding: ActivitySocialAccEditBinding
     private lateinit var flowLayout: FlowLayout
     private lateinit var socialTypeData: SocialTypeData
@@ -54,7 +50,7 @@ class SocialAccountEditActivity : BaseActivity() {
                 socialAccount!!.accountNum = infoBinding.etAccount.text.toString()
             }
             if (TextUtils.isEmpty(socialAccount!!.accountNum)) {
-                ToastUtils.show("社交类型不能为空")
+                ToastUtils.show("交易类型不能为空")
                 return@setOnClickListener
             }
             val intent = Intent()
@@ -121,7 +117,7 @@ class SocialAccountEditActivity : BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     fun initTagAdapter() {
-        val inputStream = Hicore.app.getResources().getAssets().open("socialaccounttypes.txt")
+        val inputStream = Hicore.app.getResources().getAssets().open("paymenttypes.txt")
         socialTypeData = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
             object : TypeToken<SocialTypeData>() {}.type)
         if (TextUtils.isEmpty(socialAccount!!.accountName))
@@ -141,5 +137,6 @@ class SocialAccountEditActivity : BaseActivity() {
             onSelectType(infoBinding.flowLayout[id], socialAccount!!.accountName, id)
         }
     }
+
 
 }

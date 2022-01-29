@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="_1F1F1F">#1f1f1f</color>
     <color name="_030303">#030303</color>
     <color name="_2B48E7">#2b48e7</color>
     <color name="_2B4CFF">#2b4cff</color>
@@ -46,7 +47,7 @@
     <color name="transparent_white">#f0ffffff</color>
     <color name="transparentColor">#555555</color>
     <color name="white">#FFFFFFFF</color>
-	<color name="text_choose_call">#7f060122</color>
+    <color name="text_choose_call">#7f060122</color>
     <color name="text_choose_one">#7f060123</color>
 
 </resources>

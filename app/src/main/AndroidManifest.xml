@@ -98,6 +98,9 @@
             android:name=".ui.activity.SocialAccountEditActivity"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".ui.activity.TradAccountEditActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".ui.activity.SettingActivity"
             android:screenOrientation="portrait"></activity>
         <activity

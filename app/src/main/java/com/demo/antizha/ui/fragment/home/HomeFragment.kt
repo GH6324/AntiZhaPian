@@ -364,9 +364,8 @@ class HomeFragment : Fragment(), IClickListener {
     private fun getNewCaseApi(page: Int, row: Int) {
         //https://fzapp.gjfzpt.cn/hicore/api/Information/querylatestcases?Page=1&Rows=2&Sort=releasetime&Order=desc
         getDataByGet(
-            "https://fzapp.gjfzpt.cn/hicore/api/Information/querylatestcases?Page=" + page.toString() + "&Rows=" + row.toString() + "&Sort=releasetime&Order=desc",
-            addHead = true, "newcase" + page.toString() + ".txt", callBackFunc = this::addNewCase
-        )
+            "https://fzapp.gjfzpt.cn/hicore/api/Information/querylatestcases?Page=${page}&Rows=${row}&Sort=releasetime&Order=desc",
+            addHead = true, "newcase" + page.toString() + ".txt", callBackFunc = this::addNewCase)
     }
 
     private fun addNewCase(data: String, saveFile: String) {
@@ -409,8 +408,7 @@ class HomeFragment : Fragment(), IClickListener {
             addNewBander(s, "")
         } else
             getDataByGet("https://fzapp.gjfzpt.cn/hicore/api/Banner",
-                addHead = true, "bander.txt",
-                callBackFunc = this::addNewBander)
+                addHead = true, "bander.txt", callBackFunc = this::addNewBander)
     }
 
     private fun addNewBander(data: String, saveFile: String) {

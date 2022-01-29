@@ -8,12 +8,14 @@ import android.os.Looper
 import android.text.Html
 import android.text.Html.FROM_HTML_MODE_LEGACY
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import cn.qqtheme.framework.entity.City
 import cn.qqtheme.framework.entity.County
 import cn.qqtheme.framework.entity.Province
 import com.demo.antizha.R
+import com.demo.antizha.adapter.SocialAccBean
 import com.demo.antizha.databinding.ActivityReportNewBinding
 import com.demo.antizha.ui.IClickListener
 import com.demo.antizha.util.AddressBean
@@ -26,6 +28,14 @@ class ReportNewActivity : BaseActivity() {
     private var provinces: ArrayList<Province> = ArrayList<Province>()
     private var urls: ArrayList<String> = ArrayList<String>()
     private var calls: ArrayList<CallBean> = ArrayList()
+    private var socialAccounts: ArrayList<SocialAccBean> = ArrayList()
+    private var dealAccounts: ArrayList<SocialAccBean> = ArrayList()
+    private lateinit var startDuperyType: ActivityResultLauncher<Intent>
+    private lateinit var startCaseDescribe: ActivityResultLauncher<Intent>
+    private lateinit var startCall: ActivityResultLauncher<Intent>
+    private lateinit var startUrl: ActivityResultLauncher<Intent>
+    private lateinit var startContact: ActivityResultLauncher<Intent>
+    private lateinit var startDeal: ActivityResultLauncher<Intent>
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun initPage() {
@@ -51,24 +61,11 @@ class ReportNewActivity : BaseActivity() {
                 isSaveRecordListener()
             )
         }
-
+        initActivityResultLauncher()
         infoBinding.tvDuperyType.setOnClickListener {
             val intent = Intent(this, TagFlowLaoutActivity::class.java)
             intent.putExtra("int_tag_name", duperyType)
-            val startForResult =
-                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-                    if (result.resultCode != Activity.RESULT_OK)
-                        return@registerForActivityResult
-                    if (result.data == null || result.data!!.extras == null)
-                        return@registerForActivityResult
-                    val tagString = result.data!!.extras!!.getString("tagString")
-                    val tagId = result.data!!.extras!!.getInt("tagId")
-                    if (tagId != 0) {
-                        duperyType = tagId
-                        infoBinding.tvDuperyType.text = tagString
-                    }
-                }
-            startForResult.launch(intent)
+            startDuperyType.launch(intent)
         }
         infoBinding.region.setOnClickListener {
             val picker = AddressBean.createAddressPicker(this, "", true, AddressListener())
@@ -78,38 +75,12 @@ class ReportNewActivity : BaseActivity() {
             val intent = Intent(mActivity, EvidenceDiscActivity::class.java)
             intent.putExtra("disc", infoBinding.etCaseDescribe.text.toString())
             intent.putExtra("title", "举报描述")
-            val startForResult =
-                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-                    if (result.resultCode != Activity.RESULT_OK)
-                        return@registerForActivityResult
-                    if (result.data == null || result.data!!.extras == null)
-                        return@registerForActivityResult
-                    val disc = result.data!!.extras!!.getString("disc")
-                    if (disc != null)
-                        infoBinding.etCaseDescribe.text = disc
-                }
-            startForResult.launch(intent)
+            startCaseDescribe.launch(intent)
         }
         infoBinding.lyCall.tvUploadCall.setOnClickListener {
             val intent = Intent(this, CallActivity::class.java)
             intent.putExtra("call", calls as Serializable)
-            val startForResult =
-                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-                    if (result.resultCode != Activity.RESULT_OK)
-                        return@registerForActivityResult
-                    if (result.data == null)
-                        return@registerForActivityResult
-                    val array: ArrayList<CallBean>? =
-                        result.data!!.getParcelableArrayListExtra<CallBean>("call")
-                    if (array == null)
-                        return@registerForActivityResult
-                    calls = array
-                    if (calls.size == 0)
-                        infoBinding.lyCall.tvUploadCall.text = ""
-                    else
-                        infoBinding.lyCall.tvUploadCall.text = calls.size.toString() + "个"
-                }
-            startForResult.launch(intent)
+            startCall.launch(intent)
         }
         infoBinding.lySms.tvUploadSms.setOnClickListener {
             val intent = Intent(this, SmsActivity::class.java)
@@ -130,31 +101,109 @@ class ReportNewActivity : BaseActivity() {
         infoBinding.lyUrl.tvUploadUrl.setOnClickListener {
             val intent = Intent(this, WebsiteActivity::class.java)
             intent.putStringArrayListExtra("url", urls)
-            val startForResult =
-                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-                    if (result.resultCode != Activity.RESULT_OK)
-                        return@registerForActivityResult
-                    if (result.data == null)
-                        return@registerForActivityResult
-                    val array = result.data!!.getStringArrayListExtra("url")
-                    if (array == null)
-                        return@registerForActivityResult
-                    urls = array
-                    if (urls.size == 0)
-                        infoBinding.lyUrl.tvUploadUrl.text = ""
-                    else
-                        infoBinding.lyUrl.tvUploadUrl.text = urls.size.toString() + "个"
-                }
-            startForResult.launch(intent)
+
+            startUrl.launch(intent)
         }
         infoBinding.lyContact.tvSocial.setOnClickListener {
             val intent = Intent(this, SocialAccountActivity::class.java)
-            startActivity(intent)
+            intent.putParcelableArrayListExtra("accounts", socialAccounts)
+            startContact.launch(intent)
+
         }
         infoBinding.lyDeal.tvTrad.setOnClickListener {
             val intent = Intent(this, TradAccountActivity::class.java)
-            startActivity(intent)
+            intent.putParcelableArrayListExtra("accounts", dealAccounts)
+            startDeal.launch(intent)
         }
+    }
+
+    fun initActivityResultLauncher() {
+        startDuperyType =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                if (result.resultCode != Activity.RESULT_OK)
+                    return@registerForActivityResult
+                if (result.data == null || result.data!!.extras == null)
+                    return@registerForActivityResult
+                val tagString = result.data!!.extras!!.getString("tagString")
+                val tagId = result.data!!.extras!!.getInt("tagId")
+                if (tagId != 0) {
+                    duperyType = tagId
+                    infoBinding.tvDuperyType.text = tagString
+                }
+            }
+        startCaseDescribe =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                if (result.resultCode != Activity.RESULT_OK)
+                    return@registerForActivityResult
+                if (result.data == null || result.data!!.extras == null)
+                    return@registerForActivityResult
+                val disc = result.data!!.extras!!.getString("disc")
+                if (disc != null)
+                    infoBinding.etCaseDescribe.text = disc
+            }
+        startCall =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                if (result.resultCode != Activity.RESULT_OK)
+                    return@registerForActivityResult
+                if (result.data == null)
+                    return@registerForActivityResult
+                val array: ArrayList<CallBean>? =
+                    result.data!!.getParcelableArrayListExtra<CallBean>("call")
+                if (array == null)
+                    return@registerForActivityResult
+                calls = array
+                if (calls.size == 0)
+                    infoBinding.lyCall.tvUploadCall.text = ""
+                else
+                    infoBinding.lyCall.tvUploadCall.text = calls.size.toString() + "个"
+            }
+        startUrl =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                if (result.resultCode != Activity.RESULT_OK)
+                    return@registerForActivityResult
+                if (result.data == null)
+                    return@registerForActivityResult
+                val array = result.data!!.getStringArrayListExtra("url")
+                if (array == null)
+                    return@registerForActivityResult
+                urls = array
+                if (urls.size == 0)
+                    infoBinding.lyUrl.tvUploadUrl.text = ""
+                else
+                    infoBinding.lyUrl.tvUploadUrl.text = urls.size.toString() + "个"
+            }
+        startContact =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+
+                if (result.resultCode != Activity.RESULT_OK)
+                    return@registerForActivityResult
+                if (result.data == null)
+                    return@registerForActivityResult
+                val array = result.data!!.getParcelableArrayListExtra<SocialAccBean>("accounts")
+                if (array == null)
+                    return@registerForActivityResult
+                socialAccounts = array
+                if (socialAccounts.size == 0)
+                    infoBinding.lyContact.tvSocial.text = ""
+                else
+                    infoBinding.lyContact.tvSocial.text = socialAccounts.size.toString() + "个"
+            }
+        startDeal =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+
+                if (result.resultCode != Activity.RESULT_OK)
+                    return@registerForActivityResult
+                if (result.data == null)
+                    return@registerForActivityResult
+                val array = result.data!!.getParcelableArrayListExtra<SocialAccBean>("accounts")
+                if (array == null)
+                    return@registerForActivityResult
+                dealAccounts = array
+                if (dealAccounts.size == 0)
+                    infoBinding.lyDeal.tvTrad.text = ""
+                else
+                    infoBinding.lyDeal.tvTrad.text = dealAccounts.size.toString() + "个"
+            }
     }
 
     inner class AddressListener : AddressBean.HiAddressListener() {

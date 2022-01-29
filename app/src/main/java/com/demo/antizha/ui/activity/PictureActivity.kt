@@ -9,10 +9,11 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.chad.library.adapter.base.BaseViewHolder
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityPictureBinding
 import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.Hicore.Companion.context
 
 
 class PictureSelectAdapter(resId: Int, var medias: ArrayList<String>) :
