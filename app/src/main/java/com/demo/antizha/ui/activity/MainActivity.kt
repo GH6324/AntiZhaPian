@@ -44,30 +44,30 @@ class MainActivity : BaseActivity() {
             WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         window.attributes = lp
         UserInfoBean.Init()
-        binding.navView.setOnItemSelectedListener(object : NavigationBarView.OnItemSelectedListener  {
-            override fun onNavigationItemSelected(item: MenuItem): Boolean
-            {
-                resetIcon(binding.navView)
-                return when (item.itemId) {
-                    R.id.navigation_home -> {
-                        item.setIcon(R.mipmap.tab_home_seled)
-                        binding.viewPager.setCurrentItem(0, false)
-                        true
+        binding.navView.setOnItemSelectedListener(
+            object : NavigationBarView.OnItemSelectedListener {
+                override fun onNavigationItemSelected(item: MenuItem): Boolean {
+                    resetIcon(binding.navView)
+                    return when (item.itemId) {
+                        R.id.navigation_home -> {
+                            item.setIcon(R.mipmap.tab_home_seled)
+                            binding.viewPager.setCurrentItem(0, false)
+                            true
+                        }
+                        R.id.navigation_dashboard -> {
+                            item.setIcon(R.mipmap.tab_xc_seled)
+                            binding.viewPager.setCurrentItem(1, false)
+                            true
+                        }
+                        R.id.navigation_notifications -> {
+                            item.setIcon(R.mipmap.tab_mine_seled)
+                            binding.viewPager.setCurrentItem(2, false)
+                            true
+                        }
+                        else -> false
                     }
-                    R.id.navigation_dashboard -> {
-                        item.setIcon(R.mipmap.tab_xc_seled)
-                        binding.viewPager.setCurrentItem(1, false)
-                        true
-                    }
-                    R.id.navigation_notifications -> {
-                        item.setIcon(R.mipmap.tab_mine_seled)
-                        binding.viewPager.setCurrentItem(2, false)
-                        true
-                    }
-                    else -> false
                 }
-            }
-        })
+            })
         Handler(Looper.getMainLooper()).postDelayed({
             binding.splash.root.visibility = View.GONE
             binding.navView.visibility = View.VISIBLE
@@ -85,7 +85,7 @@ class MainActivity : BaseActivity() {
         binding.viewPager.run {
             isUserInputEnabled = false
             offscreenPageLimit = 2
-            adapter = object: FragmentStateAdapter(this@MainActivity) {
+            adapter = object : FragmentStateAdapter(this@MainActivity) {
                 override fun getItemCount(): Int = mFragments.size
                 override fun createFragment(position: Int): Fragment = mFragments[position]
             }

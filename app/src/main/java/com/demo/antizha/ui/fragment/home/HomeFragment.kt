@@ -368,6 +368,13 @@ class HomeFragment : Fragment(), IClickListener {
             addHead = true, "newcase" + page.toString() + ".txt", callBackFunc = this::addNewCase)
     }
 
+    private fun onNormalSave(data: String, saveFile: String) {
+        if (data[0] != '{')
+            return
+        if (!TextUtils.isEmpty(saveFile))
+            saveBuff2File(data, saveFile)
+    }
+
     private fun addNewCase(data: String, saveFile: String) {
         if (data[0] != '{')
             return

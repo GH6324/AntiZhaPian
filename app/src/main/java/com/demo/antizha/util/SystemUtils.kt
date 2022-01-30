@@ -1,13 +1,8 @@
 package com.demo.antizha.util
 
-import android.view.WindowManager
-
-import android.util.DisplayMetrics
-
 import android.app.Activity
 import android.content.res.Configuration
 import android.os.Build
-import com.demo.antizha.BuildConfig
 
 
 object SystemUtils {
@@ -20,22 +15,20 @@ object SystemUtils {
             activity.baseContext.createConfigurationContext(configuration)
         }
     }
+
     fun getAndroidVer(): String {
         return Build.VERSION.RELEASE
     }
+
     fun getOsVer(): String {
         return "Android " + getAndroidVer()
     }
+
     fun getBrand(): String {
         return Build.BRAND
     }
+
     fun getModel(): String {
         return Build.MODEL
-    }
-    fun getAppVer(): String {
-        return BuildConfig.VERSION_NAME
-    }
-    fun getAppVerCode(): Int {
-        return BuildConfig.VERSION_CODE
     }
 }

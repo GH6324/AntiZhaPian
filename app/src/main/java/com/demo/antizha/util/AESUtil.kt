@@ -2,10 +2,8 @@ package com.demo.antizha.util
 
 import android.content.SharedPreferences
 import android.text.TextUtils
+import android.util.Base64
 import com.demo.antizha.ui.Hicore
-import java.io.UnsupportedEncodingException
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -17,7 +15,7 @@ import javax.crypto.spec.SecretKeySpec
 
 object AESUtil {
     private var cipher: Cipher? = null
-    private const val charSet = "UTF-8"
+    private val charSet = charset("UTF-8")
     private const val str_MD5 = "MD5"
     private const val str_AES = "AES"
     private const val KEY_ALGORITHM = "SHA1PRNG"
@@ -104,7 +102,7 @@ object AESUtil {
         return if (seed.length == PRIVATE_KEY_SIZE_BYTE) {
             try {
                 cipherInit(seed, 1)
-                byteArray2HexStr(cipher!!.doFinal(input.toByteArray(charset("UTF-8"))))
+                byteArray2HexStr(cipher!!.doFinal(input.toByteArray(charSet)))
             } catch (err: Exception) {
                 throw RuntimeException("AESUtil:encrypt fail!", err)
             }
@@ -118,7 +116,7 @@ object AESUtil {
         return if (seed.length == PRIVATE_KEY_SIZE_BYTE) {
             try {
                 cipherInit(seed, 2)
-                String(cipher!!.doFinal(hexString2ByteArray(input)), charset("UTF-8"))
+                String(cipher!!.doFinal(hexString2ByteArray(input)), charSet)
             } catch (e2: Exception) {
                 throw RuntimeException("AESUtil:decrypt fail!", e2)
             }
@@ -162,4 +160,19 @@ object AESUtil {
         }
     }
 
+    @Throws(java.lang.Exception::class)
+    fun cipherEncrypt(str: String, keySalt: String, iv: String): String {
+        val instance = Cipher.getInstance(DEFAULT_CIPHER_ALGORITHM)
+        val secretKeySpec = SecretKeySpec(keySalt.toByteArray(charSet), str_AES)
+        instance.init(Cipher.ENCRYPT_MODE, secretKeySpec, IvParameterSpec(iv.toByteArray(charSet)))
+        return Base64.encodeToString(instance.doFinal(str.toByteArray(charSet)), 0)
+    }
+
+    @Throws(java.lang.Exception::class)
+    fun cipherDecrypt(str: String?, keySalt: String, iv: String): String {
+        val instance = Cipher.getInstance(DEFAULT_CIPHER_ALGORITHM)
+        val secretKeySpec = SecretKeySpec(keySalt.toByteArray(charSet), str_AES)
+        instance.init(Cipher.DECRYPT_MODE, secretKeySpec, IvParameterSpec(iv.toByteArray(charSet)))
+        return String(instance.doFinal(Base64.decode(str, 0)), charSet)
+    }
 }

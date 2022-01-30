@@ -4,46 +4,71 @@ import android.os.Handler
 import android.os.Looper
 import com.demo.antizha.ui.Hicore
 import com.demo.antizha.util.RequestParamInterceptor
-import okhttp3.Callback
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import com.google.gson.Gson
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.*
 
 
 fun getDataByGet(url: String,
                  addHead: Boolean,
                  saveFile: String,
-                 callBackFunc: (data: String, saveFile: String) -> Unit): Int {
+                 callBackFunc: (data: String, saveFile: String) -> Unit) {
     try {
         val builder = OkHttpClient.Builder()
         if (addHead)
             builder.addInterceptor(RequestParamInterceptor());
         val client = builder.build()
-        var requestb = Request.Builder().get()
-        requestb = requestb.url(url)
+        var requestb = Request.Builder().get().url(url)
         var request = requestb.build()
 
         val call = client.newCall(request)
         //异步请求
-        call.enqueue(object : Callback {
-            override fun onFailure(call: okhttp3.Call, e: IOException) {
-                callBackFunc(" ", "")
-            }
-
-            @Throws(IOException::class)
-            override fun onResponse(call: okhttp3.Call, response: Response) {
-                //更新界面必须在UI线程里调用，所以需要用Handler
-                Handler(Looper.getMainLooper()).postDelayed({
-                    //notifyDataSetChanged必须在UI线程里调用，所以需要用Handler
-                    callBackFunc("" + response.body?.string(), saveFile)
-                }, 0)
-            }
-        })
+        callBack(call, saveFile, callBackFunc)
     } catch (e: Exception) {
         //callBackFunc("")
     }
-    return 1
+}
+
+fun getDataByPost(url: String,
+                  bodyMap: HashMap<String, String>?,
+                  addHead: Boolean,
+                  saveFile: String,
+                  callBackFunc: (data: String, saveFile: String) -> Unit) {
+    try {
+        val builder = OkHttpClient.Builder()
+        if (addHead)
+            builder.addInterceptor(RequestParamInterceptor());
+        val client = builder.build()
+        val json = Gson().toJson(bodyMap)
+        var requestb = Request.Builder()
+            .post(json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()))
+            .url(url)
+        var request = requestb.build()
+        val call = client.newCall(request)
+        //异步请求
+        callBack(call, saveFile, callBackFunc)
+    } catch (e: Exception) {
+        //callBackFunc("")
+    }
+}
+
+fun callBack(call: Call, saveFile: String, callBackFunc: (data: String, saveFile: String) -> Unit) {
+    call.enqueue(object : Callback {
+        override fun onFailure(call: okhttp3.Call, e: IOException) {
+            callBackFunc(" ", "")
+        }
+
+        @Throws(IOException::class)
+        override fun onResponse(call: okhttp3.Call, response: Response) {
+            //更新界面必须在UI线程里调用，所以需要用Handler
+            Handler(Looper.getMainLooper()).postDelayed({
+                //notifyDataSetChanged必须在UI线程里调用，所以需要用Handler
+                callBackFunc("" + response.body?.string(), saveFile)
+            }, 0)
+        }
+    })
 }
 
 fun saveBuff2File(data: String, saveFile: String) {
@@ -52,6 +77,7 @@ fun saveBuff2File(data: String, saveFile: String) {
     val fileWriter = FileOutputStream(file, false)
     fileWriter.write(data.toByteArray(charset("UTF_8")))
     fileWriter.close()
+
 }
 
 fun loadBuff4File(readFile: String): String {

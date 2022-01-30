@@ -10,11 +10,13 @@ import android.util.AttributeSet
 import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
 import android.webkit.WebView
-import com.demo.antizha.*
+import com.demo.antizha.OnWebListener
+import com.demo.antizha.UserInfoBean
 import com.demo.antizha.ui.activity.BaseActivity
-import com.demo.antizha.util.SystemUtils
+import com.demo.antizha.ui.activity.PromosWebDetActivity
 import com.demo.antizha.util.UrlUtils
 import com.google.gson.Gson
+
 
 fun getFixedContext(context: Context): Context {
     return if (Build.VERSION.SDK_INT >= 17) context.createConfigurationContext(Configuration()) else context
@@ -24,6 +26,7 @@ class HiWebView : WebView {
     private var mActivity: Activity? = null
     private lateinit var mJsObject: Any
     private var mOnWebListener: OnWebListener? = null
+    private var mSwipBackLayout: SwipBackLayout? = null
 
     constructor(context: Context) : super(getFixedContext(context)) {
         initWebView(this)
@@ -49,9 +52,9 @@ class HiWebView : WebView {
         mOnWebListener = onWebListener!!
     }
 
-    fun setActivity(activity: Activity?) {
+    fun setSwipLayout(activity: Activity?, swipBackLayout: SwipBackLayout?) {
         mActivity = activity
-        //this.mSwipBackLayout = swipBackLayout
+        mSwipBackLayout = swipBackLayout
     }
 
     @SuppressLint("JavascriptInterface")
@@ -90,19 +93,29 @@ class HiWebView : WebView {
 
         @JavascriptInterface
         fun getPageParams(str: String?) {
-            if (this@HiWebView.mActivity != null && TextUtils.equals("pageFinish=1", str) &&
-                this@HiWebView.mActivity != null && this@HiWebView.mOnWebListener != null
-            ) {
-                this@HiWebView.mOnWebListener!!.webJsFinish()
+            if (mActivity != null && TextUtils.equals("pageFinish=1", str) &&
+                mOnWebListener != null) {
+                mOnWebListener!!.webJsFinish()
+            }
+        }
+
+        @JavascriptInterface
+        fun getSwpieEvent(str: String?) {
+            if (mActivity != null && mSwipBackLayout != null && mActivity is PromosWebDetActivity) {
+                if (TextUtils.equals(str, "1")) {
+                    mSwipBackLayout!!.setInterEvent(true)
+                } else {
+                    mSwipBackLayout!!.setInterEvent(false)
+                }
             }
         }
 
         @JavascriptInterface
         fun sendWebMsg(str: String?) {
-            if (this@HiWebView.mActivity != null && this@HiWebView.mOnWebListener != null &&
+            if (mActivity != null && mOnWebListener != null &&
                 str != null && !TextUtils.isEmpty(str)
             ) {
-                this@HiWebView.mOnWebListener!!.shouldIntercept(UrlUtils.string2Param(str))
+                mOnWebListener!!.shouldIntercept(UrlUtils.string2Param(str))
             }
         }
     }
@@ -113,8 +126,8 @@ class HiWebView : WebView {
             hashMap["deviceid"] = UserInfoBean.imei
             hashMap["os-version"] = "0"
             hashMap["market"] = Hicore.app.getChannel()
-            hashMap["app-version"] = SystemUtils.getAppVer()
-            hashMap["app-version-code"] = SystemUtils.getAppVerCode().toString()
+            hashMap["app-version"] = UserInfoBean.version
+            hashMap["app-version-code"] = UserInfoBean.innerVersion.toString()
             hashMap["haveLiuhai"] = BaseActivity.liuhaiHeight.toString()
             hashMap["userid"] = UserInfoBean.accountId
             hashMap["pcode"] = UserInfoBean.adcode

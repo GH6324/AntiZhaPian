@@ -1,7 +1,10 @@
 package com.demo.antizha.ui.activity
 
 import android.app.Activity
-import android.os.*
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.text.TextUtils
 import android.view.View
 import android.webkit.*
@@ -11,6 +14,7 @@ import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityPromWebDetBinding
 import com.demo.antizha.ui.HiWebView
 import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.SwipBackLayout
 import com.demo.antizha.util.Parameters
 import qiu.niorgai.StatusBarCompat
 import java.util.concurrent.atomic.AtomicReference
@@ -19,6 +23,7 @@ import java.util.concurrent.atomic.AtomicReference
 class PromosWebDetActivity : BaseActivity() {
     private lateinit var promosWebDetBinding: ActivityPromWebDetBinding
     private lateinit var mHandler: Handler
+    private lateinit var swipBackLayout: SwipBackLayout
     private var isVideo = false
     private var mArticleId: String = ""
     override fun initPage() {
@@ -81,7 +86,9 @@ class PromosWebDetActivity : BaseActivity() {
 
     // ui.activity.BaseActivity
     private fun loadWeb() {
-        promosWebDetBinding.webview.setActivity(this)
+        swipBackLayout = SwipBackLayout.create(this.mActivity)
+        swipBackLayout.init()
+        promosWebDetBinding.webview.setSwipLayout(this, swipBackLayout)
         promosWebDetBinding.piTitle.ivRight.setBackgroundResource(R.drawable.iv_share_dot)
         mArticleId = intent.getStringExtra("extra_web_id").toString()
         val stringExtra = intent.getStringExtra("extra_web_url")
@@ -174,10 +181,8 @@ class PromosWebDetActivity : BaseActivity() {
         }
 
         // android.webkit.WebViewClient
-        override fun shouldOverrideUrlLoading(
-            webView: WebView?,
-            webResourceRequest: WebResourceRequest
-        ): Boolean {
+        override fun shouldOverrideUrlLoading(webView: WebView?,
+                                              webResourceRequest: WebResourceRequest): Boolean {
             val atomicReference = AtomicReference<String>()
             if (Build.VERSION.SDK_INT >= 21) {
                 atomicReference.set(webResourceRequest.url.path)

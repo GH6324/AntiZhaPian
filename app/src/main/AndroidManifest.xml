@@ -106,7 +106,15 @@
         <activity
             android:name=".ui.activity.AboutUsActivity"
             android:screenOrientation="portrait"></activity>
-
+        <activity
+            android:name=".ui.activity.WebActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.FeedbackHelpActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.FeedbackDetailActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

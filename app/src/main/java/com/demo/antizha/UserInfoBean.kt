@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import com.demo.antizha.ui.Hicore
 import com.demo.antizha.util.AddressBean
 import com.demo.antizha.util.CRC64
+import com.demo.antizha.util.UpdateUtil
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.TypeAdapter
@@ -54,6 +55,11 @@ object UserInfoBean {
     var longitude: String = ""          //设置地区的经度，每天会略做随机修改
     var latitude: String = ""           //设置地区的纬度，每天会略做随机修改
     var refTudeTime: String = ""        //上次刷新经纬度的日期，和当前不同就该刷新了
+    var version: String = ""
+    var innerVersion = 0
+    var getVerTime: String = ""        //上次获取新颁布的日期，和当前不同就该刷新了
+
+    @RequiresApi(Build.VERSION_CODES.P)
     fun Init() {
         val context: Context = Hicore.context
         val settings: SharedPreferences = context.getSharedPreferences("setting", 0)
@@ -80,14 +86,23 @@ object UserInfoBean {
         longitude = settings.getString("longitude", "").toString()
         latitude = settings.getString("latitude", "").toString()
         refTudeTime = settings.getString("refTudeTime", "").toString()
+        version = settings.getString("version", "").toString()
+        innerVersion = settings.getInt("innerVersion", 0)
+        getVerTime = settings.getString("getVerTime", "").toString()
+
         clusterID = 365268909
         exp = (System.currentTimeMillis() + 86400000L * 30L) / 1000
         if (TextUtils.isEmpty(region)) {
             region = "北京市.北京市.东城区"
             adcode = "110101"
-            checkLongitudeLatitude()
-        } else
-            checkLongitudeLatitude()
+        }
+        checkLongitudeLatitude()
+
+        if (TextUtils.isEmpty(version)) {
+            version = BuildConfig.VERSION_NAME
+            innerVersion = BuildConfig.VERSION_CODE
+        }
+        checkUpdate()
         getToken()
         CalcProgress()
     }
@@ -114,8 +129,22 @@ object UserInfoBean {
         editor.putString("longitude", longitude)
         editor.putString("latitude", latitude)
         editor.putString("refTudeTime", refTudeTime)
+        editor.putString("version", version)
+        editor.putInt("innerVersion", innerVersion)
+        editor.putString("getVerTime", getVerTime)
         editor.apply()
         CalcProgress()
+    }
+
+    fun setVer(ver: String, verCode: Int) {
+        if (!TextUtils.equals(ver, version) || innerVersion != verCode) {
+            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd") // HH:mm:ss
+            val currentDate = Date(System.currentTimeMillis())
+            getVerTime = simpleDateFormat.format(currentDate)
+            version = ver
+            innerVersion = verCode
+            commit()
+        }
     }
 
     fun CalcProgress() {
@@ -191,6 +220,16 @@ object UserInfoBean {
                     }
                 }
             }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    fun checkUpdate() {
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd") // HH:mm:ss
+        val currentDate = Date(System.currentTimeMillis())
+        val dateString = simpleDateFormat.format(currentDate)
+        if (!dateString.equals(getVerTime)) {
+            UpdateUtil.checkVer()
         }
     }
 

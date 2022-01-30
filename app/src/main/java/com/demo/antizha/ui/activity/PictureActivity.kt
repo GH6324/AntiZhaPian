@@ -42,6 +42,7 @@ class PictureSelectAdapter(resId: Int, var medias: ArrayList<String>) :
         this@PictureSelectAdapter.uploadStateInfos = upStates
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun convertMedia2Video(baseViewHolder: BaseViewHolder, localMedia: String) {
     }
 

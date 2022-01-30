@@ -9,13 +9,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.demo.antizha.R
 import com.demo.antizha.UserInfoBean
-import com.demo.antizha.ui.activity.AboutUsActivity
-import com.demo.antizha.ui.activity.MinePersonalActivity
-import com.demo.antizha.ui.activity.SettingActivity
+import com.demo.antizha.ui.activity.*
 
 class MineFragment : Fragment() {
 
@@ -30,8 +29,13 @@ class MineFragment : Fragment() {
             ViewModelProvider(this).get(MineViewModel::class.java)
         root = inflater.inflate(R.layout.fragment_mine, container, false)
 
-        val explain: TextView = root.findViewById(R.id.tv_explain)
-        explain.setOnClickListener {
+        val head: ConstraintLayout = root.findViewById(R.id.cl_head)
+        head.setOnClickListener {
+            val intentInfo = Intent(activity, MinePersonalActivity::class.java)
+            startActivity(intentInfo)
+        }
+        val phone: TextView = root.findViewById(R.id.tv_phone)
+        phone.setOnClickListener {
             val intentInfo = Intent(activity, MinePersonalActivity::class.java)
             startActivity(intentInfo)
         }
@@ -40,9 +44,22 @@ class MineFragment : Fragment() {
             val intentInfo = Intent(activity, SettingActivity::class.java)
             startActivity(intentInfo)
         }
-        val ablout: RelativeLayout = root.findViewById(R.id.ll_ablout_app)
-        ablout.setOnClickListener {
+        val about: RelativeLayout = root.findViewById(R.id.ll_ablout_app)
+        about.setOnClickListener {
             val intentInfo = Intent(activity, AboutUsActivity::class.java)
+            startActivity(intentInfo)
+        }
+        val userNote: RelativeLayout = root.findViewById(R.id.ll_user_note)
+        userNote.setOnClickListener {
+            val intentInfo = Intent(activity, WebActivity::class.java)
+            intentInfo.putExtra(WebActivity.EXTRA_WEB_TITLE, "用户手册");
+            intentInfo.putExtra(WebActivity.EXTRA_WEB_URL,
+                "https://fzapph5.gjfzpt.cn/UserManual/?time=" + System.currentTimeMillis() / 3000);
+            startActivity(intentInfo)
+        }
+        val feedback: RelativeLayout = root.findViewById(R.id.ll_feedback)
+        feedback.setOnClickListener {
+            val intentInfo = Intent(activity, FeedbackHelpActivity::class.java)
             startActivity(intentInfo)
         }
         return root

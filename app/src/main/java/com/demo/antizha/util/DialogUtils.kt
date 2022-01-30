@@ -4,9 +4,13 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
+import android.text.method.LinkMovementMethod
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -195,5 +199,130 @@ class DialogUtils {
                 e.printStackTrace()
             }
         }
+
+        @RequiresApi(Build.VERSION_CODES.R)
+        fun showInterlinkingDialog(activity: Activity?,
+                                   title: String?,
+                                   subTitle: String?,
+                                   cancelText: String?,
+                                   confirmText: String?,
+                                   iClickListener: IClickListener?): Dialog? {
+            return showInterlinkingDialog(activity,
+                title,
+                subTitle,
+                cancelText,
+                confirmText,
+                -1,
+                -1,
+                iClickListener)
+        }
+
+        @RequiresApi(Build.VERSION_CODES.R)
+        fun showInterlinkingDialog(activity: Activity?,
+                                   title: String?,
+                                   subTitle: String?,
+                                   cancelText: String?,
+                                   confirmText: String?,
+                                   cancelColor: Int,
+                                   confirmColor: Int,
+                                   iClickListener: IClickListener?): Dialog? {
+            return showInterlinkingDialog(activity,
+                title,
+                subTitle as CharSequence?,
+                false,
+                cancelText,
+                confirmText,
+                cancelColor,
+                confirmColor,
+                iClickListener)
+        }
+
+        @RequiresApi(Build.VERSION_CODES.R)
+        fun showInterlinkingDialog(activity: Activity?,
+                                   title: String?,
+                                   subTitle: CharSequence?,
+                                   interlinking: Boolean,
+                                   cancelText: String?,
+                                   confirmText: String?,
+                                   cancelColor: Int,
+                                   confirmColor: Int,
+                                   iClickListener: IClickListener?): Dialog? {
+            if (activity == null || activity.isFinishing) {
+                return null
+            }
+            val baseDialog = BaseDialog(activity, R.style.base_dialog_style)
+            baseDialog.setContentView(R.layout.custom_bt_dialog)
+            baseDialog.setGravityLayout(2)
+            baseDialog.widthDialogdp = -2.0f
+            baseDialog.heightDialogdp = -2.0f
+            baseDialog.setCancelable(false)
+            baseDialog.setCanceledOnTouchOutside(false)
+            baseDialog.initOnCreate()
+            baseDialog.show()
+            val tvTitle = baseDialog.findViewById<TextView>(R.id.customdialog_title)
+            val tvSubTitle = baseDialog.findViewById<TextView>(R.id.customdialog_subtitle)
+            val btCancel = baseDialog.findViewById<Button>(R.id.cancel_btn)
+            val btConfirm = baseDialog.findViewById<Button>(R.id.confirm_btn)
+            if (interlinking) {
+                tvSubTitle.movementMethod = LinkMovementMethod.getInstance()
+                tvSubTitle.text = subTitle
+            } else {
+                tvSubTitle.text = subTitle
+            }
+            if (TextUtils.isEmpty(subTitle)) {
+                tvSubTitle.visibility = View.GONE
+            }
+            tvTitle.text = title
+            btCancel.text = cancelText
+            btConfirm.text = confirmText
+            if (cancelColor == -1) {
+                btCancel.setTextColor(-14072090)
+            } else {
+                btCancel.setTextColor(cancelColor)
+            }
+            if (confirmColor == -1) {
+                btConfirm.setTextColor(-14072090)
+            } else {
+                btConfirm.setTextColor(confirmColor)
+            }
+            btCancel.setOnClickListener { _ ->
+                iClickListener?.cancelBtn()
+                baseDialog.dismiss()
+            }
+            btConfirm.setOnClickListener { _ ->
+                iClickListener?.clickOKBtn()
+                baseDialog.dismiss()
+            }
+            return baseDialog
+        }
+
+        @RequiresApi(Build.VERSION_CODES.R)
+        fun showDialogAutoClose(activity: Activity?,
+                                finishActivity: Boolean,
+                                delayClose: Int,
+                                title: String?,
+                                resID: Int): Dialog? {
+            if (activity == null || activity.isFinishing) {
+                return null
+            }
+            val baseDialog = BaseDialog(activity, R.style.base_dialog_style)
+            baseDialog.setContentView(R.layout.custom_iv_h_dialog)
+            baseDialog.setGravityLayout(2)
+            baseDialog.widthDialog = (-2.0).toFloat()
+            baseDialog.heightDialog = (-2.0).toFloat()
+            baseDialog.setCancelable(true)
+            baseDialog.setCanceledOnTouchOutside(true)
+            baseDialog.initOnCreate()
+            baseDialog.show()
+            baseDialog.findViewById<ImageView>(R.id.iv_img).setBackgroundResource(resID)
+            baseDialog.findViewById<TextView>(R.id.tv_title).text = title
+            Handler(Looper.getMainLooper()).postDelayed({
+                baseDialog.dismiss()
+                if (finishActivity)
+                    activity.finish()
+            }, (1000 * delayClose).toLong())
+            return baseDialog
+        }
+
     }
 }
