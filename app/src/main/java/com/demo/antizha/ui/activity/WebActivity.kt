@@ -4,12 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
-import android.os.Build
 import android.os.Message
 import android.text.TextUtils
 import android.view.View
 import android.webkit.*
-import androidx.annotation.RequiresApi
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityWebBinding
 import com.demo.antizha.interfaces.IHandler
@@ -28,10 +26,10 @@ import java.util.concurrent.atomic.AtomicReference
 
 class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
     companion object {
-        val EXTRA_WEB_PERSONALIZE = "extra_web_personalize"
-        val EXTRA_WEB_PERSONALIZE_UNSEALING = "extra_web_personalize_unsealing"
-        val EXTRA_WEB_TITLE = "extra_web_title"
-        val EXTRA_WEB_URL = "extra_web_url"
+        const val EXTRA_WEB_PERSONALIZE = "extra_web_personalize"
+        const val EXTRA_WEB_PERSONALIZE_UNSEALING = "extra_web_personalize_unsealing"
+        const val EXTRA_WEB_TITLE = "extra_web_title"
+        const val EXTRA_WEB_URL = "extra_web_url"
     }
 
     private lateinit var infoBinding: ActivityWebBinding
@@ -44,19 +42,18 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
     private var articId: String? = null
     private var shareFullScreen = false
 
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun initPage() {
         infoBinding = ActivityWebBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         StatusBarCompat.translucentStatusBar(this, true, true)
-        swipBackLayout = SwipBackLayout.create(this.mActivity);
-        swipBackLayout.init();
-        IHandler.setHandleMsgListener(this);
+        swipBackLayout = SwipBackLayout.create(mActivity)
+        swipBackLayout.init()
+        IHandler.setHandleMsgListener(this)
         mTitle = intent.getStringExtra(EXTRA_WEB_TITLE).toString()
         mOrginUrl = intent.getStringExtra(EXTRA_WEB_URL).toString()
-        caragyCode = getIntent().getIntExtra("extra_web_theme_caragy", -9);
-        mPersonalize = getIntent().getStringExtra(EXTRA_WEB_PERSONALIZE);
-        infoBinding.piTitle.tvTitle.setText(this.mTitle)
+        caragyCode = getIntent().getIntExtra("extra_web_theme_caragy", -9)
+        mPersonalize = getIntent().getStringExtra(EXTRA_WEB_PERSONALIZE)
+        infoBinding.piTitle.tvTitle.setText(mTitle)
         initWebView(infoBinding.webview)
         infoBinding.webview.loadUrl(mOrginUrl)
         infoBinding.llProgress.setVisibility(View.VISIBLE)
@@ -68,7 +65,6 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
     }
 
     // androidx.activity.ComponentActivity, android.app.Activity
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun onBackPressed() {
         if (infoBinding.webview.canGoBack()) {
             val i: Int = toPage
@@ -103,7 +99,7 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
     }
 
     private fun initView() {
-        this.shareFullScreen = false
+        shareFullScreen = false
         infoBinding.piTitle.rlTitle.setBackgroundResource(R.drawable.status_bar_bg)
         infoBinding.piTitle.tvTitle.setText(mTitle)
         infoBinding.piTitle.ivBack.setVisibility(View.VISIBLE)
@@ -164,7 +160,6 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun handleMsg(message: Message?) {
         val activity = mActivity
         if (activity != null && !activity.isFinishing) {
@@ -175,11 +170,11 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
                     infoBinding.piTitle.rlTitle.visibility = View.VISIBLE
                     infoBinding.flMask.visibility = View.GONE
                     infoBinding.piTitle.rlTitle.setBackgroundResource(R.drawable.transparent)
-                    swipBackLayout.setInterEvent(true);
+                    swipBackLayout.setInterEvent(true)
                     infoBinding.piTitle.tvTitle.setText("")
                     infoBinding.piTitle.ivBack.visibility = View.GONE
                     infoBinding.piTitle.ivRight.setBackgroundResource(R.drawable.iv_share_white)
-                    this.shareFullScreen = true
+                    shareFullScreen = true
                     return
                 }
                 3 -> {
@@ -259,7 +254,7 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
         override fun onReceivedTitle(webView: WebView?, str: String?) {
             super.onReceivedTitle(webView, str)
             if (TextUtils.isEmpty(mTitle) && !TextUtils.isEmpty(str)) {
-                infoBinding.piTitle.tvTitle.setText(mTitle);
+                infoBinding.piTitle.tvTitle.setText(mTitle)
             }
         }
     }
@@ -288,9 +283,7 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
         override fun shouldOverrideUrlLoading(webView: WebView?,
                                               webResourceRequest: WebResourceRequest): Boolean {
             val atomicReference = AtomicReference<String>()
-            if (Build.VERSION.SDK_INT >= 21) {
-                atomicReference.set(webResourceRequest.url.path)
-            }
+            atomicReference.set(webResourceRequest.url.path)
             return super.shouldOverrideUrlLoading(webView, webResourceRequest)
         }
 

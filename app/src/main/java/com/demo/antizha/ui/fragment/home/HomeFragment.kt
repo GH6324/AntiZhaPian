@@ -1,8 +1,8 @@
 package com.demo.antizha.ui.fragment.home
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,7 +21,9 @@ import com.demo.antizha.*
 import com.demo.antizha.ui.Hicore
 import com.demo.antizha.ui.IClickListener
 import com.demo.antizha.ui.activity.*
+import com.demo.antizha.util.AppUtil
 import com.demo.antizha.util.DialogUtils
+import com.demo.antizha.util.FileUtil
 import com.google.gson.Gson
 import com.scwang.smart.refresh.footer.BallPulseFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
@@ -32,6 +33,7 @@ import com.youth.banner.adapter.BannerAdapter
 import com.youth.banner.indicator.RoundLinesIndicator
 import com.youth.banner.listener.OnBannerListener
 import com.youth.banner.util.BannerUtils
+import java.io.InputStreamReader
 
 
 class ToolBean(val id: Int, val name: String, val imageId: Int)
@@ -54,12 +56,11 @@ class ToolHolderAdapte(private var homeFragment: HomeFragment,
         holder.name.text = list[i].name
         holder.image.setImageResource(list[i].imageId)
         holder.itemView.setOnClickListener(object : View.OnClickListener {
-            @RequiresApi(Build.VERSION_CODES.R)
             override fun onClick(v: View?) {
                 if (!Hicore.app.isDouble()) {
                     if (list.size <= 0)
                         return
-                    val adapterPosition = holder.adapterPosition
+                    val adapterPosition = holder.absoluteAdapterPosition
                     if (adapterPosition < 0)
                         return
                     val toolBean = list[adapterPosition]
@@ -154,8 +155,8 @@ class NewCaseHolderAdapte(
         holder.title.text = list[i].title
         Glide.with(view).load(list[i].cdnCover).into(holder.image)
         holder.itemView.setOnClickListener(object : View.OnClickListener {
-            val url: String = list[holder.adapterPosition].localFilePath
-            val id: String = list[holder.adapterPosition].id
+            val url: String = list[holder.absoluteAdapterPosition].localFilePath
+            val id: String = list[holder.absoluteAdapterPosition].id
             override fun onClick(v: View?) {
                 if (!Hicore.app.isDouble()) {
                     val intent = Intent(context, PromosWebDetActivity::class.java)
@@ -183,13 +184,13 @@ class NewCaseHolderAdapte(
 
     fun addNewCase(newCase: NewCase) {
         list.add(newCase)
-        this.recycle.layoutParams?.height =
+        recycle.layoutParams?.height =
             context.resources.displayMetrics.density.let { (100 * list.size * it + 0.5).toInt() }
     }
 
     fun addNewCase(newCases: ArrayList<NewCase>) {
         list.addAll(newCases)
-        this.recycle.layoutParams?.height =
+        recycle.layoutParams?.height =
             context.resources.displayMetrics.density.let { (100 * list.size * it + 0.5).toInt() }
     }
 }
@@ -213,7 +214,7 @@ class BanderHolder(view: View) : RecyclerView.ViewHolder(view) {
 }
 
 class BanderAdapter(
-    private var imageUrls: ArrayList<BanderBean>
+    imageUrls: ArrayList<BanderBean>
 ) : BannerAdapter<BanderBean, BanderHolder>(imageUrls) {
     override fun onCreateHolder(parent: ViewGroup?, viewType: Int): BanderHolder {
         val imageView = ImageView(parent!!.context)
@@ -238,7 +239,7 @@ class BanderAdapter(
 }
 
 class HomeFragment : Fragment(), IClickListener {
-
+    private lateinit var mActivity: Activity
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var root: View
     private lateinit var newCaseAdapter: NewCaseHolderAdapte
@@ -247,6 +248,7 @@ class HomeFragment : Fragment(), IClickListener {
     private var pageIndex = 1
     private var pageSize = 10
     private var total = 0
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -259,7 +261,13 @@ class HomeFragment : Fragment(), IClickListener {
         initWarnCheck()
         initNewCase()
         initRefreshLayout()
+        initNoteList()
         return root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mActivity = context as Activity
     }
 
     private fun initBanner() {
@@ -286,7 +294,7 @@ class HomeFragment : Fragment(), IClickListener {
             }
         }
         banner.setOnBannerListener(mOnWebListener)
-        getNewBander()
+        loadBander()
     }
 
     private fun initTool() {
@@ -313,7 +321,8 @@ class HomeFragment : Fragment(), IClickListener {
         val frameVirusCheck: FrameLayout = root.findViewById(R.id.fl_virus_check)
         val frameFruadCheck: FrameLayout = root.findViewById(R.id.fl_fruad_check)
         frameVirusCheck.setOnClickListener(View.OnClickListener { _ ->
-            startActivity(Intent(activity, VirusKillingActivity::class.java))
+            if (AppUtil.checkPermission(mActivity, true) == true)
+                startActivity(Intent(activity, VirusKillingActivity::class.java))
         })
         frameFruadCheck.setOnClickListener(View.OnClickListener { _ ->
             startActivity(Intent(activity, CheckFraudActivity::class.java))
@@ -323,7 +332,7 @@ class HomeFragment : Fragment(), IClickListener {
     private fun initNewCase() {
         val newCaseRecycle: RecyclerView = root.findViewById(R.id.rcy_newcase)
         newCaseRecycle.layoutManager = LinearLayoutManager(root.context)
-        this.newCaseAdapter =
+        newCaseAdapter =
             NewCaseHolderAdapte(root.context, root, newCaseRecycle, ArrayList<NewCase>())
         newCaseRecycle.adapter = newCaseAdapter
     }
@@ -346,6 +355,13 @@ class HomeFragment : Fragment(), IClickListener {
             }
         }
         getNewCaseApi(1, pageSize)
+    }
+
+    private fun initNoteList() {
+        val flNoteView: FrameLayout = root.findViewById(R.id.fl_note_view)
+        flNoteView.setOnClickListener {
+            startActivity(Intent(activity, NoteListActivity::class.java))
+        }
     }
 
     override fun cancelBtn() {
@@ -408,23 +424,19 @@ class HomeFragment : Fragment(), IClickListener {
         val url: String?
     )
 
-    private fun getNewBander() {
-        if (TextUtils.isEmpty(UserInfoBean.acctoken)) {
-            val s =
-                """{"data":[{"title":null,"url":null,"openType":0,"imgPath":"https://oss.gjfzpt.cn/preventfraud-static/h5/files/banners/306dd120fd9cb87af9a8fbcd6d0790c7.png","sort":2,"isShow":1,"extraID":null,"startTime":null,"endTime":null,"name":null,"description":null,"id":222537046026227713,"createTime":"2021-08-06 10:52:50","updateTime":"2021-08-06 10:52:50","nodeID":0}],"code":0,"msg":"成功"}"""
-            addNewBander(s, "")
-        } else
-            getDataByGet("https://fzapp.gjfzpt.cn/hicore/api/Banner",
-                addHead = true, "bander.txt", callBackFunc = this::addNewBander)
+    private fun loadBander() {
+        val inStream = FileUtil.openfile("bander.txt")
+        val inputReader = InputStreamReader(inStream, charset("UTF_8"))
+        val buff = inputReader.readText()
+        inStream.close()
+        addNewBander(buff)
     }
 
-    private fun addNewBander(data: String, saveFile: String) {
+    private fun addNewBander(data: String) {
         if (data[0] != '{')
             return
         val json = Gson().fromJson(data, NewBanderData::class.java)
         if (json != null && json.code == 0 && json.data != null && json.data.size > 0) {
-            if (!TextUtils.isEmpty(saveFile))
-                saveBuff2File(data, saveFile)
             val imageList = ArrayList<BanderBean>()
             for (row in json.data) {
                 imageList.add(

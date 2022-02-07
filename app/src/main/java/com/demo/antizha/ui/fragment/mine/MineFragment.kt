@@ -1,5 +1,7 @@
 package com.demo.antizha.ui.fragment.mine
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -17,7 +19,7 @@ import com.demo.antizha.UserInfoBean
 import com.demo.antizha.ui.activity.*
 
 class MineFragment : Fragment() {
-
+    private lateinit var mActivity: Activity
     private lateinit var mineViewModel: MineViewModel
     private lateinit var root: View
     override fun onCreateView(
@@ -52,14 +54,19 @@ class MineFragment : Fragment() {
         val userNote: RelativeLayout = root.findViewById(R.id.ll_user_note)
         userNote.setOnClickListener {
             val intentInfo = Intent(activity, WebActivity::class.java)
-            intentInfo.putExtra(WebActivity.EXTRA_WEB_TITLE, "用户手册");
+            intentInfo.putExtra(WebActivity.EXTRA_WEB_TITLE, "用户手册")
             intentInfo.putExtra(WebActivity.EXTRA_WEB_URL,
-                "https://fzapph5.gjfzpt.cn/UserManual/?time=" + System.currentTimeMillis() / 3000);
+                "https://fzapph5.gjfzpt.cn/UserManual/?time=" + System.currentTimeMillis() / 3000)
             startActivity(intentInfo)
         }
         val feedback: RelativeLayout = root.findViewById(R.id.ll_feedback)
         feedback.setOnClickListener {
             val intentInfo = Intent(activity, FeedbackHelpActivity::class.java)
+            startActivity(intentInfo)
+        }
+        val recordScreen: LinearLayout = root.findViewById(R.id.ll_record_screen)
+        recordScreen.setOnClickListener {
+            val intentInfo = Intent(activity, OneKeyScreenRecordActivity::class.java)
             startActivity(intentInfo)
         }
         return root
@@ -81,6 +88,11 @@ class MineFragment : Fragment() {
         accountid.text = UserInfoBean.accountId
         val ver: LinearLayout = root.findViewById(R.id.ll_version)
         ver.visibility = if (TextUtils.isEmpty(UserInfoBean.name)) View.VISIBLE else View.GONE
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mActivity = context as Activity
     }
 
     private fun generatePhoneNumber(): String {   //手机号生成

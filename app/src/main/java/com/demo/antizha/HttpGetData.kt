@@ -18,7 +18,7 @@ fun getDataByGet(url: String,
     try {
         val builder = OkHttpClient.Builder()
         if (addHead)
-            builder.addInterceptor(RequestParamInterceptor());
+            builder.addInterceptor(RequestParamInterceptor())
         val client = builder.build()
         var requestb = Request.Builder().get().url(url)
         var request = requestb.build()
@@ -39,7 +39,7 @@ fun getDataByPost(url: String,
     try {
         val builder = OkHttpClient.Builder()
         if (addHead)
-            builder.addInterceptor(RequestParamInterceptor());
+            builder.addInterceptor(RequestParamInterceptor())
         val client = builder.build()
         val json = Gson().toJson(bodyMap)
         var requestb = Request.Builder()

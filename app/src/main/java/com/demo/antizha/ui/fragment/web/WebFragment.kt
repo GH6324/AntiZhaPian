@@ -7,7 +7,10 @@ import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
-import android.os.*
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -15,15 +18,14 @@ import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.*
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.demo.antizha.OnWebListener
 import com.demo.antizha.R
+import com.demo.antizha.UserInfoBean
 import com.demo.antizha.WebViewFrag
 import com.demo.antizha.ui.Hicore
 import com.demo.antizha.ui.activity.PromosWebDetActivity
-import com.demo.antizha.UserInfoBean
 import com.demo.antizha.util.Parameters
 import com.demo.antizha.util.UrlAES
 import com.just.agentweb.AbsAgentWebSettings
@@ -90,7 +92,6 @@ class WebFragment : Fragment() {
                 webView.clearHistory()
             }
 
-            @RequiresApi(Build.VERSION_CODES.M)
             override fun onPageStarted(webView: WebView?, str: String?, bitmap: Bitmap?) {
                 super.onPageStarted(webView, str, bitmap)
                 if (!networkConnected()) {
@@ -98,7 +99,6 @@ class WebFragment : Fragment() {
                 }
             }
 
-            @RequiresApi(Build.VERSION_CODES.M)
             override fun shouldOverrideUrlLoading(
                 webView: WebView,
                 request: WebResourceRequest
@@ -137,7 +137,6 @@ class WebFragment : Fragment() {
         return root
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun networkConnected(): Boolean {
         val cm: ConnectivityManager = Hicore.getContext()
             .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -156,7 +155,7 @@ class WebFragment : Fragment() {
     }
 
     private fun initPage() {
-        this.mIvRight.setBackgroundResource(R.drawable.iv_share_white)
+        mIvRight.setBackgroundResource(R.drawable.iv_share_white)
         mIvBack.visibility = View.GONE
         mRlTitle.visibility = View.GONE
         mRlTitle.setBackgroundColor(0)

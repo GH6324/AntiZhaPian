@@ -1,13 +1,10 @@
 package com.demo.antizha.ui.activity
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.demo.antizha.databinding.ActivityAudioBinding
 
 class AudioActivity : BaseActivity() {
     private lateinit var infoBinding: ActivityAudioBinding
 
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun initPage() {
         infoBinding = ActivityAudioBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)

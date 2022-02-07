@@ -2,11 +2,9 @@ package com.demo.antizha.ui.activity
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Build
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -23,7 +21,6 @@ class SocialAccountActivity : BaseActivity() {
     private lateinit var socialAccAdapter: SocialAccAdapter
     private lateinit var startEdit: ActivityResultLauncher<Intent>
 
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun initPage() {
         infoBinding = ActivitySocialAccountBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
@@ -34,7 +31,7 @@ class SocialAccountActivity : BaseActivity() {
         getIntentData()
         infoBinding.recyclerview.setLayoutManager(LinearLayoutManager(this,
             RecyclerView.VERTICAL, false))
-        socialAccAdapter = SocialAccAdapter(R.layout.item_social_acc, this.SocialAccounts)
+        socialAccAdapter = SocialAccAdapter(R.layout.item_social_acc, SocialAccounts)
         infoBinding.recyclerview.setAdapter(socialAccAdapter)
         socialAccAdapter.setOnItemChildClickListener(BaseQuickAdapter.OnItemChildClickListener { adapter, view, position ->
             val id: Int = view.getId()

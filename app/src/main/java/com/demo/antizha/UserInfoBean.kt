@@ -3,10 +3,8 @@ package com.demo.antizha
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.*
-import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
-import androidx.annotation.RequiresApi
 import com.demo.antizha.ui.Hicore
 import com.demo.antizha.util.AddressBean
 import com.demo.antizha.util.CRC64
@@ -16,6 +14,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
+import com.hjq.toast.ToastUtils
 import org.w3c.dom.Document
 import org.w3c.dom.NodeList
 import java.io.File
@@ -59,7 +58,6 @@ object UserInfoBean {
     var innerVersion = 0
     var getVerTime: String = ""        //上次获取新颁布的日期，和当前不同就该刷新了
 
-    @RequiresApi(Build.VERSION_CODES.P)
     fun Init() {
         val context: Context = Hicore.context
         val settings: SharedPreferences = context.getSharedPreferences("setting", 0)
@@ -223,7 +221,6 @@ object UserInfoBean {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     fun checkUpdate() {
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd") // HH:mm:ss
         val currentDate = Date(System.currentTimeMillis())
@@ -255,7 +252,22 @@ object UserInfoBean {
                     val value = node.getTextContent()
                     val token = Gson().fromJson(value, TokenPackage::class.java)
                     if (token != null) {
+                        val tokenSub: List<String> = token.token.split(".")
+                        if (tokenSub.size != 3)
+                            return
+                        val payLoadJson =
+                            String(Base64.getUrlDecoder().decode(tokenSub[1]), charset("UTF-8"))
+                        val gsonBuilder = GsonBuilder().registerTypeAdapter(PayLoads::class.java,
+                            PayLoadAdapter())
+                        val gson = gsonBuilder.create()
+                        val pl = gson.fromJson(payLoadJson, PayLoads::class.java)
+                        val currentTime = System.currentTimeMillis() / 1000
+                        if (pl.getExp() < currentTime) {
+                            ToastUtils.show("Token Is Expire!")
+                            return
+                        }
                         acctoken = token.token
+                        return
                     }
                 }
             }
@@ -293,10 +305,13 @@ object UserInfoBean {
 
     class PayLoads {
         var sub: ArrayList<PayLoad> = ArrayList<PayLoad>()
-        lateinit var TokenModel: String
-        var exp: Long = 0
-        var iss: String = "PreventFraudAPI"
-        var aud: String = "PreventFraudAPP"
+        fun getExp(): Long {
+            for (i in sub) {
+                if (i.name == "exp")
+                    return i.value as Long
+            }
+            return 0
+        }
     }
 
     class PayLoadAdapter : TypeAdapter<PayLoads>() {
@@ -316,13 +331,23 @@ object UserInfoBean {
         }
 
         @Throws(IOException::class)
-        override fun read(`in`: JsonReader?): PayLoads? {
-            // TODO Auto-generated method stub
-            return null
+        override fun read(jread: JsonReader?): PayLoads? {
+            var pl = PayLoads()
+            if (jread == null)
+                return pl
+            jread.beginObject()
+            while (jread.hasNext()) {
+                val name = jread.nextName()
+                when (name) {
+                    "exp" -> pl.sub.add(PayLoad("exp", jread.nextLong()))
+                    else -> pl.sub.add(PayLoad(name, jread.nextString()))
+                }
+            }
+            jread.endObject()
+            return pl
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun makeToken(): String {       //伪造TOKEN的算法应该是正确的，但是没有正确的seed，算不出正确的TOKEN
         val headerJson = """{"alg":"HS256","typ":"JWT"}"""
         val header = Base64.getUrlEncoder().withoutPadding().encodeToString(
@@ -351,10 +376,6 @@ object UserInfoBean {
         val sign = Base64.getUrlEncoder().withoutPadding().encodeToString(hmacSha1(seed, value))
         return String.format("Bearer %s.%s.%s", header, payload, sign)
     }
-
-
-    //地区的基类
-
 }
 
 

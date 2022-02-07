@@ -2,9 +2,10 @@ package com.demo.antizha.ui.activity
 
 import android.os.Handler
 import android.os.Looper
+import android.text.TextUtils
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.databinding.ActivityAboutUsBinding
-import com.demo.antizha.util.DialogUtils
+import com.demo.antizha.util.FileUtil
 import com.hjq.toast.ToastUtils
 
 
@@ -13,17 +14,18 @@ class AboutUsActivity : BaseActivity() {
     override fun initPage() {
         infoBinding = ActivityAboutUsBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
-        infoBinding.piTitle.tvTitle.setText("关于我们");
+        infoBinding.piTitle.tvTitle.setText("关于我们")
         infoBinding.tvAppVersion.text = "v" + UserInfoBean.version
         infoBinding.piTitle.ivBack.setOnClickListener {
             finish()
         }
         infoBinding.checkUpadte.setOnClickListener {
-            DialogUtils.showProgressDialog("检测中...", true, this.mActivity)
-
+            showProgressDialog("检测中...", true)
+            if (!TextUtils.isEmpty(UserInfoBean.acctoken))
+                FileUtil.update()
             Handler(Looper.getMainLooper()).postDelayed({
-                DialogUtils.destroyProgressDialog()
-                ToastUtils.show("已是最新版本");
+                hideProgressDialog()
+                ToastUtils.show("已是最新版本")
             }, 500)
         }
     }

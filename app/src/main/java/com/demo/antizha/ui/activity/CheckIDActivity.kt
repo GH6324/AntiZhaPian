@@ -25,9 +25,9 @@ class CheckIDActivity: BaseActivity(), IClickListener {
         infoBinding.btnIdvrfySend.setOnClickListener {
             val checkID: String = infoBinding.etCheckPhone.getText().toString()
             if (checkID.trim { it <= ' ' }.length < 11) {
-                var toast = Toast.makeText(Hicore.app, "请输入正确手机号~", Toast.LENGTH_SHORT);
-                toast.setGravity(17, 0, 0);
-                toast.show();
+                var toast = Toast.makeText(Hicore.app, "请输入正确手机号~", Toast.LENGTH_SHORT)
+                toast.setGravity(17, 0, 0)
+                toast.show()
             } else {
                 DialogUtils.showNormalDialog(mActivity, "向该号码发送身份核实请求?", checkID, "取消", "确认发送", this)
             }
@@ -37,8 +37,8 @@ class CheckIDActivity: BaseActivity(), IClickListener {
 
     }
     override fun clickOKBtn(){
-        var toast = Toast.makeText(Hicore.app, "发送成功", Toast.LENGTH_SHORT);
-        toast.setGravity(17, 0, 0);
-        toast.show();
+        var toast = Toast.makeText(Hicore.app, "发送成功", Toast.LENGTH_SHORT)
+        toast.setGravity(17, 0, 0)
+        toast.show()
     }
 }

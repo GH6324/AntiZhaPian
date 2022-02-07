@@ -1,9 +1,7 @@
 package com.demo.antizha.adapter
 
-import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.annotation.RequiresApi
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.demo.antizha.R
@@ -19,8 +17,8 @@ class SocialAccAdapter(resId: Int, val list: ArrayList<SocialAccBean>) :
     override fun convert(holder: BaseViewHolder, item: SocialAccBean) {
         holder.setText(R.id.tv_name, item.accountName)
         holder.setText(R.id.tv_acc_num, item.accountNum)
-        holder.addOnClickListener(R.id.iv_delete);
-        holder.addOnClickListener(R.id.iv_edit);
+        holder.addOnClickListener(R.id.iv_delete)
+        holder.addOnClickListener(R.id.iv_edit)
     }
 
 }
@@ -33,7 +31,6 @@ class SocialAccBean : Parcelable {
 
     constructor() {}
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     constructor(source: Parcel) {
         accountName = source.readString().toString()
         accountNum = source.readString().toString()
@@ -45,7 +42,6 @@ class SocialAccBean : Parcelable {
         return 0
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeString(accountName)
         dest.writeString(accountNum)
@@ -54,7 +50,6 @@ class SocialAccBean : Parcelable {
     }
 
     companion object CREATOR : Parcelable.Creator<SocialAccBean> {
-        @RequiresApi(Build.VERSION_CODES.Q)
         override fun createFromParcel(parcel: Parcel): SocialAccBean {
             return SocialAccBean(parcel)
         }

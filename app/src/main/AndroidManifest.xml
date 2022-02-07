@@ -5,6 +5,10 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
@@ -62,6 +66,9 @@
             android:name=".ui.activity.CheckFraudActivity"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".ui.activity.CheckFraudResultActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".ui.activity.VirusKillingActivity"
             android:screenOrientation="portrait"></activity>
         <activity
@@ -75,6 +82,9 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.SmsActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.SmsAddActivity"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.AppActivity"
@@ -114,6 +124,21 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.FeedbackDetailActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.OneKeyScreenRecordActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.NoteListActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.NoteDetailActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.AppSelectedActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.PreviewPictureActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 

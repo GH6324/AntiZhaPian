@@ -1,21 +1,107 @@
 package com.demo.antizha.ui.activity
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.app.Activity
+import android.content.Intent
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.demo.antizha.R
+import com.demo.antizha.adapter.AppDeleteAdapter
 import com.demo.antizha.databinding.ActivityAudioBinding
+import com.demo.antizha.util.AppUtil
+import com.demo.antizha.util.AppUtil.AppInfoBean
 
-class AppActivity : BaseActivity() {
+
+class AppActivity : BaseUploadActivity() {
     private lateinit var infoBinding: ActivityAudioBinding
+    private var mAppBeans: ArrayList<AppInfoBean> = ArrayList()
+    private var mAppIds: ArrayList<Int> = ArrayList()
+    private val mMaxSelectNum = 2
+    private lateinit var startApp: ActivityResultLauncher<Intent>
+    private lateinit var mAdapter: AppDeleteAdapter
 
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun initPage() {
         infoBinding = ActivityAudioBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "添加APP应用程序"
         infoBinding.lySelect.tvSelectTip.text = "添加"
         infoBinding.lyComplete.tvCommitTip.text = "最多可选择" + 2 + "个APP应用程序"
+        AppUtil.checkPermission(this, true)
+        getIntentData()
+        val lyManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        infoBinding.recyclerview.setLayoutManager(lyManager)
+        mAdapter =
+            AppDeleteAdapter(R.layout.recyclerview_app_record_select, mAppBeans, mUploadStateList)
+        mAdapter.bindToRecyclerView(infoBinding.recyclerview)
+        infoBinding.recyclerview.setAdapter(mAdapter)
+        mAdapter.setOnItemChildClickListener(BaseQuickAdapter.OnItemChildClickListener { adapter, view, position ->
+            val id: Int = view.getId()
+            if (id == R.id.iv_clear) {
+                mAppBeans.removeAt(position)
+                mAppIds.removeAt(position)
+                mUploadStateList.removeAt(position)
+                adapter.notifyDataSetChanged()
+                if (mAppBeans.size == 0)
+                    infoBinding.lyComplete.btnCommit.setText("确定")
+            }
+        })
+        initActivityResultLauncher()
         infoBinding.piTitle.ivBack.setOnClickListener {
+            val intent = Intent()
+            setResult(RESULT_OK, intent)
+            intent.putParcelableArrayListExtra("apps", mAppBeans)
             finish()
         }
+        infoBinding.lySelect.llSelect.setOnClickListener {
+            if (!AppUtil.checkPermission(this, true))
+                return@setOnClickListener
+            val intent = Intent(this, AppSelectedActivity::class.java)
+            intent.putExtra(AppSelectedActivity.SELECT_TYPE, 2)
+            intent.putExtra(AppSelectedActivity.SELECT_CURRENT, mAppBeans.size)
+            intent.putExtra(AppSelectedActivity.SELECT_MAX, mMaxSelectNum)
+            startApp.launch(intent)
+        }
+    }
+
+    fun getIntentData() {
+        val list = intent.getParcelableArrayListExtra<AppInfoBean>("apps")
+        if (list != null) {
+            mAppBeans.addAll(list)
+            for (app in mAppBeans) {
+                mAppIds.add(app.id)
+                mUploadStateList.add(UploadStateInfo())
+            }
+        }
+        if (mAppBeans.size > 0)
+            infoBinding.lyComplete.btnCommit.setText("文件上传")
+    }
+
+    fun initActivityResultLauncher() {
+        startApp =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                if (result.resultCode != Activity.RESULT_OK)
+                    return@registerForActivityResult
+                if (result.data == null)
+                    return@registerForActivityResult
+                val array: ArrayList<AppInfoBean>? =
+                    result.data!!.getParcelableArrayListExtra<AppInfoBean>("app")
+                if (array == null)
+                    return@registerForActivityResult
+                val apps = mAppBeans
+                for (app in array) {
+                    if (!mAppIds.contains(app.id)) {
+                        apps.add(app)
+                        mAppIds.add(app.id)
+                        mUploadStateList.add(UploadStateInfo())
+                    }
+                }
+                mAdapter.notifyDataSetChanged()
+                if (mAppBeans.size > 0)
+                    infoBinding.lyComplete.btnCommit.setText("文件上传")
+
+            }
     }
 }

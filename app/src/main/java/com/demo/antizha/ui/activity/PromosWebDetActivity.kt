@@ -51,10 +51,14 @@ class PromosWebDetActivity : BaseActivity() {
                             if (isVideo) {
                                 promosWebDetBinding.flTitWhite.visibility = View.GONE
                                 promosWebDetBinding.tvHelp.visibility = View.VISIBLE
-                                //ui.statusbarcompat.b.a(this, true, false);
+                                StatusBarCompat.translucentStatusBar(this@PromosWebDetActivity,
+                                    true,
+                                    false)
                                 return
                             }
-                            //ui.statusbarcompat.b.a(PromosWebDetActivity.this.mActivity, true, false);
+                            StatusBarCompat.translucentStatusBar(this@PromosWebDetActivity,
+                                true,
+                                false)
 
                         }
                         7 -> {
@@ -63,11 +67,15 @@ class PromosWebDetActivity : BaseActivity() {
                                 promosWebDetBinding.piTitle.rlTitle.visibility = View.GONE
                                 promosWebDetBinding.flTitWhite.visibility = View.VISIBLE
                                 promosWebDetBinding.tvHelp.visibility = View.VISIBLE
-                                //ui.statusbarcompat.b.a(this, true, false);
+                                StatusBarCompat.translucentStatusBar(this@PromosWebDetActivity,
+                                    true,
+                                    false)
                                 return
                             }
                             promosWebDetBinding.piTitle.rlTitle.visibility = View.VISIBLE
-                            //ui.statusbarcompat.b.a(this, true, true);
+                            StatusBarCompat.translucentStatusBar(this@PromosWebDetActivity,
+                                true,
+                                true)
                         }
                     }
                 }
@@ -86,7 +94,7 @@ class PromosWebDetActivity : BaseActivity() {
 
     // ui.activity.BaseActivity
     private fun loadWeb() {
-        swipBackLayout = SwipBackLayout.create(this.mActivity)
+        swipBackLayout = SwipBackLayout.create(mActivity)
         swipBackLayout.init()
         promosWebDetBinding.webview.setSwipLayout(this, swipBackLayout)
         promosWebDetBinding.piTitle.ivRight.setBackgroundResource(R.drawable.iv_share_dot)

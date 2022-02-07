@@ -2,7 +2,6 @@ package com.demo.antizha.ui.activity
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
@@ -11,17 +10,14 @@ import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import cn.qqtheme.framework.entity.City
 import cn.qqtheme.framework.entity.County
 import cn.qqtheme.framework.entity.Province
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.databinding.ActivityPersonaInfolBinding
 import com.demo.antizha.ui.Hicore
-import com.demo.antizha.util.AESUtil
-import com.demo.antizha.util.AddressBean
-import com.demo.antizha.util.CRC64
-import com.demo.antizha.util.SpUtils
+import com.demo.antizha.util.*
+import com.hjq.toast.ToastUtils
 import qiu.niorgai.StatusBarCompat
 import java.util.regex.Pattern
 
@@ -61,7 +57,6 @@ class PersonalInfoAddActivity : BaseActivity() {
         }
     }
     */
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun initPage() {
         infoBinding = ActivityPersonaInfolBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
@@ -146,6 +141,13 @@ class PersonalInfoAddActivity : BaseActivity() {
             SpUtils.setValue(SpUtils.primissAuto, false)
             SpUtils.setValue(SpUtils.primissPower, false)
             SpUtils.setValue(SpUtils.primissLock, false)
+            var isClosed = AppUtil.checkPermission(this, false)
+            if (isClosed)
+                isClosed = PictureUtil.checkPermission(this, false)
+            //if (isClosed)
+            //    isClosed = "检测下一个"
+            if (isClosed)
+                ToastUtils.show("权限已经全部关闭")
         }
         infoBinding.btnConfirm.setOnClickListener {
             when (pageType) {

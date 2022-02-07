@@ -1,18 +1,16 @@
 package com.demo.antizha.ui.activity
 
 import android.content.Intent
-import android.os.Build
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.core.view.get
 import com.demo.antizha.R
 import com.demo.antizha.adapter.SocialAccBean
 import com.demo.antizha.databinding.ActivitySocialAccEditBinding
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.util.FileUtil
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hjq.toast.ToastUtils
@@ -32,7 +30,6 @@ class SocialAccountEditActivity : BaseActivity() {
     private var socialAccount: SocialAccBean? = null
     private var socialTypeIdx: Int = -1
 
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun initPage() {
         infoBinding = ActivitySocialAccEditBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
@@ -65,7 +62,6 @@ class SocialAccountEditActivity : BaseActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun onSelectType(view: View, type: String, pos: Int) {
         if (TextUtils.equals(FINATYPE, type)) {
             infoBinding.llAccOther.setVisibility(View.VISIBLE)
@@ -111,7 +107,6 @@ class SocialAccountEditActivity : BaseActivity() {
             val tagString: String = tagType
             val tagId: Int = id
 
-            @RequiresApi(Build.VERSION_CODES.M)
             override fun onClick(view: View?) {
                 if (tagId != socialTypeIdx)
                     onSelectType(view!!, tagString, tagId)
@@ -119,11 +114,11 @@ class SocialAccountEditActivity : BaseActivity() {
         })
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun initTagAdapter() {
-        val inputStream = Hicore.app.getResources().getAssets().open("socialaccounttypes.txt")
+        val inputStream = FileUtil.openfile("socialaccounttypes.txt")
         socialTypeData = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
             object : TypeToken<SocialTypeData>() {}.type)
+        inputStream.close()
         if (TextUtils.isEmpty(socialAccount!!.accountName))
             socialAccount!!.accountName = socialTypeData.data[0].text
         socialTypeData.data.add(SocialType(FINATYPE))

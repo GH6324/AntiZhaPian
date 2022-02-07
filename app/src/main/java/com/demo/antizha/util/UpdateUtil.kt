@@ -1,8 +1,6 @@
 package com.demo.antizha.util
 
 import android.content.pm.PackageInfo
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.getDataByPost
 import com.demo.antizha.ui.Hicore
@@ -50,7 +48,6 @@ object UpdateUtil {
         //接收到后，先根据sign计算出signHash，根据timestamp计算出timeHash，然后把data解密出json
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     fun checkVer() {
         val registerBody = RegisterBody()
         registerBody.imei = UserInfoBean.imei

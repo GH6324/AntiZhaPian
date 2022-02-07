@@ -1,20 +1,17 @@
 package com.demo.antizha.util
 
 import android.app.Activity
-import android.os.Build
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import cn.qqtheme.framework.entity.City
 import cn.qqtheme.framework.entity.County
 import cn.qqtheme.framework.entity.Province
 import cn.qqtheme.framework.picker.AddressPicker
 import cn.qqtheme.framework.picker.AddressPicker.OnAddressPickListener
 import com.demo.antizha.R
-import com.demo.antizha.ui.Hicore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.InputStreamReader
@@ -49,29 +46,30 @@ object AddressBean {
         var cityList: List<HiCity> = ArrayList()
     }
 
-    var hiProvinces: List<HiProvince> = ArrayList<HiProvince>()
-    var provinces: ArrayList<Province> = ArrayList<Province>()
+    var hiProvinces: List<HiProvince> = ArrayList<HiProvince>() //address直接导出的结构
+    var provinces: ArrayList<Province> = ArrayList<Province>()  //地区选择器使用的结构
     fun getHiProvince(): List<HiProvince> {
         if (hiProvinces.size == 0) {
-            val inputStream = Hicore.app.getResources().getAssets().open("address.txt")
+            val inputStream = FileUtil.openfile("address.txt")
             hiProvinces = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
                 object : TypeToken<List<HiProvince>>() {}.type)
             initProvinceList()
+            inputStream.close()
         }
         return hiProvinces
     }
 
     fun getProvince(): ArrayList<Province> {
         if (hiProvinces.size == 0) {
-            val inputStream = Hicore.app.getResources().getAssets().open("address.txt")
+            val inputStream = FileUtil.openfile("address.txt")
             hiProvinces = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
                 object : TypeToken<List<HiProvince>>() {}.type)
             initProvinceList()
+            inputStream.close()
         }
         return provinces
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun createAddressPicker(activity: Activity,
                             region: String,
                             showClear: Boolean,

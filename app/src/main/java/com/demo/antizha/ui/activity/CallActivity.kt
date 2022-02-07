@@ -1,7 +1,6 @@
 package com.demo.antizha.ui.activity
 
 import android.content.Intent
-import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.Creator
@@ -12,7 +11,6 @@ import android.text.method.DigitsKeyListener
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
-import androidx.annotation.RequiresApi
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityCallBinding
 
@@ -47,12 +45,11 @@ class CallBean : Parcelable {
         isInput = !isSelect
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     constructor(source: Parcel) {
         crime_time = source.readString()
         duration = source.readLong()
-        isInput = source.readBoolean()
-        isSelect = source.readBoolean()
+        isInput = source.readInt() > 0
+        isSelect = source.readInt() > 0
         number = source.readString()
         plcae = source.readString()
         suspectInfoID = source.readString()
@@ -63,12 +60,11 @@ class CallBean : Parcelable {
         return 0
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeString(crime_time)
         dest.writeLong(duration)
-        dest.writeBoolean(isInput)
-        dest.writeBoolean(isSelect)
+        dest.writeInt(if (isInput) 1 else 0)
+        dest.writeInt(if (isSelect) 1 else 0)
         dest.writeString(number)
         dest.writeString(plcae)
         dest.writeString(suspectInfoID)
@@ -76,7 +72,6 @@ class CallBean : Parcelable {
     }
 
     companion object CREATOR : Creator<CallBean> {
-        @RequiresApi(Build.VERSION_CODES.Q)
         override fun createFromParcel(parcel: Parcel): CallBean {
             return CallBean(parcel)
         }
@@ -95,7 +90,6 @@ class CallActivity : BaseActivity() {
     private val selectCallBeans: ArrayList<CallBean> = ArrayList()
     private val inputCallBeans: ArrayList<CallBean> = ArrayList()
 
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun initPage() {
         infoBinding = ActivityCallBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)

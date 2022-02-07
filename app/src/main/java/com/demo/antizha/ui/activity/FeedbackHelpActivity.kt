@@ -10,8 +10,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityFeedbackHelpBinding
-import com.demo.antizha.ui.Hicore
 import com.demo.antizha.util.AnimUtils
+import com.demo.antizha.util.FileUtil
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.InputStreamReader
@@ -48,8 +48,8 @@ class FeedbackHelpActivity : BaseActivity() {
     override fun initPage() {
         infoBinding = ActivityFeedbackHelpBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
-        infoBinding.piTitle.tvTitle.setText("反馈与帮助");
-        infoBinding.piTitle.tvRightRed.setVisibility(View.GONE);
+        infoBinding.piTitle.tvTitle.setText("反馈与帮助")
+        infoBinding.piTitle.tvRightRed.setVisibility(View.GONE)
         initQaList()
         infoBinding.piTitle.ivBack.setOnClickListener {
             finish()
@@ -57,12 +57,13 @@ class FeedbackHelpActivity : BaseActivity() {
     }
 
     fun initQaList() {
-        val inputStream = Hicore.app.getResources().getAssets().open("qalist.txt")
+        val inputStream = FileUtil.openfile("qalist.txt")
         qaTypeBeanData = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
             object : TypeToken<QATypeBeanData>() {}.type)
         for ((i, qaType) in qaTypeBeanData.data.withIndex()) {
             addView(qaType, i == qaTypeBeanData.data.size - 1)
         }
+        inputStream.close()
     }
 
     @Throws(Exception::class)

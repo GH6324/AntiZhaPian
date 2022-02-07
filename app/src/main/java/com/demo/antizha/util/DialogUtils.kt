@@ -3,7 +3,6 @@ package com.demo.antizha.util
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
@@ -13,10 +12,10 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import com.demo.antizha.R
 import com.demo.antizha.ui.BaseDialog
 import com.demo.antizha.ui.IClickListener
+import com.demo.antizha.ui.IOneClickListener
 import com.demo.antizha.ui.ProgressDialogBar
 
 
@@ -24,7 +23,6 @@ class DialogUtils {
     companion object {
         var progressDialogBar: ProgressDialogBar? = null
 
-        @RequiresApi(Build.VERSION_CODES.R)
         fun showNormalDialog(context: Context?,
                              title: String?,
                              subTitle: String?,
@@ -41,8 +39,6 @@ class DialogUtils {
                 iClickListener)
         }
 
-        /* renamed from: a */
-        @RequiresApi(Build.VERSION_CODES.R)
         fun showBtDialog(context: Context?,
                          title: String?,
                          subTitle: String?,
@@ -83,7 +79,7 @@ class DialogUtils {
                 private var mBaseDialog: BaseDialog? = null
                 override fun onClick(view: View?) {
                     iClickListener?.cancelBtn()
-                    mBaseDialog?.dismiss();
+                    mBaseDialog?.dismiss()
                 }
 
                 init {
@@ -94,7 +90,7 @@ class DialogUtils {
                 private var mBaseDialog: BaseDialog? = null
                 override fun onClick(view: View?) {
                     iClickListener?.clickOKBtn()
-                    mBaseDialog?.dismiss();
+                    mBaseDialog?.dismiss()
                 }
 
                 init {
@@ -104,7 +100,6 @@ class DialogUtils {
             return baseDialog
         }
 
-        @RequiresApi(Build.VERSION_CODES.R)
         fun showBtTitleDialog(context: Context?,
                               title: String?,
                               subTitle: String?,
@@ -133,7 +128,7 @@ class DialogUtils {
             btnCancel.setText(cancelText)
             btnConfirm.setText(confirmText)
             if (!TextUtils.isEmpty(subTitle)) {
-                (baseDialog.findViewById(R.id.ll_subtit) as LinearLayout).setVisibility(View.VISIBLE);
+                (baseDialog.findViewById(R.id.ll_subtit) as LinearLayout).setVisibility(View.VISIBLE)
             }
             if (cancelColor == -1) {
                 btnCancel.setTextColor(-14072090)
@@ -149,7 +144,7 @@ class DialogUtils {
                 private var mBaseDialog: BaseDialog? = null
                 override fun onClick(view: View?) {
                     iClickListener?.cancelBtn()
-                    mBaseDialog?.dismiss();
+                    mBaseDialog?.dismiss()
                 }
 
                 init {
@@ -160,7 +155,46 @@ class DialogUtils {
                 private var mBaseDialog: BaseDialog? = null
                 override fun onClick(view: View?) {
                     iClickListener?.clickOKBtn()
-                    mBaseDialog?.dismiss();
+                    mBaseDialog?.dismiss()
+                }
+
+                init {
+                    mBaseDialog = baseDialog
+                }
+            })
+            return baseDialog
+        }
+
+        fun showOneClickDialog(activity: Activity,
+                               title: String,
+                               subTitle: String,
+                               buttonText: String,
+                               iOneClickListener: IOneClickListener?): Dialog? {
+            if (activity.isFinishing) {
+                return null
+            }
+            val baseDialog = BaseDialog(activity, R.style.base_dialog_style)
+            baseDialog.setContentView(R.layout.custom_dialog_one)
+            baseDialog.setGravityLayout(2)
+            baseDialog.widthDialog = (-2.0).toFloat()
+            baseDialog.heightDialog = (-2.0).toFloat()
+            baseDialog.setCancelable(false)
+            baseDialog.setCanceledOnTouchOutside(false)
+            baseDialog.initOnCreate()
+            baseDialog.show()
+            val subtitle = baseDialog.findViewById<View>(R.id.subtitle) as TextView
+            val button = baseDialog.findViewById<View>(R.id.button) as Button
+            button.text = buttonText
+            (baseDialog.findViewById<View>(R.id.title) as TextView).text = title
+            if (!TextUtils.isEmpty(subTitle)) {
+                subtitle.visibility = View.VISIBLE
+                subtitle.text = subTitle
+            }
+            button.setOnClickListener(object : View.OnClickListener {
+                private var mBaseDialog: BaseDialog? = null
+                override fun onClick(view: View?) {
+                    iOneClickListener?.clickOKBtn()
+                    mBaseDialog?.dismiss()
                 }
 
                 init {
@@ -200,7 +234,6 @@ class DialogUtils {
             }
         }
 
-        @RequiresApi(Build.VERSION_CODES.R)
         fun showInterlinkingDialog(activity: Activity?,
                                    title: String?,
                                    subTitle: String?,
@@ -217,7 +250,6 @@ class DialogUtils {
                 iClickListener)
         }
 
-        @RequiresApi(Build.VERSION_CODES.R)
         fun showInterlinkingDialog(activity: Activity?,
                                    title: String?,
                                    subTitle: String?,
@@ -237,7 +269,6 @@ class DialogUtils {
                 iClickListener)
         }
 
-        @RequiresApi(Build.VERSION_CODES.R)
         fun showInterlinkingDialog(activity: Activity?,
                                    title: String?,
                                    subTitle: CharSequence?,
@@ -296,7 +327,6 @@ class DialogUtils {
             return baseDialog
         }
 
-        @RequiresApi(Build.VERSION_CODES.R)
         fun showDialogAutoClose(activity: Activity?,
                                 finishActivity: Boolean,
                                 delayClose: Int,

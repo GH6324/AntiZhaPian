@@ -2,12 +2,13 @@ package com.demo.antizha.ui.activity
 
 import android.R
 import android.app.Activity
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.ProgressDialogBar
 import com.demo.antizha.util.NotchUtils
 import com.demo.antizha.util.SystemUtils.adjustFontScale
 import qiu.niorgai.StatusBarCompat
@@ -21,6 +22,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     var mActivity: Activity? = null
     var typ_ME: Typeface? = null
+    private var mProgressDialogBar: ProgressDialogBar? = null
 
     abstract fun initPage()
 
@@ -28,32 +30,34 @@ abstract class BaseActivity : AppCompatActivity() {
         return Hicore.app.isDouble()
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.mActivity = this
-        this.typ_ME = Typeface.createFromAsset(getAssets(), "DIN-Medium.otf")
+        //关闭权限后APP会重启，但直接跳到后面的界面，所以在这重新载入
+        if (null != savedInstanceState) {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
+        mActivity = this
+        typ_ME = Typeface.createFromAsset(getAssets(), "DIN-Medium.otf")
         adjustFontScale(this)
         supportActionBar?.hide()
-        setStatusBar();
+        setStatusBar()
         initPage()
-        haveLiuhai = NotchUtils.haveLiuhai(this);
-        liuhaiHeight = NotchUtils.liuhaiHeight(this);
+        haveLiuhai = NotchUtils.haveLiuhai(this)
+        liuhaiHeight = NotchUtils.liuhaiHeight(this)
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun setBlackStatusBar() {
         StatusBarCompat.setStatusBarColor((this as Activity),
             resources.getColor(R.color.black, null))
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun setWhiteStatusBar() {
         StatusBarCompat.setStatusBarColor((this as Activity),
             resources.getColor(R.color.white, null))
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     protected fun setStatusBar() {
         if (Build.VERSION.SDK_INT >= 23) {
             setWhiteStatusBar()
@@ -61,6 +65,27 @@ abstract class BaseActivity : AppCompatActivity() {
             setBlackStatusBar()
         }
         StatusBarCompat.translucentStatusBar(this, true, true)
+    }
+
+    open fun showProgressDialog(str: String?, cancelable: Boolean) {
+        if (!isFinishing) {
+            if (mProgressDialogBar == null) {
+                mProgressDialogBar = ProgressDialogBar.create(this)
+            }
+            if (mProgressDialogBar!!.isShowing()) {
+                return
+            }
+            mProgressDialogBar!!.setProgress(str)
+            mProgressDialogBar!!.setCanceledOnTouchOutside(false)
+            mProgressDialogBar!!.setCancelable(cancelable)
+            mProgressDialogBar!!.show()
+        }
+    }
+
+    open fun hideProgressDialog() {
+        if (mProgressDialogBar != null && mProgressDialogBar!!.isShowing()) {
+            mProgressDialogBar!!.dismiss()
+        }
     }
 
 }

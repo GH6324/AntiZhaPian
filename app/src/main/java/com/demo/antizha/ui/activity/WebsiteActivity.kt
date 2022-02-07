@@ -1,14 +1,12 @@
 package com.demo.antizha.ui.activity
 
 import android.content.Intent
-import android.os.Build
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.text.TextUtils
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
-import androidx.annotation.RequiresApi
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityWeburlBinding
 import com.hjq.toast.ToastUtils
@@ -21,15 +19,14 @@ class WebsiteActivity : BaseActivity() {
     private val ivClears: LinkedList<ImageView> = LinkedList<ImageView>()
     private val MAX_COUNT = 20
 
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun initPage() {
         infoBinding = ActivityWeburlBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "添加诈骗网址"
         infoBinding.lyComplete.tvCommitTip.text = "最多可添加" + MAX_COUNT.toString() + "条网址"
         infoBinding.lyComplete.btnCommit.text = "确定"
-        infoBinding.vLine.setVisibility(View.GONE);
-        infoBinding.flSelectHistory.setVisibility(View.GONE);
+        infoBinding.vLine.visibility = View.GONE
+        infoBinding.flSelectHistory.visibility = View.GONE
         initData()
         infoBinding.flSelect.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
@@ -71,8 +68,8 @@ class WebsiteActivity : BaseActivity() {
         etContent.filters = arrayOf<InputFilter>(LengthFilter(500))
         ivClear.setOnClickListener(OnClearClickListener())
         infoBinding.linearlayout.addView(inflate)
-        this.etContents.add(etContent)
-        this.ivClears.add(ivClear)
+        etContents.add(etContent)
+        ivClears.add(ivClear)
         if (!TextUtils.isEmpty(url)) {
             etContent.setText(url)
         }

@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.demo.antizha.Dp2Px
@@ -30,19 +29,23 @@ class MainActivity : BaseActivity() {
     private var lastIndex = 0
     private var mFragments = ArrayList<Fragment>()
 
-    @RequiresApi(Build.VERSION_CODES.R)
+    @Suppress("DEPRECATION")
     override fun initPage() {
         dp2px = Dp2Px(Hicore.context)
         val SPLASH_TIME: Long = 5000
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         //隐藏状态栏
-        binding.root.windowInsetsController?.hide(WindowInsets.Type.statusBars())
-        //刘海屏？反正测试的时候不加这些代码，状态栏隐藏后会有一块空白
-        val lp = window.attributes
-        lp.layoutInDisplayCutoutMode =
-            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-        window.attributes = lp
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            binding.root.windowInsetsController?.hide(WindowInsets.Type.statusBars())
+            //刘海屏？反正测试的时候不加这些代码，状态栏隐藏后会有一块空白
+            val lp = window.attributes
+            lp.layoutInDisplayCutoutMode =
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            window.attributes = lp
+        } else
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         UserInfoBean.Init()
         binding.navView.setOnItemSelectedListener(
             object : NavigationBarView.OnItemSelectedListener {
@@ -52,16 +55,19 @@ class MainActivity : BaseActivity() {
                         R.id.navigation_home -> {
                             item.setIcon(R.mipmap.tab_home_seled)
                             binding.viewPager.setCurrentItem(0, false)
+                            StatusBarCompat.translucentStatusBar(this@MainActivity, true, true)
                             true
                         }
                         R.id.navigation_dashboard -> {
                             item.setIcon(R.mipmap.tab_xc_seled)
                             binding.viewPager.setCurrentItem(1, false)
+                            StatusBarCompat.translucentStatusBar(this@MainActivity, true, true)
                             true
                         }
                         R.id.navigation_notifications -> {
                             item.setIcon(R.mipmap.tab_mine_seled)
                             binding.viewPager.setCurrentItem(2, false)
+                            StatusBarCompat.translucentStatusBar(this@MainActivity, true, false)
                             true
                         }
                         else -> false
@@ -73,7 +79,10 @@ class MainActivity : BaseActivity() {
             binding.navView.visibility = View.VISIBLE
             binding.viewPager.visibility = View.VISIBLE
             StatusBarCompat.translucentStatusBar(this, true, true)
-            binding.root.windowInsetsController?.show(WindowInsets.Type.statusBars())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                binding.root.windowInsetsController?.show(WindowInsets.Type.statusBars())
+            else
+                getWindow().setFlags(0, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }, SPLASH_TIME)
         initData()
     }

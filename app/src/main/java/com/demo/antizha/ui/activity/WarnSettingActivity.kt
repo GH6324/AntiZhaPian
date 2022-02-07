@@ -1,6 +1,5 @@
 package com.demo.antizha.ui.activity
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Typeface
 import android.text.TextUtils
@@ -18,8 +17,8 @@ class WarnSettingActivity : BaseActivity() {
     override fun initPage() {
         infoBinding = ActivityWarnSettingBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
-        StatusBarCompat.translucentStatusBar(this as Activity, true, false)
-        this.typ_ME = Typeface.createFromAsset(getAssets(), "DIN-Medium.otf")
+        StatusBarCompat.translucentStatusBar(this, true, false)
+        typ_ME = Typeface.createFromAsset(getAssets(), "DIN-Medium.otf")
 
         infoBinding.piTitle.tvTitle.setText("来电预警")
         infoBinding.piTitle.ivRight.setImageResource(R.mipmap.ic_warn_setting)
@@ -30,10 +29,10 @@ class WarnSettingActivity : BaseActivity() {
         infoBinding.switchCall.setOnCheckedChangeListener(OnCheckedChangeListener(SpUtils.warnCall))
         infoBinding.switchSms.setOnCheckedChangeListener(OnCheckedChangeListener(SpUtils.warnSms))
         //先显示一个打开的动画，具体是否打开在onResume事件中判断
-        infoBinding.lottieLikeanim.setRenderMode(RenderMode.SOFTWARE);
-        infoBinding.lottieLikeanim.setImageAssetsFolder("images/");
-        infoBinding.lottieLikeanim.setAnimation("lottie_on.json");
-        infoBinding.lottieLikeanim.playAnimation();
+        infoBinding.lottieLikeanim.setRenderMode(RenderMode.SOFTWARE)
+        infoBinding.lottieLikeanim.setImageAssetsFolder("images/")
+        infoBinding.lottieLikeanim.setAnimation("lottie_on.json")
+        infoBinding.lottieLikeanim.playAnimation()
         //监听2个点击事件
         infoBinding.piTitle.ivBack.setOnClickListener {
             finish()
@@ -96,10 +95,10 @@ class WarnSettingActivity : BaseActivity() {
 
     private fun switchAnimation(warnIsOpen: Boolean): Boolean {
         val str = if (warnIsOpen) "lottie_on.json" else "lottie_off.json"
-        if (TextUtils.equals(str, this.currentAnimation)) {
+        if (TextUtils.equals(str, currentAnimation)) {
             return true
         }
-        this.currentAnimation = str
+        currentAnimation = str
         infoBinding.lottieLikeanim.setAnimation(str)
         infoBinding.lottieLikeanim.playAnimation()
         return false
