@@ -43,12 +43,12 @@ open class BaseDialog : Dialog {
     private fun initWindowState() {
         mWindow = window!!
         lp = mWindow.attributes
-        val windowManager = (this.context as Activity).windowManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             display = context.getDisplay()!!
             dm = mContext.resources.getDisplayMetrics()
             metrics = (mContext as Activity).windowManager.getCurrentWindowMetrics()
         } else {
+            val windowManager = (mContext as Activity).windowManager
             display = windowManager.defaultDisplay
             dm = DisplayMetrics()
             display.getMetrics(dm);
