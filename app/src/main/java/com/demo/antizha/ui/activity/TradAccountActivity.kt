@@ -31,6 +31,7 @@ class TradAccountActivity : BaseActivity() {
             RecyclerView.VERTICAL, false)
         socialAccAdapter = SocialAccAdapter(R.layout.item_social_acc, dealAccounts)
         infoBinding.recyclerview.adapter = socialAccAdapter
+        infoBinding.recyclerview.itemAnimator = null
         socialAccAdapter.setOnItemChildClickListener(OnItemChildClickListener { adapter, view, position ->
             val id: Int = view.id
             if (id == R.id.iv_delete) {

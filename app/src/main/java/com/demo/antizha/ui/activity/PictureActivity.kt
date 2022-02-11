@@ -36,6 +36,7 @@ class PictureActivity : BaseUploadActivity() {
             mMaxSelectNum,
             mUploadStateList)
         infoBinding.recyclerview.adapter = mAdapter
+        infoBinding.recyclerview.itemAnimator = null
         mAdapter.setOnItemChildClickListener(OnItemChildClickListener { adapter, view, position ->
             val id: Int = view.id
             if (id == R.id.iv_clear) {

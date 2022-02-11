@@ -37,6 +37,7 @@ class SmsActivity : BaseActivity() {
         infoBinding.recyclerview.layoutManager = lym
         smsDeleteAdapter = SmsDeleteAdapter(R.layout.recyclerview_sms_record_select, smss)
         infoBinding.recyclerview.adapter = smsDeleteAdapter
+        infoBinding.recyclerview.itemAnimator = null
         smsDeleteAdapter.setOnItemChildClickListener(OnItemChildClickListener { adapter, view, position ->
             val id: Int = view.id
             if (id == R.id.iv_clear) {
