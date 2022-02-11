@@ -22,10 +22,12 @@ class SocialType(val text: String)
 class SocialTypeData(val code: Int, var data: ArrayList<SocialType>)
 
 class SocialAccountEditActivity : BaseActivity() {
+    companion object {
+        const val FINATYPE = "其他类型"
+    }
     private lateinit var infoBinding: ActivitySocialAccEditBinding
     private lateinit var flowLayout: FlowLayout
     private lateinit var socialTypeData: SocialTypeData
-    private val FINATYPE = "其他类型"
     private var pos: Int = 0
     private var socialAccount: SocialAccBean? = null
     private var socialTypeIdx: Int = -1
@@ -64,25 +66,25 @@ class SocialAccountEditActivity : BaseActivity() {
 
     fun onSelectType(view: View, type: String, pos: Int) {
         if (TextUtils.equals(FINATYPE, type)) {
-            infoBinding.llAccOther.setVisibility(View.VISIBLE)
-            infoBinding.llAccNomar.setVisibility(View.GONE)
+            infoBinding.llAccOther.visibility = View.VISIBLE
+            infoBinding.llAccNomar.visibility = View.GONE
         } else {
-            infoBinding.llAccOther.setVisibility(View.GONE)
-            infoBinding.llAccNomar.setVisibility(View.VISIBLE)
+            infoBinding.llAccOther.visibility = View.GONE
+            infoBinding.llAccNomar.visibility = View.VISIBLE
             socialAccount!!.accountName = type
         }
         infoBinding.tvAccName.text = type + "账号"
         if (socialTypeIdx >= 0) {
-            flowLayout[socialTypeIdx].setSelected(false)
+            flowLayout[socialTypeIdx].isSelected = false
             (flowLayout[socialTypeIdx] as TextView).setTextColor(resources.getColor(R.color._1F1F1F,
                 null))
         }
-        view.setSelected(true)
+        view.isSelected = true
         (view as TextView).setTextColor(resources.getColor(R.color.white, null))
         socialTypeIdx = pos
     }
 
-    fun getIntentData() {
+    private fun getIntentData() {
         pos = intent.getIntExtra("pos", 0)
         socialAccount = intent.getParcelableExtra("acc")
         if (socialAccount == null)
@@ -98,7 +100,7 @@ class SocialAccountEditActivity : BaseActivity() {
         return -1
     }
 
-    fun addTagType(tagType: String, id: Int) {
+    private fun addTagType(tagType: String, id: Int) {
         val tagView = LayoutInflater.from(mActivity)
             .inflate(R.layout.tag_flow_item, null as ViewGroup?, false) as TextView
         infoBinding.flowLayout.addView(tagView)
@@ -114,7 +116,7 @@ class SocialAccountEditActivity : BaseActivity() {
         })
     }
 
-    fun initTagAdapter() {
+    private fun initTagAdapter() {
         val inputStream = FileUtil.openfile("socialaccounttypes.txt")
         socialTypeData = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
             object : TypeToken<SocialTypeData>() {}.type)

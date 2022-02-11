@@ -5,7 +5,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.text.TextUtils
 import androidx.recyclerview.widget.GridLayoutManager
-import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.listener.OnItemChildClickListener
 import com.demo.antizha.R
 import com.demo.antizha.adapter.PictureSelectAdapter
 import com.demo.antizha.databinding.ActivityPictureBinding
@@ -17,7 +17,7 @@ class PictureActivity : BaseUploadActivity() {
     private lateinit var infoBinding: ActivityPictureBinding
 
     private lateinit var mAdapter: PictureSelectAdapter
-    private val mLocalMedia: ArrayList<String> = ArrayList<String>()
+    private val mLocalMedia: ArrayList<String> = ArrayList()
     private var previewPosition = -1
     private val mMaxSelectNum = 6
 
@@ -28,28 +28,28 @@ class PictureActivity : BaseUploadActivity() {
         infoBinding.lyComplete.tvCommitTip.text = "最多可选择" + 6 + "张图片"
         mLocalMedia.add("")
         getIntentData()
-        infoBinding.recyclerview.setLayoutManager(GridLayoutManager(this, 3))
+        infoBinding.recyclerview.layoutManager = GridLayoutManager(this, 3)
         mUploadStateList.add(UploadStateInfo())
         mAdapter = PictureSelectAdapter(R.layout.recyclerview_picture,
             mLocalMedia,
             PictureSelectAdapter.stylePicture,
             mMaxSelectNum,
             mUploadStateList)
-        infoBinding.recyclerview.setAdapter(mAdapter)
-        mAdapter.setOnItemChildClickListener(BaseQuickAdapter.OnItemChildClickListener { adapter, view, position ->
-            val id: Int = view.getId()
+        infoBinding.recyclerview.adapter = mAdapter
+        mAdapter.setOnItemChildClickListener(OnItemChildClickListener { adapter, view, position ->
+            val id: Int = view.id
             if (id == R.id.iv_clear) {
                 removeMedia(position)
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemRemoved(position)
                 if (mLocalMedia.size == 1)
-                    infoBinding.lyComplete.btnCommit.setText("确定")
+                    infoBinding.lyComplete.btnCommit.text = "确定"
             } else if (id == R.id.picture_foot) {
                 if (PictureUtil.checkPermission(this, true)) {
                     selectImage()
                 }
             } else if (id == R.id.picture_select) {
                 val intent = Intent(this, PreviewPictureActivity::class.java)
-                var medias = ArrayList<String>()
+                val medias = ArrayList<String>()
                 medias.addAll(mLocalMedia)
                 if (TextUtils.isEmpty(mLocalMedia.last()))
                     medias.removeAt(medias.size - 1)
@@ -66,7 +66,7 @@ class PictureActivity : BaseUploadActivity() {
     override fun onBackPressed() {
         val intent = Intent()
         setResult(RESULT_OK, intent)
-        var medias = ArrayList<String>()
+        val medias = ArrayList<String>()
         medias.addAll(mLocalMedia)
         if (TextUtils.isEmpty(mLocalMedia.last()))
             medias.removeAt(medias.size - 1)
@@ -74,26 +74,28 @@ class PictureActivity : BaseUploadActivity() {
         super.onBackPressed()
     }
 
-    fun getIntentData() {
+    private fun getIntentData() {
         val list = intent.getStringArrayListExtra("pics")
         if (list != null) {
             for (media in list)
                 addMedia(media)
         }
         if (mLocalMedia.size > 1)
-            infoBinding.lyComplete.btnCommit.setText("文件上传")
+            infoBinding.lyComplete.btnCommit.text = "文件上传"
     }
 
     fun getRealPathFromURI(uri: Uri): String {
         val cursor: Cursor? = contentResolver.query(uri, null, null, null, null)
         cursor!!.moveToFirst()
         val idx: Int = cursor.getColumnIndex("_data")
-        return cursor.getString(idx)
+        val path = cursor.getString(idx)
+        cursor.close()
+        return path
     }
 
     fun addMedia(path: String) {
         for (media in mLocalMedia)
-            if (media.equals(path))
+            if (media == path)
                 return
         //最后是个空的，填进去
         if (TextUtils.isEmpty(mLocalMedia.last()))
@@ -105,7 +107,7 @@ class PictureActivity : BaseUploadActivity() {
         mUploadStateList.add(UploadStateInfo())
     }
 
-    fun removeMedia(pos: Int) {
+    private fun removeMedia(pos: Int) {
         mLocalMedia.removeAt(pos)
         mUploadStateList.removeAt(pos)
         if (!TextUtils.isEmpty(mLocalMedia.last())) {
@@ -114,7 +116,7 @@ class PictureActivity : BaseUploadActivity() {
         }
     }
 
-    fun selectImage() {
+    private fun selectImage() {
         var mediasize = mLocalMedia.size
         if (TextUtils.isEmpty(mLocalMedia.last()))
             mediasize -= 1
@@ -133,7 +135,7 @@ class PictureActivity : BaseUploadActivity() {
                 }
                 mAdapter.notifyDataSetChanged()
                 if (mLocalMedia.size > 1)
-                    infoBinding.lyComplete.btnCommit.setText("文件上传")
+                    infoBinding.lyComplete.btnCommit.text = "文件上传"
             }
         })
     }

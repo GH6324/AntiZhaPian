@@ -36,7 +36,7 @@ class Hicore : Application() {
                 .toInt()
         }
 
-        override fun getBackgroundDrawable(context: Context): Drawable? {
+        override fun getBackgroundDrawable(context: Context): Drawable {
             val drawable = GradientDrawable()
             // 设置颜色
             drawable.setColor(-0x78000000)
@@ -70,12 +70,12 @@ class Hicore : Application() {
     }
 
     fun getChannel(): String {
-        try {
-            return app.getPackageManager().getApplicationInfo(packageName,
+        return try {
+            app.packageManager.getApplicationInfo(packageName,
                 PackageManager.GET_META_DATA).metaData.getString("CHANNEL").toString()
         } catch (e2: Exception) {
             e2.printStackTrace()
-            return "oss"
+            "oss"
         }
     }
 }

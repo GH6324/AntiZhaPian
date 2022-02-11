@@ -7,7 +7,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.listener.OnItemChildClickListener
 import com.demo.antizha.R
 import com.demo.antizha.adapter.SocialAccAdapter
 import com.demo.antizha.adapter.SocialAccBean
@@ -17,7 +17,7 @@ import com.demo.antizha.databinding.ActivitySocialAccountBinding
 class SocialAccountActivity : BaseActivity() {
 
     private lateinit var infoBinding: ActivitySocialAccountBinding
-    private var SocialAccounts: ArrayList<SocialAccBean> = ArrayList()
+    private var socialAccounts: ArrayList<SocialAccBean> = ArrayList()
     private lateinit var socialAccAdapter: SocialAccAdapter
     private lateinit var startEdit: ActivityResultLauncher<Intent>
 
@@ -29,15 +29,15 @@ class SocialAccountActivity : BaseActivity() {
         infoBinding.lyComplete.tvCommitTip.text = "提示：最多可上传20条社交账号"
         infoBinding.lyComplete.btnCommit.text = "确定"
         getIntentData()
-        infoBinding.recyclerview.setLayoutManager(LinearLayoutManager(this,
-            RecyclerView.VERTICAL, false))
-        socialAccAdapter = SocialAccAdapter(R.layout.item_social_acc, SocialAccounts)
-        infoBinding.recyclerview.setAdapter(socialAccAdapter)
-        socialAccAdapter.setOnItemChildClickListener(BaseQuickAdapter.OnItemChildClickListener { adapter, view, position ->
-            val id: Int = view.getId()
+        infoBinding.recyclerview.layoutManager = LinearLayoutManager(this,
+            RecyclerView.VERTICAL, false)
+        socialAccAdapter = SocialAccAdapter(R.layout.item_social_acc, socialAccounts)
+        infoBinding.recyclerview.adapter = socialAccAdapter
+        socialAccAdapter.setOnItemChildClickListener(OnItemChildClickListener { adapter, view, position ->
+            val id: Int = view.id
             if (id == R.id.iv_delete) {
-                SocialAccounts.removeAt(position)
-                adapter.notifyDataSetChanged()
+                socialAccounts.removeAt(position)
+                adapter.notifyItemRemoved(position)
             } else if (id == R.id.iv_edit) {
                 editAcc(position)
             }
@@ -52,7 +52,7 @@ class SocialAccountActivity : BaseActivity() {
         }
         infoBinding.lyComplete.btnCommit.setOnClickListener {
             val intent = Intent()
-            intent.putParcelableArrayListExtra("accounts", SocialAccounts)
+            intent.putParcelableArrayListExtra("accounts", socialAccounts)
             setResult(RESULT_OK, intent)
             finish()
         }
@@ -64,26 +64,29 @@ class SocialAccountActivity : BaseActivity() {
                     return@registerForActivityResult
                 val tag = result.data!!.extras!!.getInt("tag")
                 val socialAccount = result.data!!.getParcelableExtra<SocialAccBean>("account")!!
-                if (tag == -1)
-                    SocialAccounts.add(socialAccount)
-                else
-                    SocialAccounts[tag] = socialAccount
-                socialAccAdapter.notifyDataSetChanged()
+                if (tag == -1) {
+                    socialAccounts.add(socialAccount)
+                    socialAccAdapter.notifyItemInserted(socialAccounts.size - 1)
+                }
+                else {
+                    socialAccounts[tag] = socialAccount
+                    socialAccAdapter.notifyItemChanged(tag)
+                }
             }
     }
 
     private fun getIntentData() {
         val list = intent.getParcelableArrayListExtra<SocialAccBean>("accounts")
         if (list != null) {
-            SocialAccounts.addAll(list)
+            socialAccounts.addAll(list)
         }
     }
 
-    fun editAcc(i: Int) {
+    private fun editAcc(i: Int) {
         val intent = Intent(mActivity, SocialAccountEditActivity::class.java)
         intent.putExtra("pos", i)
         if (i != -1) {
-            intent.putExtra("acc", SocialAccounts.get(i))
+            intent.putExtra("acc", socialAccounts[i])
         }
         startEdit.launch(intent)
     }

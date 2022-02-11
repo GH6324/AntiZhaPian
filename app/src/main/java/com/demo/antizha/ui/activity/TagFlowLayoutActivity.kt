@@ -16,7 +16,10 @@ import java.io.InputStreamReader
 
 
 class ReportZPEleBean {
+    var clusterID: String? = null
+    var code = -1
     var id: Long = -1
+    var isShow: String? = null
     var name: String? = null
     var parentClusterID: String? = null
     var sort: String? = null
@@ -25,7 +28,10 @@ class ReportZPEleBean {
 
 class ReportZPBean {
     var children: List<ReportZPEleBean>? = null
+    var clusterID: String? = null
+    var code = 0
     var id: Long = 0
+    var isShow: String? = null
     var name: String? = null
     var parentClusterID: String? = null
     var sort: String? = null
@@ -34,12 +40,12 @@ class ReportZPBean {
 
 class ZPTypeData(val code: Int, var data: ArrayList<ReportZPBean>)
 
-class TagFlowLaoutActivity : BaseActivity() {
+class TagFlowLayoutActivity : BaseActivity() {
     private lateinit var infoBinding: ActivityTagflowBinding
-    protected var mFlowString: List<ReportZPBean> = ArrayList()
+    private var mFlowString: List<ReportZPBean> = ArrayList()
     var childPost = 0
     val pageType: Int = 0
-    var tagBean: Long = 0
+    var tagBean: Int = 0
 
     override fun initPage() {
         infoBinding = ActivityTagflowBinding.inflate(layoutInflater)
@@ -55,9 +61,9 @@ class TagFlowLaoutActivity : BaseActivity() {
         }
     }
 
-    fun initTagAdapter() {
-        tagBean = intent.getLongExtra("int_tag_name", 0)
-        val inputStream = FileUtil.openfile("xccasecategorys.txt")
+    private fun initTagAdapter() {
+        tagBean = intent.getIntExtra("int_tag_name", 0)
+        val inputStream = FileUtil.openfile("EvidenceType.txt")
         val zPTypeData: ZPTypeData = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
             object : TypeToken<ZPTypeData>() {}.type)
         for (i in zPTypeData.data.indices) {
@@ -66,7 +72,7 @@ class TagFlowLaoutActivity : BaseActivity() {
         inputStream.close()
     }
 
-    fun initTagAdapter(reportZPBean: ReportZPBean, idx: Int) {
+    private fun initTagAdapter(reportZPBean: ReportZPBean, idx: Int) {
         val inflate: View = LayoutInflater.from(mActivity)
             .inflate(R.layout.layout_tag_flow, null as ViewGroup?, false)
         infoBinding.llParent.addView(inflate)
@@ -74,14 +80,17 @@ class TagFlowLaoutActivity : BaseActivity() {
         val ivDrop = inflate.findViewById<ImageView>(R.id.iv_arrow)
         val tagFlowLayout = inflate.findViewById<FlowLayout>(R.id.flow_layout)
         tagFlowLayout.tag = false
-        inflate.findViewById<TextView>(R.id.tag_title).setText(reportZPBean.name)
+        inflate.findViewById<TextView>(R.id.tag_title).text = reportZPBean.name
         tvDivBg.visibility = if (idx % 4 == 0) View.VISIBLE else View.GONE
-        if (reportZPBean.children == null || reportZPBean.children!!.size == 0) {
+        if (reportZPBean.children == null || reportZPBean.children!!.isEmpty()) {
             val arrayList = ArrayList<ReportZPEleBean>()
             val reportZPEleBean = ReportZPEleBean()
             reportZPEleBean.id = reportZPBean.id
+            reportZPEleBean.code = reportZPBean.code
             reportZPEleBean.name = reportZPBean.name
+            reportZPEleBean.clusterID = reportZPBean.clusterID
             reportZPEleBean.parentClusterID = reportZPBean.parentClusterID
+            reportZPEleBean.isShow = reportZPBean.isShow
             reportZPEleBean.sort = reportZPBean.sort
             reportZPEleBean.topClass = reportZPBean.topClass
             arrayList.add(reportZPEleBean)
@@ -92,16 +101,16 @@ class TagFlowLaoutActivity : BaseActivity() {
                 .inflate(R.layout.tag_flow_item, null as ViewGroup?, false) as TextView
             tagFlowLayout.addView(tagView)
             tagView.text = i.name
-            if (tagBean != 0L && tagBean == i.id) {
+            if (tagBean != 0 && tagBean == i.code) {
                 tagFlowLayout.visibility = View.VISIBLE
                 tagFlowLayout.tag = true
                 ivDrop.setImageResource(R.drawable.iv_tag_ar_up)
-                tagView.setSelected(true)
+                tagView.isSelected = true
                 tagView.setTextColor(resources.getColor(R.color.white, null))
             }
             tagView.setOnClickListener(object : View.OnClickListener {
                 val tagString: String? = i.name
-                val tagId: Long = i.id
+                val tagId: Int = i.code
                 override fun onClick(view: View?) {
                     val intent = Intent()
                     intent.putExtra("tagString", tagString)

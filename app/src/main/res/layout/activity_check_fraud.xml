@@ -35,7 +35,8 @@
             android:paddingBottom="@dimen/dp_30"
             android:textColor="@color/fraud_result_color"
             android:textColorHint="@color/fraud_result_color_light"
-            android:textSize="@dimen/sp_15" />
+            android:textSize="@dimen/sp_15"
+            android:autofillHints="" />
 
         <ImageView
             android:id="@+id/iv_clear"

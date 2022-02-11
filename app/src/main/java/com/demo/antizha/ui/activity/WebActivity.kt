@@ -51,12 +51,12 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
         IHandler.setHandleMsgListener(this)
         mTitle = intent.getStringExtra(EXTRA_WEB_TITLE).toString()
         mOrginUrl = intent.getStringExtra(EXTRA_WEB_URL).toString()
-        caragyCode = getIntent().getIntExtra("extra_web_theme_caragy", -9)
-        mPersonalize = getIntent().getStringExtra(EXTRA_WEB_PERSONALIZE)
-        infoBinding.piTitle.tvTitle.setText(mTitle)
+        caragyCode = intent.getIntExtra("extra_web_theme_caragy", -9)
+        mPersonalize = intent.getStringExtra(EXTRA_WEB_PERSONALIZE)
+        infoBinding.piTitle.tvTitle.text = mTitle
         initWebView(infoBinding.webview)
         infoBinding.webview.loadUrl(mOrginUrl)
-        infoBinding.llProgress.setVisibility(View.VISIBLE)
+        infoBinding.llProgress.visibility = View.VISIBLE
         fromUnsealedUrl()
         infoBinding.piTitle.ivBack.setOnClickListener {
             if (!Hicore.app.isDouble())
@@ -67,42 +67,45 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
     // androidx.activity.ComponentActivity, android.app.Activity
     override fun onBackPressed() {
         if (infoBinding.webview.canGoBack()) {
-            val i: Int = toPage
-            if (i == 3) {
-                DialogUtils.showInterlinkingDialog(mActivity,
-                    "确定要退出答题?",
-                    "退出后已作答题目将不会保存",
-                    "退出",
-                    "继续",
-                    onDialogClick())
-            } else if (i == 2) {
-                infoBinding.webview.loadUrl(mOrginUrl)
-            } else {
-                super.onBackPressed()
+            when (toPage) {
+                3 -> {
+                    DialogUtils.showInterlinkingDialog(mActivity,
+                        "确定要退出答题?",
+                        "退出后已作答题目将不会保存",
+                        "退出",
+                        "继续",
+                        OnDialogClick())
+                }
+                2 -> {
+                    infoBinding.webview.loadUrl(mOrginUrl)
+                }
+                else -> {
+                    super.onBackPressed()
+                }
             }
         } else {
             super.onBackPressed()
         }
     }
 
-    protected fun initWebView(myWebView: HiWebView) {
-        myWebView.setWebChromeClient(webChromeClient())
-        myWebView.setWebViewClient(webViewClient())
+    private fun initWebView(myWebView: HiWebView) {
+        myWebView.webChromeClient = WebWebChromeClient()
+        myWebView.webViewClient = WebWebViewClient()
     }
 
     private fun fromUnsealedUrl() {
         if (TextUtils.equals(mPersonalize, EXTRA_WEB_PERSONALIZE_UNSEALING)) {
             StatusBarCompat.translucentStatusBar((this as Activity), true, false)
-            infoBinding.piTitle.rlTitle.setVisibility(View.GONE)
-            infoBinding.flMask.setVisibility(View.GONE)
+            infoBinding.piTitle.rlTitle.visibility = View.GONE
+            infoBinding.flMask.visibility = View.GONE
         }
     }
 
     private fun initView() {
         shareFullScreen = false
         infoBinding.piTitle.rlTitle.setBackgroundResource(R.drawable.status_bar_bg)
-        infoBinding.piTitle.tvTitle.setText(mTitle)
-        infoBinding.piTitle.ivBack.setVisibility(View.VISIBLE)
+        infoBinding.piTitle.tvTitle.text = mTitle
+        infoBinding.piTitle.ivBack.visibility = View.VISIBLE
         infoBinding.piTitle.ivRight.setBackgroundResource(0)
     }
 
@@ -137,20 +140,28 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
                 val isfullScreen: String = param.value("isfullScreen")
                 val stylecolor: String = param.value("stylecolor")
                 val toPage: String = param.value("toPage")
-                if (TextUtils.equals("yes", isfullScreen)) {
-                    IHandler.HandleListener.mHandler.sendEmptyMessage(2)
-                } else if (TextUtils.equals("no", isfullScreen)) {
-                    IHandler.HandleListener.mHandler.sendEmptyMessage(3)
-                } else if (TextUtils.equals("black", stylecolor)) {
-                    IHandler.HandleListener.mHandler.sendEmptyMessage(4)
-                } else if (TextUtils.equals("white", stylecolor)) {
-                    IHandler.HandleListener.mHandler.sendEmptyMessage(5)
-                } else if (TextUtils.equals("1", toPage)) {
-                    IHandler.HandleListener.mHandler.sendEmptyMessage(8)
-                } else if (TextUtils.equals("2", toPage)) {
-                    IHandler.HandleListener.mHandler.sendEmptyMessage(9)
-                } else if (TextUtils.equals("3", toPage)) {
-                    IHandler.HandleListener.mHandler.sendEmptyMessage(10)
+                when {
+                    TextUtils.equals("yes", isfullScreen) -> {
+                        IHandler.HandleListener.mHandler.sendEmptyMessage(2)
+                    }
+                    TextUtils.equals("no", isfullScreen) -> {
+                        IHandler.HandleListener.mHandler.sendEmptyMessage(3)
+                    }
+                    TextUtils.equals("black", stylecolor) -> {
+                        IHandler.HandleListener.mHandler.sendEmptyMessage(4)
+                    }
+                    TextUtils.equals("white", stylecolor) -> {
+                        IHandler.HandleListener.mHandler.sendEmptyMessage(5)
+                    }
+                    TextUtils.equals("1", toPage) -> {
+                        IHandler.HandleListener.mHandler.sendEmptyMessage(8)
+                    }
+                    TextUtils.equals("2", toPage) -> {
+                        IHandler.HandleListener.mHandler.sendEmptyMessage(9)
+                    }
+                    TextUtils.equals("3", toPage) -> {
+                        IHandler.HandleListener.mHandler.sendEmptyMessage(10)
+                    }
                 }
                 if (TextUtils.equals(param.value("appBack"), "1")) {
                     IHandler.HandleListener.mHandler.sendEmptyMessage(11)
@@ -171,7 +182,7 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
                     infoBinding.flMask.visibility = View.GONE
                     infoBinding.piTitle.rlTitle.setBackgroundResource(R.drawable.transparent)
                     swipBackLayout.setInterEvent(true)
-                    infoBinding.piTitle.tvTitle.setText("")
+                    infoBinding.piTitle.tvTitle.text = ""
                     infoBinding.piTitle.ivBack.visibility = View.GONE
                     infoBinding.piTitle.ivRight.setBackgroundResource(R.drawable.iv_share_white)
                     shareFullScreen = true
@@ -179,22 +190,22 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
                 }
                 3 -> {
                     StatusBarCompat.translucentStatusBar(this, true, true)
-                    infoBinding.piTitle.rlTitle.setVisibility(View.VISIBLE)
-                    infoBinding.flMask.setVisibility(View.VISIBLE)
+                    infoBinding.piTitle.rlTitle.visibility = View.VISIBLE
+                    infoBinding.flMask.visibility = View.VISIBLE
                     swipBackLayout.setInterEvent(false)
                     return
                 }
                 4 -> {
                     StatusBarCompat.translucentStatusBar(this, true, true)
-                    infoBinding.piTitle.rlTitle.setVisibility(View.GONE)
-                    infoBinding.flMask.setVisibility(View.GONE)
+                    infoBinding.piTitle.rlTitle.visibility = View.GONE
+                    infoBinding.flMask.visibility = View.GONE
                     swipBackLayout.setInterEvent(true)
                     return
                 }
                 5 -> {
                     StatusBarCompat.translucentStatusBar(this, true, false)
-                    infoBinding.piTitle.rlTitle.setVisibility(View.GONE)
-                    infoBinding.flMask.setVisibility(View.GONE)
+                    infoBinding.piTitle.rlTitle.visibility = View.GONE
+                    infoBinding.flMask.visibility = View.GONE
                     swipBackLayout.setInterEvent(true)
                     return
                 }
@@ -203,9 +214,9 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
                     toPage = 1
                     StatusBarCompat.translucentStatusBar(this, true, true)
                     infoBinding.piTitle.rlTitle.setBackgroundResource(R.drawable.status_bar_bg)
-                    infoBinding.piTitle.tvTitle.setText(mTitle)
+                    infoBinding.piTitle.tvTitle.text = mTitle
                     swipBackLayout.setInterEvent(false)
-                    infoBinding.flMask.setVisibility(View.VISIBLE)
+                    infoBinding.flMask.visibility = View.VISIBLE
                     infoBinding.piTitle.ivBack.setImageResource(R.drawable.back_bla_arrow)
                     infoBinding.piTitle.tvTitle.setTextColor(Color.parseColor("#1D1A33"))
                     infoBinding.piTitle.ivRight.setBackgroundResource(0)
@@ -229,7 +240,7 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
 
     }
 
-    inner class onDialogClick internal constructor() : IClickListener {
+    inner class OnDialogClick internal constructor() : IClickListener {
         override fun cancelBtn() {
             val webActivity: WebActivity = this@WebActivity
             infoBinding.webview.loadUrl(webActivity.mOrginUrl)
@@ -238,28 +249,28 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
         override fun clickOKBtn() {}
     }
 
-    inner class webChromeClient internal constructor() : WebChromeClient() {
+    inner class WebWebChromeClient internal constructor() : WebChromeClient() {
         // android.webkit.WebChromeClient
         override fun onProgressChanged(webView: WebView?, i: Int) {
             if (i == 100) {
                 infoBinding.progressBar.visibility = View.GONE
-                infoBinding.llProgress.setVisibility(View.GONE)
+                infoBinding.llProgress.visibility = View.GONE
                 return
             }
             infoBinding.progressBar.visibility = View.VISIBLE
-            infoBinding.progressBar.setProgress(i)
+            infoBinding.progressBar.progress = i
         }
 
         // android.webkit.WebChromeClient
         override fun onReceivedTitle(webView: WebView?, str: String?) {
             super.onReceivedTitle(webView, str)
             if (TextUtils.isEmpty(mTitle) && !TextUtils.isEmpty(str)) {
-                infoBinding.piTitle.tvTitle.setText(mTitle)
+                infoBinding.piTitle.tvTitle.text = mTitle
             }
         }
     }
 
-    inner class webViewClient internal constructor() : WebViewClient() {
+    inner class WebWebViewClient internal constructor() : WebViewClient() {
 
         override fun onReceivedError(webView: WebView,
                                      request: WebResourceRequest,

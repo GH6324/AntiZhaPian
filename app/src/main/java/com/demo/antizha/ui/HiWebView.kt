@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
-import android.os.Build
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.webkit.JavascriptInterface
@@ -19,7 +18,7 @@ import com.google.gson.Gson
 
 
 fun getFixedContext(context: Context): Context {
-    return if (Build.VERSION.SDK_INT >= 17) context.createConfigurationContext(Configuration()) else context
+    return context.createConfigurationContext(Configuration())
 }
 
 class HiWebView : WebView {
@@ -77,9 +76,7 @@ class HiWebView : WebView {
         settings.cacheMode = WebSettings.LOAD_DEFAULT
         settings.databaseEnabled = true
         settings.blockNetworkImage = false
-        if (Build.VERSION.SDK_INT >= 21) {
-            settings.mixedContentMode = 0
-        }
+        settings.mixedContentMode = 0
         settings.textZoom = 100
         settings.mediaPlaybackRequiresUserGesture = false
 

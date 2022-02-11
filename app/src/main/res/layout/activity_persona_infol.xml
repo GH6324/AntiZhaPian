@@ -13,13 +13,13 @@
         android:id="@+id/cl_base_cont"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="12dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="10dp"
         android:background="@drawable/bg_white_crop"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@id/pi_title">
 
         <TextView
@@ -45,7 +45,8 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_name_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_name_cont" />
+            app:layout_constraintTop_toTopOf="@id/tv_name_cont"
+            android:autofillHints="" />
 
         <View
             android:layout_width="match_parent"
@@ -76,7 +77,8 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_id_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_id_cont" />
+            app:layout_constraintTop_toTopOf="@id/tv_id_cont"
+            android:autofillHints="" />
 
         <View
             android:layout_width="match_parent"
@@ -108,7 +110,8 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_phone_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_phone_cont" />
+            app:layout_constraintTop_toTopOf="@id/tv_phone_cont"
+            android:autofillHints="" />
 
         <View
             android:layout_width="match_parent"
@@ -130,7 +133,7 @@
         <EditText
             android:id="@+id/et_account_num"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginLeft="55dp"
             android:background="@color/transparent"
             android:hint="48808f6c-c936-47b7-9b85-aaaa78787878"
@@ -140,7 +143,8 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_account_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_account_cont" />
+            app:layout_constraintTop_toTopOf="@id/tv_account_cont"
+            android:autofillHints="" />
 
         <View
             android:layout_width="match_parent"
@@ -170,17 +174,36 @@
             app:sb_checked_color="#34c759"
             app:sb_shadow_radius="3dp"
             app:sb_show_indicator="false" />
-        <Button
-            android:id="@+id/btn_clearpermiss"
-            style="@style/buttonCrop"
-            android:layout_width="120dp"
-            android:layout_height="40dp"
-            android:text="清理可关闭权限"
-            android:textColor="#ffffff"
-            android:textSize="14sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_originalimei" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_originalimei">
+            <TextView
+                android:id="@+id/tv_apktime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="编译时间 2022-01-01 01:01:01"
+                android:textColor="#333333"
+                android:textSize="15sp" />
+            <Button
+                android:id="@+id/btn_clearpermiss"
+                style="@style/buttonCrop"
+                android:layout_width="@dimen/dp_130"
+                android:layout_height="35dp"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="清理可关闭权限"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -257,7 +280,8 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_address_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_address_cont" />
+            app:layout_constraintTop_toTopOf="@id/tv_address_cont"
+            android:autofillHints="" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -297,7 +321,8 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_emerg_name_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_emerg_name_cont" />
+            app:layout_constraintTop_toTopOf="@id/tv_emerg_name_cont"
+            android:autofillHints="" />
 
         <View
             android:layout_width="match_parent"
@@ -329,7 +354,8 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_emerg_phone_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_emerg_phone_cont" />
+            app:layout_constraintTop_toTopOf="@id/tv_emerg_phone_cont"
+            android:autofillHints="" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -369,7 +395,8 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_qq_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_qq_cont" />
+            app:layout_constraintTop_toTopOf="@id/tv_qq_cont"
+            android:autofillHints="" />
 
         <View
             android:layout_width="match_parent"
@@ -400,7 +427,8 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_wx_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_wx_cont" />
+            app:layout_constraintTop_toTopOf="@id/tv_wx_cont"
+            android:autofillHints="" />
 
         <View
             android:layout_width="match_parent"
@@ -432,14 +460,15 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_email_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_email_cont" />
+            app:layout_constraintTop_toTopOf="@id/tv_email_cont"
+            android:autofillHints="" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
         android:id="@+id/btn_confirm"
         style="@style/buttonCrop"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="300dp"
         android:layout_marginRight="20dp"
         android:gravity="center"
         android:text="确定"

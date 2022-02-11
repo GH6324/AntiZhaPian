@@ -7,7 +7,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.listener.OnItemChildClickListener
 import com.demo.antizha.R
 import com.demo.antizha.adapter.SocialAccAdapter
 import com.demo.antizha.adapter.SocialAccBean
@@ -27,15 +27,15 @@ class TradAccountActivity : BaseActivity() {
         infoBinding.lyComplete.tvCommitTip.text = "提示：最多可上传20条交易账户"
         infoBinding.lyComplete.btnCommit.text = "确定"
         getIntentData()
-        infoBinding.recyclerview.setLayoutManager(LinearLayoutManager(this,
-            RecyclerView.VERTICAL, false))
+        infoBinding.recyclerview.layoutManager = LinearLayoutManager(this,
+            RecyclerView.VERTICAL, false)
         socialAccAdapter = SocialAccAdapter(R.layout.item_social_acc, dealAccounts)
-        infoBinding.recyclerview.setAdapter(socialAccAdapter)
-        socialAccAdapter.setOnItemChildClickListener(BaseQuickAdapter.OnItemChildClickListener { adapter, view, position ->
-            val id: Int = view.getId()
+        infoBinding.recyclerview.adapter = socialAccAdapter
+        socialAccAdapter.setOnItemChildClickListener(OnItemChildClickListener { adapter, view, position ->
+            val id: Int = view.id
             if (id == R.id.iv_delete) {
                 dealAccounts.removeAt(position)
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemRemoved(position)
             } else if (id == R.id.iv_edit) {
                 editAcc(position)
             }
@@ -61,11 +61,14 @@ class TradAccountActivity : BaseActivity() {
                     return@registerForActivityResult
                 val tag = result.data!!.extras!!.getInt("tag")
                 val socialAccount = result.data!!.getParcelableExtra<SocialAccBean>("account")!!
-                if (tag == -1)
+                if (tag == -1) {
                     dealAccounts.add(socialAccount)
-                else
+                    socialAccAdapter.notifyItemInserted(dealAccounts.size - 1)
+                }
+                else {
                     dealAccounts[tag] = socialAccount
-                socialAccAdapter.notifyDataSetChanged()
+                    socialAccAdapter.notifyItemChanged(tag)
+                }
             }
     }
 
@@ -76,11 +79,11 @@ class TradAccountActivity : BaseActivity() {
         }
     }
 
-    fun editAcc(i: Int) {
+    private fun editAcc(i: Int) {
         val intent = Intent(mActivity, TradAccountEditActivity::class.java)
         intent.putExtra("pos", i)
         if (i != -1) {
-            intent.putExtra("acc", dealAccounts.get(i))
+            intent.putExtra("acc", dealAccounts[i])
         }
         startEdit.launch(intent)
     }

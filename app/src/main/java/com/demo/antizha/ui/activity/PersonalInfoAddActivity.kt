@@ -13,12 +13,15 @@ import android.widget.Toast
 import cn.qqtheme.framework.entity.City
 import cn.qqtheme.framework.entity.County
 import cn.qqtheme.framework.entity.Province
+import com.demo.antizha.BuildConfig
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.databinding.ActivityPersonaInfolBinding
-import com.demo.antizha.ui.Hicore
 import com.demo.antizha.util.*
+import com.demo.antizha.util.NotchUtils.dp2px
 import com.hjq.toast.ToastUtils
 import qiu.niorgai.StatusBarCompat
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.regex.Pattern
 
 
@@ -33,7 +36,7 @@ class PersonalInfoAddActivity : BaseActivity() {
 
     private var pageType: String = ""
     private var adcode: String = ""
-    private var provinces: ArrayList<Province> = ArrayList<Province>()
+    private var provinces: ArrayList<Province> = ArrayList()
     private lateinit var infoBinding: ActivityPersonaInfolBinding
 
     inner class AddressListener : AddressBean.HiAddressListener() {
@@ -107,7 +110,7 @@ class PersonalInfoAddActivity : BaseActivity() {
             picker.show()
         }
         infoBinding.etAccountNum.setOnClickListener {
-            if (infoBinding.etAccountNum.inputType == InputType.TYPE_NULL) {
+            if (infoBinding.etAccountNum.text.toString().isEmpty()) {
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("关于账号ID")
                 builder.setMessage(
@@ -125,10 +128,10 @@ class PersonalInfoAddActivity : BaseActivity() {
                     val strtemplate = "1111aaaa-aaaa-aaaa-aaaa-aaaa11111111"
                     val nummap = "1234567890"
                     val hexmap = "1234567890abcdefabcdef"
-                    for (i in 0 until strtemplate.length) {
-                        when (strtemplate[i]) {
-                            '1' -> account += nummap[(0 until nummap.length).random()]
-                            'a' -> account += hexmap[(0 until hexmap.length).random()]
+                    for (element in strtemplate) {
+                        when (element) {
+                            '1' -> account += nummap[(nummap.indices).random()]
+                            'a' -> account += hexmap[(hexmap.indices).random()]
                             '-' -> account += "-"
                         }
                     }
@@ -240,16 +243,16 @@ class PersonalInfoAddActivity : BaseActivity() {
         }
     }
 
-    fun stringIsEmail(str: String): Boolean {
+    private fun stringIsEmail(str: String): Boolean {
         return Pattern.compile("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$").matcher(str)
             .matches()
     }
 
-    fun stringIsUserID(str: String): Boolean {
+    private fun stringIsUserID(str: String): Boolean {
         return Pattern.compile("^[1-6][0-9X]$").matcher(str).matches()
     }
 
-    fun stringIsMobileNumber(str: String): Boolean {
+    private fun stringIsMobileNumber(str: String): Boolean {
         return Pattern.compile("^1[0-9]{4}$").matcher(str).matches()
     }
 
@@ -263,13 +266,14 @@ class PersonalInfoAddActivity : BaseActivity() {
                 infoBinding.etPhoneNum.setText(UserInfoBean.mobileNumber)
                 infoBinding.etAccountNum.setText(UserInfoBean.accountId)
                 infoBinding.sbOriginalimei.isChecked = UserInfoBean.useorigimei
+                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                infoBinding.tvApktime.text = "编译时间 " + sdf.format(Date(BuildConfig.BUILD_TIME))
                 if (TextUtils.isEmpty(UserInfoBean.accountId))
                     infoBinding.etAccountNum.inputType = InputType.TYPE_NULL
 
                 val params: ViewGroup.MarginLayoutParams =
                     infoBinding.btnConfirm.layoutParams as ViewGroup.MarginLayoutParams
-                params.topMargin =
-                    (280 * Hicore.context.resources.displayMetrics.density + 0.5f).toInt()
+                params.topMargin = dp2px(300F)
                 infoBinding.btnConfirm.layoutParams = params
                 infoBinding.btnConfirm.requestLayout()
             }

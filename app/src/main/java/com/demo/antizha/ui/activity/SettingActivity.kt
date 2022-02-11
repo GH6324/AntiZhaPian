@@ -1,5 +1,8 @@
 package com.demo.antizha.ui.activity
 
+import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import com.demo.antizha.databinding.ActivitySettingBinding
 import com.demo.antizha.ui.IClickListener
 import com.demo.antizha.util.DataCleanManager
@@ -11,7 +14,7 @@ class SettingActivity : BaseActivity() {
     override fun initPage() {
         infoBinding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
-        infoBinding.piTitle.tvTitle.setText("设置")
+        infoBinding.piTitle.tvTitle.text = "设置"
         infoBinding.switchShowCheck.isChecked = false
         infoBinding.switchShowPush.isChecked = true
         infoBinding.cacheNum.text = DataCleanManager.getCheckSize(this)
@@ -27,15 +30,20 @@ class SettingActivity : BaseActivity() {
                 -1,
                 -1,
                 true,
-                logoutListener())
+                LogoutListener())
         }
         infoBinding.rlCacheCalean.setOnClickListener {
             infoBinding.cacheNum.text = "0KB"
         }
     }
 
-    inner class logoutListener : IClickListener {
+    inner class LogoutListener : IClickListener {
         override fun cancelBtn() {
+            showProgressDialog("退出中...", false)
+            Handler(Looper.getMainLooper()).postDelayed({
+                hideProgressDialog()
+                startActivity(Intent(this@SettingActivity, LoginActivity::class.java))
+            }, 100)
         }
 
         override fun clickOKBtn() {

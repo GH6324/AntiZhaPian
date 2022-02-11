@@ -8,8 +8,7 @@ import java.nio.charset.StandardCharsets
 
 object UrlUtils {
     fun separateParam(str: String): Parameters {
-        val aVar: Parameters?
-        aVar = if (TextUtils.isEmpty(str) || str.indexOf('?') <= -1) {
+        val aVar: Parameters? = if (TextUtils.isEmpty(str) || str.indexOf('?') <= -1) {
             null
         } else {
             val substring = str.substring(str.indexOf('?') + 1)
@@ -26,7 +25,7 @@ object UrlUtils {
         val params = Parameters()
         try {
             val paramList: List<String> = paramString.split("&")
-            if (paramList.size > 0) {
+            if (paramList.isNotEmpty()) {
                 for (param in paramList) {
                     val paramSplit: List<String> = param.split("=", ignoreCase = false, limit = 2)
                     if (paramSplit.size == 2) {

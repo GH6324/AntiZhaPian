@@ -10,15 +10,13 @@ object UrlAES {
 
 
     fun urlDecrypt(str: String): String {
-        try {
+        return try {
             if (TextUtils.isEmpty(str)) {
-                return ""
+                ""
             } else
-                return cipherDecrypt(
-                    str.replace(" ".toRegex(), "+"), "hicore2020051518", "hicore2020051518"
-                )
+                cipherDecrypt(str.replace(" ".toRegex(), "+"), "hicore2020051518", "hicore2020051518")
         } catch (unused: Exception) {
-            return ""
+            ""
         }
     }
 }

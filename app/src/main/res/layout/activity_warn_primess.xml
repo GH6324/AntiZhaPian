@@ -343,7 +343,7 @@
                 android:textSize="@dimen/sp_16"
                 app:layout_constraintTop_toBottomOf="@+id/ll_content" />
 
-            <Space
+            <android.widget.Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/dp_10"

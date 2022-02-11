@@ -49,16 +49,16 @@ class WarnPrimessActivity : BaseActivity() {
             if (!mOpenCount.contains("0")) {
                 SpUtils.setValue(SpUtils.warnCall, true)
                 SpUtils.setValue(SpUtils.warnSms, true)
-                openState(infoBinding.openFlow, true, true)
+                openState(infoBinding.openFlow, isOpen = true, addOpenCount = true)
             }
 
         }, 500)
         openState(infoBinding.openFlow,
             SpUtils.getValue(SpUtils.warnCall, true) && SpUtils.getValue(SpUtils.warnSms, true),
             true)
-        openState(infoBinding.openPhone, true, true)
-        openState(infoBinding.openPhoneRecord, true, true)
-        openState(infoBinding.openSms, true, true)
+        openState(infoBinding.openPhone, isOpen = true, addOpenCount = true)
+        openState(infoBinding.openPhoneRecord, true, addOpenCount = true)
+        openState(infoBinding.openSms, isOpen = true, addOpenCount = true)
         openState(infoBinding.openAuto, SpUtils.getValue(SpUtils.primissAuto, false), false)
         openState(infoBinding.openPower, SpUtils.getValue(SpUtils.primissPower, false), false)
         openState(infoBinding.openLock, SpUtils.getValue(SpUtils.primissLock, false), false)
@@ -93,7 +93,7 @@ class WarnPrimessActivity : BaseActivity() {
         }
     }
 
-    inner class OnClickListener(val key: String) : View.OnClickListener {
+    inner class OnClickListener(private val key: String) : View.OnClickListener {
         override fun onClick(v: View?) {
             val isOpen = SpUtils.getValue(key, false)
             SpUtils.setValue(key, !isOpen)

@@ -21,30 +21,30 @@ class CheckFraudResultActivity : BaseActivity() {
         setContentView(infoBinding.root)
         SwipBackLayout(this).init()
         StatusBarCompat.translucentStatusBar(this, true, true)
-        checkType = getIntent().getIntExtra("checkType", 0)
-        checkFraudBean = intent.getParcelableExtra<CheckFraudBean>("checkBean")!!
-        shareBean = intent.getParcelableExtra<ShareConfigBean>("shareBean")!!
+        checkType = intent.getIntExtra("checkType", 0)
+        checkFraudBean = intent.getParcelableExtra("checkBean")!!
+        shareBean = intent.getParcelableExtra("shareBean")!!
         when (checkType) {
-            1 -> infoBinding.piTitle.tvTitle.setText("IP网址查询")
-            2 -> infoBinding.piTitle.tvTitle.setText("QQ/微信查询")
-            else -> infoBinding.piTitle.tvTitle.setText("支付风险查询")
+            1 -> infoBinding.piTitle.tvTitle.text = "IP网址查询"
+            2 -> infoBinding.piTitle.tvTitle.text = "QQ/微信查询"
+            else -> infoBinding.piTitle.tvTitle.text = "支付风险查询"
         }
-        infoBinding.tvType.setVisibility(View.GONE)
-        infoBinding.tvCotent.setText("查询内容：" + checkFraudBean.content)
+        infoBinding.tvType.visibility = View.GONE
+        infoBinding.tvCotent.text = "查询内容：" + checkFraudBean.content
         infoBinding.ivPicture.setImageResource(R.mipmap.ic_fraud_safe)
-        infoBinding.tvCheckResult.setText("未知")
+        infoBinding.tvCheckResult.text = "未知"
         infoBinding.tvCheckResult.setTextColor(
-            getResources().getColor(R.color.fraud_result_color, null))
-        infoBinding.warnTxt.setVisibility(View.VISIBLE)
+            resources.getColor(R.color.fraud_result_color, null))
+        infoBinding.warnTxt.visibility = View.VISIBLE
         infoBinding.piTitle.ivBack.setOnClickListener {
             onBackPressed()
         }
         infoBinding.tvShare.setOnClickListener {
-            if (shareBean != null && !TextUtils.isEmpty(shareBean.downloadUrl)) {
+            if (!TextUtils.isEmpty(shareBean.downloadUrl)) {
                 val shareConfigBean2: ShareConfigBean = this.shareBean
                 val str = shareConfigBean2.downloadUrl
                 shareConfigBean2.downloadUrl =
-                    str!!.replace("{0}", (System.currentTimeMillis() / 3000).toString())
+                    str.replace("{0}", (System.currentTimeMillis() / 3000).toString())
             }
             val mShareDialog = HiShareDialog(this, shareBean, 2)
             mShareDialog.show()

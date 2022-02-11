@@ -14,7 +14,7 @@ class SmsAddActivity : BaseActivity() {
     override fun initPage() {
         infoBinding = ActivityCallAddBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
-        infoBinding.piTitle.tvTitle.setText("添加短信")
+        infoBinding.piTitle.tvTitle.text = "添加短信"
         getIntentData()
         infoBinding.piTitle.ivBack.setOnClickListener {
             onBackPressed()
@@ -24,8 +24,8 @@ class SmsAddActivity : BaseActivity() {
         }
     }
 
-    fun getIntentData() {
-        var tmp = intent.getParcelableExtra<SmsBean>("sms")
+    private fun getIntentData() {
+        val tmp = intent.getParcelableExtra<SmsBean>("sms")
         if (tmp != null) {
             sms = tmp
         }
@@ -37,9 +37,9 @@ class SmsAddActivity : BaseActivity() {
         }
     }
 
-    fun editConfirm() {
-        sms.smsNum = infoBinding.etPhone.getText().toString()
-        sms.smsContent = infoBinding.etDescribe.getText().toString()
+    private fun editConfirm() {
+        sms.smsNum = infoBinding.etPhone.text.toString()
+        sms.smsContent = infoBinding.etDescribe.text.toString()
         if (TextUtils.isEmpty(sms.smsNum)) {
             ToastUtils.show("请输入短信号码")
             return
@@ -49,8 +49,8 @@ class SmsAddActivity : BaseActivity() {
             return
         }
         sms.isInput = true
-        sms.stringDate =
-            SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date(System.currentTimeMillis()))
+        sms.stringDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            .format(Date(System.currentTimeMillis()))
         val intent = Intent()
         setResult(RESULT_OK, intent)
         intent.putExtra("sms", sms)

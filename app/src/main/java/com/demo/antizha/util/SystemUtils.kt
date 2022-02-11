@@ -16,7 +16,7 @@ object SystemUtils {
         }
     }
 
-    fun getAndroidVer(): String {
+    private fun getAndroidVer(): String {
         return Build.VERSION.RELEASE
     }
 

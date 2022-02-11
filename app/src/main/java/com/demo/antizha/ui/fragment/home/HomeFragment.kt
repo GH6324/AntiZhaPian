@@ -163,7 +163,7 @@ class NewCaseHolderAdapte(
                     intent.putExtra("extra_web_title", "国家反诈中心")
                     val adcode =
                         if (TextUtils.isEmpty(UserInfoBean.adcode)) "110105" else UserInfoBean.adcode
-                    intent.putExtra("extra_web_url", url + "&nodeId=" + adcode)
+                    intent.putExtra("extra_web_url", "$url&nodeId=$adcode")
                     intent.putExtra("extra_web_id", id)
                     intent.putExtra("extra_web_enter", 2)
                     context.startActivity(intent)
@@ -254,7 +254,7 @@ class HomeFragment : Fragment(), IClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        ViewModelProvider(this).get(HomeViewModel::class.java).also { homeViewModel = it }
+        ViewModelProvider(this)[HomeViewModel::class.java].also { homeViewModel = it }
         root = inflater.inflate(R.layout.fragment_home, container, false)
         initBanner()
         initTool()
@@ -320,11 +320,11 @@ class HomeFragment : Fragment(), IClickListener {
     private fun initWarnCheck() {
         val frameVirusCheck: FrameLayout = root.findViewById(R.id.fl_virus_check)
         val frameFruadCheck: FrameLayout = root.findViewById(R.id.fl_fruad_check)
-        frameVirusCheck.setOnClickListener(View.OnClickListener { _ ->
-            if (AppUtil.checkPermission(mActivity, true) == true)
+        frameVirusCheck.setOnClickListener(View.OnClickListener {
+            if (AppUtil.checkPermission(mActivity, true))
                 startActivity(Intent(activity, VirusKillingActivity::class.java))
         })
-        frameFruadCheck.setOnClickListener(View.OnClickListener { _ ->
+        frameFruadCheck.setOnClickListener(View.OnClickListener {
             startActivity(Intent(activity, CheckFraudActivity::class.java))
         })
     }
@@ -333,7 +333,7 @@ class HomeFragment : Fragment(), IClickListener {
         val newCaseRecycle: RecyclerView = root.findViewById(R.id.rcy_newcase)
         newCaseRecycle.layoutManager = LinearLayoutManager(root.context)
         newCaseAdapter =
-            NewCaseHolderAdapte(root.context, root, newCaseRecycle, ArrayList<NewCase>())
+            NewCaseHolderAdapte(root.context, root, newCaseRecycle, ArrayList())
         newCaseRecycle.adapter = newCaseAdapter
     }
 
@@ -380,8 +380,8 @@ class HomeFragment : Fragment(), IClickListener {
     private fun getNewCaseApi(page: Int, row: Int) {
         //https://fzapp.gjfzpt.cn/hicore/api/Information/querylatestcases?Page=1&Rows=2&Sort=releasetime&Order=desc
         getDataByGet(
-            "https://fzapp.gjfzpt.cn/hicore/api/Information/querylatestcases?Page=${page}&Rows=${row}&Sort=releasetime&Order=desc",
-            addHead = true, "newcase" + page.toString() + ".txt", callBackFunc = this::addNewCase)
+            BuildConfig.RELEASE_API_URL+ "/api/Information/querylatestcases?Page=${page}&Rows=${row}&Sort=releasetime&Order=desc",
+            addHead = true, "newcase$page.txt", callBackFunc = this::addNewCase)
     }
 
     private fun onNormalSave(data: String, saveFile: String) {
@@ -400,8 +400,9 @@ class HomeFragment : Fragment(), IClickListener {
                 saveBuff2File(data, saveFile)
             total = json.data.total
             refreshLayout.finishLoadMore()
+            val oldCount = newCaseAdapter.itemCount
             newCaseAdapter.addNewCase(json.data.rows)
-            newCaseAdapter.notifyDataSetChanged()
+            newCaseAdapter.notifyItemRangeInserted(oldCount, json.data.rows.size)
             if (newCaseAdapter.itemCount >= total) {
                 val morecase: View = root.findViewById(R.id.ly_morecase)
                 morecase.visibility = View.VISIBLE
@@ -443,8 +444,8 @@ class HomeFragment : Fragment(), IClickListener {
                     BanderBean(
                         0,
                         row.imgPath,
-                        if (row.url == null) "" else row.url,
-                        if (row.title == null) "" else row.title,
+                        row.url ?: "",
+                        row.title ?: "",
                         BanderType.TYPE_URL
                     )
                 )

@@ -6,7 +6,7 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.demo.antizha.R
 import java.util.*
 
@@ -21,10 +21,7 @@ class SmsBean : Parcelable {
     var isInput = false
     var index: Int = -1
 
-    constructor() {
-
-    }
-
+    constructor()
     constructor(source: Parcel) {
         id = source.readString().toString()
         isSelect = source.readInt() > 0
@@ -62,33 +59,17 @@ class SmsBean : Parcelable {
     }
 }
 
-class SmsDeleteAdapter(resId: Int, list: List<SmsBean?>?) :
+class SmsDeleteAdapter(resId: Int, list: ArrayList<SmsBean>?) :
     BaseQuickAdapter<SmsBean, BaseViewHolder>(resId, list) {
-    private var itemClickListener: ItemClickListener? = null
-
-    inner class OnClickListener internal constructor(val holder: BaseViewHolder) :
-        View.OnClickListener {
-        override fun onClick(view: View) {
-            if (itemClickListener != null) {
-                itemClickListener!!.onItemClickListener(holder.adapterPosition,
-                    this@SmsDeleteAdapter.mData)
-            }
-        }
+    init {
+        addChildClickViewIds(R.id.iv_clear)
+        addChildClickViewIds(R.id.iv_edit)
     }
 
-    interface ItemClickListener {
-        fun onItemClickListener(i: Int, list: List<SmsBean>)
-    }
-
-    fun setOnItemClickListener(bVar: ItemClickListener?) {
-        itemClickListener = bVar
-    }
-
-    public override fun convert(holder: BaseViewHolder, smsBean: SmsBean) {
-        holder.setText(R.id.tv_sms_phone, smsBean.smsNum)
-        holder.setText(R.id.tv_sms_content, smsBean.smsContent)
-        holder.addOnClickListener(R.id.iv_clear)
-        val stringDate = smsBean.stringDate
+    public override fun convert(holder: BaseViewHolder, item: SmsBean) {
+        holder.setText(R.id.tv_sms_phone, item.smsNum)
+        holder.setText(R.id.tv_sms_content, item.smsContent)
+        val stringDate = item.stringDate
         if (!TextUtils.isEmpty(stringDate)) {
             val split = stringDate.split(" ").toTypedArray()
             val sb = StringBuilder().append(Calendar.getInstance()[1]).append("")
@@ -98,15 +79,10 @@ class SmsDeleteAdapter(resId: Int, list: List<SmsBean?>?) :
             holder.setText(R.id.tv_time, "")
         }
         val ivEdit = holder.getView<View>(R.id.iv_edit) as ImageView
-        if (smsBean.isInput) {
+        if (item.isInput) {
             ivEdit.visibility = View.VISIBLE
         } else {
             ivEdit.visibility = View.GONE
         }
-    }
-
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        super.onBindViewHolder(holder, position)
-        holder.itemView.setOnClickListener(OnClickListener(holder))
     }
 }

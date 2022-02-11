@@ -61,7 +61,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/qb_px_10"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:baselineAligned="false">
 
                     <FrameLayout
                         android:id="@+id/fl_virus_check"

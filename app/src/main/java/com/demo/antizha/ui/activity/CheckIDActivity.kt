@@ -1,16 +1,12 @@
 package com.demo.antizha.ui.activity
 
 import android.app.Activity
-import android.content.Intent
 import android.widget.Toast
 import com.demo.antizha.databinding.ActivityIdCheckBinding
-import com.demo.antizha.databinding.ActivityWarnSettingBinding
 import com.demo.antizha.ui.Hicore
 import com.demo.antizha.ui.IClickListener
-
-import qiu.niorgai.StatusBarCompat
-import java.lang.Exception
 import com.demo.antizha.util.DialogUtils
+import qiu.niorgai.StatusBarCompat
 
 class CheckIDActivity: BaseActivity(), IClickListener {
     private lateinit var infoBinding: ActivityIdCheckBinding
@@ -23,9 +19,9 @@ class CheckIDActivity: BaseActivity(), IClickListener {
             finish()
         }
         infoBinding.btnIdvrfySend.setOnClickListener {
-            val checkID: String = infoBinding.etCheckPhone.getText().toString()
+            val checkID: String = infoBinding.etCheckPhone.text.toString()
             if (checkID.trim { it <= ' ' }.length < 11) {
-                var toast = Toast.makeText(Hicore.app, "请输入正确手机号~", Toast.LENGTH_SHORT)
+                val toast = Toast.makeText(Hicore.app, "请输入正确手机号~", Toast.LENGTH_SHORT)
                 toast.setGravity(17, 0, 0)
                 toast.show()
             } else {
@@ -37,7 +33,7 @@ class CheckIDActivity: BaseActivity(), IClickListener {
 
     }
     override fun clickOKBtn(){
-        var toast = Toast.makeText(Hicore.app, "发送成功", Toast.LENGTH_SHORT)
+        val toast = Toast.makeText(Hicore.app, "发送成功", Toast.LENGTH_SHORT)
         toast.setGravity(17, 0, 0)
         toast.show()
     }

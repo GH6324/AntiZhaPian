@@ -8,6 +8,7 @@ import android.text.TextUtils
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.demo.antizha.BuildConfig
 import com.demo.antizha.R
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.adapter.HRecyclerViewAdapter
@@ -25,7 +26,7 @@ class ShareConfigBean : Parcelable {
     var saveImgUrl: String = ""
     var title: String = ""
 
-    constructor() {}
+    constructor()
 
     constructor(source: Parcel) {
         apiAddress = source.readString().toString()
@@ -64,22 +65,19 @@ class ShareConfigBean : Parcelable {
     }
 }
 
-class HiShareDialog : BaseDialog {
-    private var shareType = 0
-    private var activity: Activity
+class HiShareDialog(
+    private var activity: Activity,
+    private var shareBean: ShareConfigBean,
+    private var shareType: Int
+) : BaseDialog(activity, R.style.base_dialog_style) {
     private var shareUrl: String
     private var title: String
     private var description: String
-    private var shareBean: ShareConfigBean
 
-    constructor(activity: Activity, shareConfigBean: ShareConfigBean, shareType: Int)
-            : super(activity, R.style.base_dialog_style) {
-        shareUrl = "https://fzapph5.gjfzpt.cn/QRCode/?appkey=a28ft4&pcode=10000"
+    init {
+        shareUrl = BuildConfig.RELEASE_H5_URL + "/QRCode/?appkey=a28ft4&pcode=10000"
         title = "下载国家反诈中心APP,公安部打击防范电信网络诈骗官方应用"
         description = "看更多反诈文章，上国家反诈中心APP"
-        this.activity = activity
-        this.shareType = shareType
-        shareBean = shareConfigBean
         createDialog()
     }
 
@@ -109,13 +107,13 @@ class HiShareDialog : BaseDialog {
             this@HiShareDialog.onItemClick(i, str)
         }
         if (!TextUtils.isEmpty(shareBean.downloadUrl)) {
-            shareUrl = shareBean.downloadUrl!!
+            shareUrl = shareBean.downloadUrl
         }
         if (!TextUtils.isEmpty(shareBean.title)) {
-            title = shareBean.title!!
+            title = shareBean.title
         }
         if (!TextUtils.isEmpty(shareBean.description)) {
-            description = shareBean.description!!
+            description = shareBean.description
         }
         shareUrl += "&nodeId=" + UserInfoBean.adcode
     }

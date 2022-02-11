@@ -7,7 +7,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.listener.OnItemChildClickListener
 import com.demo.antizha.R
 import com.demo.antizha.adapter.AppDeleteAdapter
 import com.demo.antizha.databinding.ActivityAudioBinding
@@ -32,20 +32,19 @@ class AppActivity : BaseUploadActivity() {
         AppUtil.checkPermission(this, true)
         getIntentData()
         val lyManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        infoBinding.recyclerview.setLayoutManager(lyManager)
+        infoBinding.recyclerview.layoutManager = lyManager
         mAdapter =
             AppDeleteAdapter(R.layout.recyclerview_app_record_select, mAppBeans, mUploadStateList)
-        mAdapter.bindToRecyclerView(infoBinding.recyclerview)
-        infoBinding.recyclerview.setAdapter(mAdapter)
-        mAdapter.setOnItemChildClickListener(BaseQuickAdapter.OnItemChildClickListener { adapter, view, position ->
-            val id: Int = view.getId()
+        infoBinding.recyclerview.adapter = mAdapter
+        mAdapter.setOnItemChildClickListener(OnItemChildClickListener { adapter, view, position ->
+            val id: Int = view.id
             if (id == R.id.iv_clear) {
                 mAppBeans.removeAt(position)
                 mAppIds.removeAt(position)
                 mUploadStateList.removeAt(position)
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemRemoved(position)
                 if (mAppBeans.size == 0)
-                    infoBinding.lyComplete.btnCommit.setText("确定")
+                    infoBinding.lyComplete.btnCommit.text = "确定"
             }
         })
         initActivityResultLauncher()
@@ -66,7 +65,7 @@ class AppActivity : BaseUploadActivity() {
         }
     }
 
-    fun getIntentData() {
+    private fun getIntentData() {
         val list = intent.getParcelableArrayListExtra<AppInfoBean>("apps")
         if (list != null) {
             mAppBeans.addAll(list)
@@ -76,31 +75,32 @@ class AppActivity : BaseUploadActivity() {
             }
         }
         if (mAppBeans.size > 0)
-            infoBinding.lyComplete.btnCommit.setText("文件上传")
+            infoBinding.lyComplete.btnCommit.text = "文件上传"
     }
 
-    fun initActivityResultLauncher() {
+    private fun initActivityResultLauncher() {
         startApp =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 if (result.resultCode != Activity.RESULT_OK)
                     return@registerForActivityResult
                 if (result.data == null)
                     return@registerForActivityResult
-                val array: ArrayList<AppInfoBean>? =
-                    result.data!!.getParcelableArrayListExtra<AppInfoBean>("app")
-                if (array == null)
-                    return@registerForActivityResult
-                val apps = mAppBeans
+                val array: ArrayList<AppInfoBean> =
+                    result.data!!.getParcelableArrayListExtra("app") ?: return@registerForActivityResult
+                val count = mAppBeans.size
+                var insertCount = 0
                 for (app in array) {
                     if (!mAppIds.contains(app.id)) {
-                        apps.add(app)
+                        mAppBeans.add(app)
                         mAppIds.add(app.id)
+                        insertCount++
                         mUploadStateList.add(UploadStateInfo())
                     }
                 }
+                mAdapter.notifyItemRangeInserted(count, insertCount)
                 mAdapter.notifyDataSetChanged()
                 if (mAppBeans.size > 0)
-                    infoBinding.lyComplete.btnCommit.setText("文件上传")
+                    infoBinding.lyComplete.btnCommit.text = "文件上传"
 
             }
     }

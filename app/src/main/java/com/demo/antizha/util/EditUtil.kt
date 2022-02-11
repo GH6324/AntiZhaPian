@@ -2,12 +2,11 @@ package com.demo.antizha.util
 
 import android.text.Editable
 import com.demo.antizha.ui.IEditAfterListener
-import android.text.TextWatcher
 
 
 class EditUtil {
-    class textWatcher internal constructor(val listener: IEditAfterListener) :
-        TextWatcher {
+    class TextWatcher internal constructor(val listener: IEditAfterListener) :
+        android.text.TextWatcher {
         override fun afterTextChanged(editable: Editable) {
             listener.editLength(editable.toString().length)
         }

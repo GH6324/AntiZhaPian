@@ -14,7 +14,7 @@ class AboutUsActivity : BaseActivity() {
     override fun initPage() {
         infoBinding = ActivityAboutUsBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
-        infoBinding.piTitle.tvTitle.setText("关于我们")
+        infoBinding.piTitle.tvTitle.text = "关于我们"
         infoBinding.tvAppVersion.text = "v" + UserInfoBean.version
         infoBinding.piTitle.ivBack.setOnClickListener {
             finish()

@@ -5,7 +5,7 @@ import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 
 object AnimUtils {
-    const val DURATION = 250
+    private const val DURATION = 250
 
     /**
      * 箭头旋转动画
@@ -24,7 +24,7 @@ object AnimUtils {
             targetValue = 360f
         }
         val objectAnimator = ObjectAnimator.ofFloat(arrow, "rotation", srcValue, targetValue)
-        objectAnimator.duration = AnimUtils.DURATION.toLong()
+        objectAnimator.duration = DURATION.toLong()
         objectAnimator.interpolator = LinearInterpolator()
         objectAnimator.start()
     }

@@ -3,24 +3,19 @@ package com.demo.antizha.adapter
 import android.os.Parcel
 import android.os.Parcelable
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.demo.antizha.R
 
 class SocialAccAdapter(resId: Int, val list: ArrayList<SocialAccBean>) :
     BaseQuickAdapter<SocialAccBean, BaseViewHolder>(resId, list) {
-
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        super.onBindViewHolder(holder, position)
-        //baseViewHolder.itemView.setOnClickListener(`View$OnClickListenerC0358a`())
+    init {
+        addChildClickViewIds(R.id.iv_delete)
+        addChildClickViewIds(R.id.iv_edit)
     }
-
     override fun convert(holder: BaseViewHolder, item: SocialAccBean) {
         holder.setText(R.id.tv_name, item.accountName)
         holder.setText(R.id.tv_acc_num, item.accountNum)
-        holder.addOnClickListener(R.id.iv_delete)
-        holder.addOnClickListener(R.id.iv_edit)
     }
-
 }
 
 class SocialAccBean : Parcelable {
@@ -29,7 +24,7 @@ class SocialAccBean : Parcelable {
     var id: String = ""
     var suspectInfoID: String = ""
 
-    constructor() {}
+    constructor()
 
     constructor(source: Parcel) {
         accountName = source.readString().toString()

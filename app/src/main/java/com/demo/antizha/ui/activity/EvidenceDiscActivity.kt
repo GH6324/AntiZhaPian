@@ -14,7 +14,7 @@ class EvidenceDiscActivity : BaseActivity() {
         infoBinding.piTitle.tvTitle.text = szTitle
         infoBinding.edDescribe.setText(intent.getStringExtra("disc"))
         if (TextUtils.equals("案情描述", szTitle)) {
-            infoBinding.edDescribe.setHint("请详细描述案件经过（时间、地点、人物、原因、经过、结果）... ")
+            infoBinding.edDescribe.hint = "请详细描述案件经过（时间、地点、人物、原因、经过、结果）... "
         }
         infoBinding.piTitle.ivBack.setOnClickListener {
             val intent = Intent()

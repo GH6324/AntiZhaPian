@@ -1,8 +1,6 @@
 package com.demo.antizha.ui.activity
 
 import android.os.Bundle
-import android.view.Window
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.demo.antizha.databinding.ActivityMainBinding
 

@@ -23,7 +23,7 @@ object AESUtil {
     private const val PRIVATE_KEY_SIZE_BIT = 128
     private const val PRIVATE_KEY_SIZE_BYTE = 16
     private var cryptoSalt: ByteArray? = null
-    const val ACCEPT_TIME_SEPARATOR_SP = ","
+    private const val ACCEPT_TIME_SEPARATOR_SP = ","
 
     @Throws(Exception::class)
     private fun createSecretKey(str: String): ByteArray? {
@@ -46,11 +46,11 @@ object AESUtil {
             str_AES).encoded
     }
 
-    fun splitString2ByteArray(str: String): ByteArray? {
+    private fun splitString2ByteArray(str: String): ByteArray? {
         return splitString2ByteArray(str, "", 0)
     }
 
-    fun splitString2ByteArray(str: String, separator: String, default: Byte): ByteArray? {
+    private fun splitString2ByteArray(str: String, separator: String, default: Byte): ByteArray? {
         var separate = separator
         if (TextUtils.isEmpty(str)) {
             return null
@@ -71,11 +71,11 @@ object AESUtil {
         return bArr
     }
 
-    fun byteArray2SplitString(bArr: ByteArray?): String? {
+    private fun byteArray2SplitString(bArr: ByteArray?): String? {
         return byteArray2SplitString(bArr, null as String?)
     }
 
-    fun byteArray2SplitString(bArr: ByteArray?, separator: String?): String? {
+    private fun byteArray2SplitString(bArr: ByteArray?, separator: String?): String? {
         var separate = separator
         if (bArr == null) {
             return null
@@ -145,7 +145,7 @@ object AESUtil {
         return bArr
     }
 
-    fun cipherInit(seed: String, opmode: Int) {
+    private fun cipherInit(seed: String, opmode: Int) {
         try {
             val instance = SecureRandom.getInstance(KEY_ALGORITHM)
             instance.setSeed(seed.toByteArray())

@@ -68,7 +68,7 @@
 
                 <EditText
                     android:id="@+id/et_account"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_weight="1"
@@ -79,7 +79,8 @@
                     android:maxLength="50"
                     android:maxLines="1"
                     android:textColor="#999999"
-                    android:textSize="@dimen/sp_15" />
+                    android:textSize="@dimen/sp_15"
+                    android:autofillHints="" />
             </LinearLayout>
 
             <LinearLayout
@@ -120,7 +121,7 @@
 
                     <EditText
                         android:id="@+id/et_tag_other"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/dp_10"
                         android:layout_weight="1"
@@ -130,7 +131,8 @@
                         android:maxLength="12"
                         android:singleLine="true"
                         android:textColor="#999999"
-                        android:textSize="@dimen/sp_15" />
+                        android:textSize="@dimen/sp_15"
+                        android:autofillHints="" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -154,7 +156,7 @@
 
                     <EditText
                         android:id="@+id/et_account_other"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/dp_10"
                         android:layout_weight="1"
@@ -162,7 +164,8 @@
                         android:gravity="right|center_vertical|center_horizontal|center"
                         android:hint="请输入账号"
                         android:textColor="#999999"
-                        android:textSize="@dimen/sp_15" />
+                        android:textSize="@dimen/sp_15"
+                        android:autofillHints="" />
                 </LinearLayout>
             </LinearLayout>
 

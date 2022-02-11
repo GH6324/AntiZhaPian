@@ -18,8 +18,8 @@ class PreviewPictureActivity : BaseActivity() {
     }
 
     private lateinit var infoBinding: DialogPreviewPictureBinding
-    private var preViews: ArrayList<View> = ArrayList<View>()
-    private var medias: ArrayList<String> = ArrayList<String>()
+    private var preViews: ArrayList<View> = ArrayList()
+    private var medias: ArrayList<String> = ArrayList()
     override fun initPage() {
         overridePendingTransition(R.anim.picture_anim_enter, R.anim.picture_anim_fade_in)
         infoBinding = DialogPreviewPictureBinding.inflate(layoutInflater)
@@ -37,7 +37,7 @@ class PreviewPictureActivity : BaseActivity() {
         overridePendingTransition(R.anim.picture_anim_fade_in, R.anim.picture_anim_exit)
     }
 
-    fun getIntentData() {
+    private fun getIntentData() {
         val list: ArrayList<String>? = intent.getStringArrayListExtra(EXTRA_PIC)
         val pos = intent.getIntExtra(EXTRA_POSITION, 0)
         if (list == null)
@@ -47,8 +47,8 @@ class PreviewPictureActivity : BaseActivity() {
                 .inflate(R.layout.pic_preview, null as ViewGroup?))
         }
         medias.addAll(list)
-        infoBinding.viewPager.setAdapter(PreviewPagerAdapter(preViews))
-        infoBinding.viewPager.setCurrentItem(pos)
+        infoBinding.viewPager.adapter = PreviewPagerAdapter(preViews)
+        infoBinding.viewPager.currentItem = pos
     }
 
     inner class PreviewPagerAdapter(private val list: List<View>) : PagerAdapter() {

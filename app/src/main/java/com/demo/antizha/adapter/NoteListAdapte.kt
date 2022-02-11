@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.demo.antizha.R
 import com.demo.antizha.ui.activity.NoteDetailActivity
 
-class NoteListBean : Parcelable {
+class NoteListBean(source: Parcel) : Parcelable {
     var content: String? = null
     var id: String? = null
     var isRead = false
@@ -21,7 +21,7 @@ class NoteListBean : Parcelable {
     var vaildEndTime: String? = null
     var vaildStartTime: String? = null
 
-    constructor(source: Parcel) {
+    init {
         content = source.readString()
         id = source.readString()
         isRead = source.readInt() > 0
@@ -58,17 +58,10 @@ class NoteListBean : Parcelable {
 }
 
 class NoteHolder(view: View) : RecyclerView.ViewHolder(view) {
-    var tvNoteThem: TextView
-    var tvTime: TextView
-    var tvNumRed: TextView
-    var tvDesc: TextView
-
-    init {
-        tvNoteThem = view.findViewById(R.id.tv_note_them)
-        tvTime = view.findViewById(R.id.tv_time)
-        tvNumRed = view.findViewById(R.id.tv_num_red)
-        tvDesc = view.findViewById(R.id.desc)
-    }
+    var tvNoteThem: TextView = view.findViewById(R.id.tv_note_them)
+    var tvTime: TextView = view.findViewById(R.id.tv_time)
+    var tvNumRed: TextView = view.findViewById(R.id.tv_num_red)
+    var tvDesc: TextView = view.findViewById(R.id.desc)
 }
 
 class NoteListAdapte(val mActivity: Activity, var list: ArrayList<NoteListBean>) :
@@ -85,10 +78,10 @@ class NoteListAdapte(val mActivity: Activity, var list: ArrayList<NoteListBean>)
 
     override fun onBindViewHolder(holder: NoteHolder, i: Int) {
         if (list.size > 0) {
-            val noteListBean = list.get(i)
+            val noteListBean = list[i]
             holder.tvNumRed.visibility = View.INVISIBLE
 
-            holder.tvNoteThem.setText(subTitle(noteListBean.title))
+            holder.tvNoteThem.text = subTitle(noteListBean.title)
             holder.tvTime.text = noteListBean.vaildStartTime
             holder.itemView.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(view: View?) {
@@ -112,7 +105,6 @@ class NoteListAdapte(val mActivity: Activity, var list: ArrayList<NoteListBean>)
         intent.putExtra("from_page_bean", noteListBean)
         mActivity.startActivity(intent)
         noteListBean.isRead = true
-        notifyDataSetChanged()
         //this@NoteListPresenter.getNoteItem(noteListBean.id)
     }
 }

@@ -48,15 +48,15 @@ class FeedbackHelpActivity : BaseActivity() {
     override fun initPage() {
         infoBinding = ActivityFeedbackHelpBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
-        infoBinding.piTitle.tvTitle.setText("反馈与帮助")
-        infoBinding.piTitle.tvRightRed.setVisibility(View.GONE)
+        infoBinding.piTitle.tvTitle.text = "反馈与帮助"
+        infoBinding.piTitle.tvRightRed.visibility = View.GONE
         initQaList()
         infoBinding.piTitle.ivBack.setOnClickListener {
             finish()
         }
     }
 
-    fun initQaList() {
+    private fun initQaList() {
         val inputStream = FileUtil.openfile("qalist.txt")
         qaTypeBeanData = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
             object : TypeToken<QATypeBeanData>() {}.type)
@@ -78,7 +78,7 @@ class FeedbackHelpActivity : BaseActivity() {
         val tvContent = lyQa.findViewById<TextView>(R.id.tv_content)
         val lyContentMore = inflate.findViewById<LinearLayout>(R.id.ly_content_more)
         val line = inflate.findViewById<View>(R.id.botton_line)
-        if (qATypeBean.qaList != null && qATypeBean.qaList!!.size > 0) {
+        if (qATypeBean.qaList != null && qATypeBean.qaList!!.isNotEmpty()) {
             for ((i, qABean) in qATypeBean.qaList!!.withIndex()) {
                 if (i == 0) {
                     tvContent1.text = qABean.question
@@ -120,14 +120,15 @@ class FeedbackHelpActivity : BaseActivity() {
         }
     }
 
-    inner class OnQaClickListener internal constructor(val qa: QABean) : View.OnClickListener {
+    inner class OnQaClickListener internal constructor(private val qa: QABean) : View.OnClickListener {
         override fun onClick(view: View) {
             intentDetail(qa)
         }
     }
 
-    class OnQaTypeClickListener internal constructor(val lyMore: LinearLayout,
-                                                     val ivArrow: ImageView) :
+    class OnQaTypeClickListener internal constructor(
+        private val lyMore: LinearLayout,
+        private val ivArrow: ImageView) :
         View.OnClickListener {
         override fun onClick(view: View) {
             if (lyMore.visibility == View.GONE) {

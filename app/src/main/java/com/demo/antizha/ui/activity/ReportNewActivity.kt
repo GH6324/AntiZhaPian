@@ -31,15 +31,15 @@ import com.demo.antizha.util.DialogUtils
 
 class ReportNewActivity : BaseActivity() {
     private lateinit var infoBinding: ActivityReportNewBinding
-    private var provinces: ArrayList<Province> = ArrayList<Province>()
-    private var duperyType: Long = 0
+    private var provinces: ArrayList<Province> = ArrayList()
+    private var duperyType: Int = 0
     private var apps: ArrayList<AppUtil.AppInfoBean> = ArrayList()
-    private var urls: ArrayList<String> = ArrayList<String>()
+    private var urls: ArrayList<String> = ArrayList()
     private var calls: ArrayList<CallBean> = ArrayList()
     private var smss: ArrayList<SmsBean> = ArrayList()
     private var socialAccounts: ArrayList<SocialAccBean> = ArrayList()
     private var dealAccounts: ArrayList<SocialAccBean> = ArrayList()
-    private var pics: ArrayList<String> = ArrayList<String>()
+    private var pics: ArrayList<String> = ArrayList()
     private lateinit var startDuperyType: ActivityResultLauncher<Intent>
     private lateinit var startCaseDescribe: ActivityResultLauncher<Intent>
     private lateinit var startApp: ActivityResultLauncher<Intent>
@@ -65,7 +65,7 @@ class ReportNewActivity : BaseActivity() {
         }
         initActivityResultLauncher()
         infoBinding.tvDuperyType.setOnClickListener {
-            val intent = Intent(this, TagFlowLaoutActivity::class.java)
+            val intent = Intent(this, TagFlowLayoutActivity::class.java)
             intent.putExtra("int_tag_name", duperyType)
             startDuperyType.launch(intent)
         }
@@ -122,7 +122,7 @@ class ReportNewActivity : BaseActivity() {
 
     override fun onBackPressed() {
         var showSaveWarn = false
-        if (duperyType != 0L)
+        if (duperyType != 0)
             showSaveWarn = true
         if (!TextUtils.isEmpty(infoBinding.etCaseDescribe.text.toString()))
             showSaveWarn = true
@@ -152,13 +152,13 @@ class ReportNewActivity : BaseActivity() {
                 R.color._353536,
                 -1,
                 true,
-                isSaveRecordListener()
+                SaveRecordListener()
             )
         else
             finish()
     }
 
-    fun initActivityResultLauncher() {
+    private fun initActivityResultLauncher() {
         startDuperyType =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 if (result.resultCode != Activity.RESULT_OK)
@@ -166,8 +166,8 @@ class ReportNewActivity : BaseActivity() {
                 if (result.data == null || result.data!!.extras == null)
                     return@registerForActivityResult
                 val tagString = result.data!!.extras!!.getString("tagString")
-                val tagId = result.data!!.extras!!.getLong("tagId")
-                if (tagId != 0L) {
+                val tagId = result.data!!.extras!!.getInt("tagId")
+                if (tagId != 0) {
                     duperyType = tagId
                     infoBinding.tvDuperyType.text = tagString
                 }
@@ -188,10 +188,8 @@ class ReportNewActivity : BaseActivity() {
                     return@registerForActivityResult
                 if (result.data == null)
                     return@registerForActivityResult
-                val array: ArrayList<CallBean>? =
-                    result.data!!.getParcelableArrayListExtra<CallBean>("call")
-                if (array == null)
-                    return@registerForActivityResult
+                val array: java.util.ArrayList<CallBean> =
+                    result.data!!.getParcelableArrayListExtra("call") ?: return@registerForActivityResult
                 calls = array
                 if (calls.size == 0)
                     infoBinding.lyCall.tvUploadCall.text = ""
@@ -204,10 +202,8 @@ class ReportNewActivity : BaseActivity() {
                     return@registerForActivityResult
                 if (result.data == null)
                     return@registerForActivityResult
-                val array: ArrayList<SmsBean>? =
-                    result.data!!.getParcelableArrayListExtra<SmsBean>("sms")
-                if (array == null)
-                    return@registerForActivityResult
+                val array: java.util.ArrayList<SmsBean> =
+                    result.data!!.getParcelableArrayListExtra("sms") ?: return@registerForActivityResult
                 smss = array
                 if (smss.size == 0)
                     infoBinding.lySms.tvUploadSms.text = ""
@@ -222,8 +218,7 @@ class ReportNewActivity : BaseActivity() {
                 if (result.data == null)
                     return@registerForActivityResult
                 val array = result.data!!.getParcelableArrayListExtra<AppUtil.AppInfoBean>("apps")
-                if (array == null)
-                    return@registerForActivityResult
+                    ?: return@registerForActivityResult
                 apps = array
                 if (apps.size == 0) {
                     infoBinding.lyApp.tvUploadApp.text = ""
@@ -258,9 +253,7 @@ class ReportNewActivity : BaseActivity() {
                     return@registerForActivityResult
                 if (result.data == null)
                     return@registerForActivityResult
-                val array = result.data!!.getStringArrayListExtra("pics")
-                if (array == null)
-                    return@registerForActivityResult
+                val array = result.data!!.getStringArrayListExtra("pics") ?: return@registerForActivityResult
                 pics = array
                 if (pics.size == 0) {
                     infoBinding.lyPicture.tvUploadPicture.text = ""
@@ -291,9 +284,7 @@ class ReportNewActivity : BaseActivity() {
                     return@registerForActivityResult
                 if (result.data == null)
                     return@registerForActivityResult
-                val array = result.data!!.getStringArrayListExtra("url")
-                if (array == null)
-                    return@registerForActivityResult
+                val array = result.data!!.getStringArrayListExtra("url") ?: return@registerForActivityResult
                 urls = array
                 if (urls.size == 0)
                     infoBinding.lyUrl.tvUploadUrl.text = ""
@@ -307,8 +298,7 @@ class ReportNewActivity : BaseActivity() {
                 if (result.data == null)
                     return@registerForActivityResult
                 val array = result.data!!.getParcelableArrayListExtra<SocialAccBean>("accounts")
-                if (array == null)
-                    return@registerForActivityResult
+                    ?: return@registerForActivityResult
                 socialAccounts = array
                 if (socialAccounts.size == 0)
                     infoBinding.lyContact.tvSocial.text = ""
@@ -323,8 +313,7 @@ class ReportNewActivity : BaseActivity() {
                 if (result.data == null)
                     return@registerForActivityResult
                 val array = result.data!!.getParcelableArrayListExtra<SocialAccBean>("accounts")
-                if (array == null)
-                    return@registerForActivityResult
+                    ?: return@registerForActivityResult
                 dealAccounts = array
                 if (dealAccounts.size == 0)
                     infoBinding.lyDeal.tvTrad.text = ""
@@ -346,7 +335,7 @@ class ReportNewActivity : BaseActivity() {
         }
     }
 
-    inner class isSaveRecordListener : IClickListener {
+    inner class SaveRecordListener : IClickListener {
         override fun cancelBtn() {
             finish()
         }

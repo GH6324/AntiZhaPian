@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="@id/iv_circle"
         app:layout_constraintWidth_percent="0.6" />
 
-    <Space
+    <android.widget.Space
         android:id="@+id/space_safe_1"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -59,7 +59,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/space_safe_1" />
 
-    <Space
+    <android.widget.Space
         android:id="@+id/space_safe_2"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -82,7 +82,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/space_safe_2" />
 
-    <Space
+    <android.widget.Space
         android:id="@+id/space_safe_3"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -91,7 +91,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scan_state" />
 
-    <Space
+    <android.widget.Space
         android:id="@+id/space"
         android:layout_width="0dp"
         android:layout_height="0dp"

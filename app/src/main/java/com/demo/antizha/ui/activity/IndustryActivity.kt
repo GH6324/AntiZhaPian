@@ -68,23 +68,22 @@ class IndustryBeanData(val code: Int, var data: ArrayList<IndustryBean>)
 
 class IndustryActivity : BaseActivity() {
     private lateinit var infoBinding: ActivityIndustryListBinding
-    private var industrys: ArrayList<IndustryBean> = ArrayList<IndustryBean>()
+    private var industrys: ArrayList<IndustryBean> = ArrayList()
     override fun initPage() {
-        val industryListBinding = ActivityIndustryListBinding.inflate(layoutInflater)
-        setContentView(industryListBinding.root)
-        industryListBinding.piTitle.tvTitle.text = "行业"
+        infoBinding = ActivityIndustryListBinding.inflate(layoutInflater)
+        setContentView(infoBinding.root)
+        infoBinding.piTitle.tvTitle.text = "行业"
         
         initIndustrys()
-        val industrysRecycle: RecyclerView = industryListBinding.rvList
-        industrysRecycle.layoutManager = LinearLayoutManager(this)
+        infoBinding.rvList.layoutManager = LinearLayoutManager(this)
         val industrysAdapter = IndustryHolderAdapte(this, industrys)
-        industrysRecycle.adapter = industrysAdapter
+        infoBinding.rvList.adapter = industrysAdapter
 
         val position = getIndustrysPos(UserInfoBean.professionName)
         industrysAdapter.select = position
         industrysAdapter.notifyItemChanged(position)
         if (position > 0)
-            industrysRecycle.smoothScrollToPosition(position)
+            infoBinding.rvList.smoothScrollToPosition(position)
         industrysAdapter.setOnItemClickListener(object : IndustryHolderAdapte.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val industry: String = industrys[position].positionName
@@ -95,12 +94,12 @@ class IndustryActivity : BaseActivity() {
                 finish()
             }
         })
-        industryListBinding.piTitle.ivBack.setOnClickListener {
+        infoBinding.piTitle.ivBack.setOnClickListener {
             finish()
         }
     }
 
-    fun initIndustrys() {
+    private fun initIndustrys() {
         val inputStream = FileUtil.openfile("positions.txt")
         val data: IndustryBeanData = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
             object : TypeToken<IndustryBeanData>() {}.type)
@@ -108,7 +107,7 @@ class IndustryActivity : BaseActivity() {
         industrys = data.data
     }
 
-    fun getIndustrysPos(pname: String): Int {
+    private fun getIndustrysPos(pname: String): Int {
         for ((i, industry) in industrys.withIndex()) {
             if (industry.positionName == pname)
                 return i

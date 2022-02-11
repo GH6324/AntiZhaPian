@@ -98,8 +98,7 @@ public class NotchUtils {
             Method method_getNotchSize = class_HwNotchSizeUtil.getMethod("getNotchSize");
             return (int[]) method_getNotchSize.invoke(class_HwNotchSizeUtil);
         } catch (Exception unused) {
-            int[] iArr = {0, 0};
-            return iArr;
+            return new int[]{0, 0};
         }
     }
 

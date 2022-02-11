@@ -20,10 +20,7 @@ import android.webkit.WebView
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.demo.antizha.OnWebListener
-import com.demo.antizha.R
-import com.demo.antizha.UserInfoBean
-import com.demo.antizha.WebViewFrag
+import com.demo.antizha.*
 import com.demo.antizha.ui.Hicore
 import com.demo.antizha.ui.activity.PromosWebDetActivity
 import com.demo.antizha.util.Parameters
@@ -63,7 +60,7 @@ class WebFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dashboardViewModel = ViewModelProvider(this).get(WebViewModel::class.java)
+        dashboardViewModel = ViewModelProvider(this)[WebViewModel::class.java]
         root = inflater.inflate(R.layout.fragment_web, container, false)
         mVirtualWeb = root.findViewById(R.id.ll_virtual_web)
         mllWebContainer = root.findViewById(R.id.ll_web_container)
@@ -118,7 +115,7 @@ class WebFragment : Fragment() {
             }
 
             override fun webJsFinish() {
-                mActivity.runOnUiThread({ switchLoadingPage(false) })
+                mActivity.runOnUiThread { switchLoadingPage(false) }
             }
         }
         mHandler = object : Handler(Looper.getMainLooper()) {
@@ -166,7 +163,7 @@ class WebFragment : Fragment() {
 
     private fun viewWeb() {
         val url =
-            "https://fzapph5.gjfzpt.cn/?userid=" + UserInfoBean.accountId + "&imei=" + UserInfoBean.imei + "&" + (System.currentTimeMillis() / 3000)
+            BuildConfig.RELEASE_H5_URL + "/?userid=" + UserInfoBean.accountId + "&imei=" + UserInfoBean.imei + "&" + (System.currentTimeMillis() / 3000)
         agentWeb =
             AgentWeb.with(this).setAgentWebParent(mLinearLayout, LinearLayout.LayoutParams(-1, -1))
                 .closeIndicator().setWebViewClient(mWebViewClient)
@@ -233,22 +230,29 @@ class WebFragment : Fragment() {
                 val isOnlyFullScreen: String = param.value("isOnlyFullScreen")
                 val isfullScreen: String = param.value("isfullScreen")
                 val stylecolor: String = param.value("stylecolor")
-                if (TextUtils.equals("yes", isfullScreen)) {
-                    //EventBus.getDefault().postSticky(a(100, null))
-                    mHandler.sendEmptyMessage(0)
-                } else if (TextUtils.equals("no", isfullScreen)) {
-                    //EventBus.getDefault().postSticky(a(101, null))
-                    mHandler.sendEmptyMessage(1)
-                } else if (TextUtils.equals("yes", isOnlyFullScreen)) {
-                    //EventBus.getDefault().postSticky(a(100, null))
-                    mHandler.sendEmptyMessage(1)
-                } else if (TextUtils.equals("no", isOnlyFullScreen)) {
-                    //EventBus.getDefault().postSticky(a(101, null))
-                    mHandler.sendEmptyMessage(1)
-                } else if (TextUtils.equals("black", stylecolor)) {
-                    //EventBus.getDefault().postSticky(a(102, null))
-                } else if (TextUtils.equals("white", stylecolor)) {
-                    //EventBus.getDefault().postSticky(a(103, null))
+                when {
+                    TextUtils.equals("yes", isfullScreen) -> {
+                        //EventBus.getDefault().postSticky(a(100, null))
+                        mHandler.sendEmptyMessage(0)
+                    }
+                    TextUtils.equals("no", isfullScreen) -> {
+                        //EventBus.getDefault().postSticky(a(101, null))
+                        mHandler.sendEmptyMessage(1)
+                    }
+                    TextUtils.equals("yes", isOnlyFullScreen) -> {
+                        //EventBus.getDefault().postSticky(a(100, null))
+                        mHandler.sendEmptyMessage(1)
+                    }
+                    TextUtils.equals("no", isOnlyFullScreen) -> {
+                        //EventBus.getDefault().postSticky(a(101, null))
+                        mHandler.sendEmptyMessage(1)
+                    }/*
+                    TextUtils.equals("black", stylecolor) -> {
+                        EventBus.getDefault().postSticky(a(102, null))
+                    }
+                    TextUtils.equals("white", stylecolor) -> {
+                        EventBus.getDefault().postSticky(a(103, null))
+                    }*/
                 }
             } catch (unused: Exception) {
             }

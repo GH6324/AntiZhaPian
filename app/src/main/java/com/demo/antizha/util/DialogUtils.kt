@@ -21,7 +21,7 @@ import com.demo.antizha.ui.ProgressDialogBar
 
 class DialogUtils {
     companion object {
-        var progressDialogBar: ProgressDialogBar? = null
+        private var progressDialogBar: ProgressDialogBar? = null
 
         fun showNormalDialog(context: Context?,
                              title: String?,
@@ -63,8 +63,8 @@ class DialogUtils {
             val btnConfirm = baseDialog.findViewById(R.id.confirm_btn) as Button
             (baseDialog.findViewById(R.id.customdialog_title) as TextView).text = title
             (baseDialog.findViewById(R.id.customdialog_subtitle) as TextView).text = subTitle
-            btnCancel.setText(cancelText)
-            btnConfirm.setText(confirmText)
+            btnCancel.text = cancelText
+            btnConfirm.text = confirmText
             if (cancelColor == -1) {
                 btnCancel.setTextColor(-14072090)
             } else {
@@ -125,10 +125,10 @@ class DialogUtils {
             val btnConfirm = baseDialog.findViewById(R.id.confirm_btn) as Button
             (baseDialog.findViewById(R.id.customdialog_title) as TextView).text = title
             (baseDialog.findViewById(R.id.customdialog_subtitle) as TextView).text = subTitle
-            btnCancel.setText(cancelText)
-            btnConfirm.setText(confirmText)
+            btnCancel.text = cancelText
+            btnConfirm.text = confirmText
             if (!TextUtils.isEmpty(subTitle)) {
-                (baseDialog.findViewById(R.id.ll_subtit) as LinearLayout).setVisibility(View.VISIBLE)
+                (baseDialog.findViewById(R.id.ll_subtit) as LinearLayout).visibility = View.VISIBLE
             }
             if (cancelColor == -1) {
                 btnCancel.setTextColor(-14072090)
@@ -316,11 +316,11 @@ class DialogUtils {
             } else {
                 btConfirm.setTextColor(confirmColor)
             }
-            btCancel.setOnClickListener { _ ->
+            btCancel.setOnClickListener {
                 iClickListener?.cancelBtn()
                 baseDialog.dismiss()
             }
-            btConfirm.setOnClickListener { _ ->
+            btConfirm.setOnClickListener {
                 iClickListener?.clickOKBtn()
                 baseDialog.dismiss()
             }

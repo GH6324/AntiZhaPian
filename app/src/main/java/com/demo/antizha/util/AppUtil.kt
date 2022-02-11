@@ -53,7 +53,7 @@ object AppUtil {
             apkName = source.readString().toString()
             appName = source.readString().toString()
             version = source.readString().toString()
-            appIcon = BitmapDrawable(Hicore.app.getResources(),
+            appIcon = BitmapDrawable(Hicore.app.resources,
                 BytesBitmap.getBitmap(source.createByteArray()!!))
             checkState = source.readInt()
             size = source.readLong()
@@ -93,13 +93,13 @@ object AppUtil {
     }
 
 
-    private var list: ArrayList<AppInfoBean> = ArrayList<AppInfoBean>()
-    private val apkNames: java.util.ArrayList<String> = java.util.ArrayList<String>()
+    private var list: ArrayList<AppInfoBean> = ArrayList()
+    private val apkNames: ArrayList<String> = ArrayList()
 
     @SuppressLint("ServiceCast")
     fun getAppinfos(): ArrayList<AppInfoBean> {
         if (list.size == 0) {
-            val pm = Hicore.context.getPackageManager()
+            val pm = Hicore.context.packageManager
             val sm =
                 Hicore.context.getSystemService(Context.STORAGE_STATS_SERVICE) as StorageStatsManager
             val packageInfos: List<PackageInfo> = pm.getInstalledPackages(0)
@@ -107,7 +107,7 @@ object AppUtil {
             val intent = Intent("android.intent.action.MAIN", null as Uri?)
             intent.addCategory("android.intent.category.LAUNCHER")
             val queryIntentActivities = pm.queryIntentActivities(intent, 0)
-            var apkNameLogs: java.util.ArrayList<String> = java.util.ArrayList<String>()
+            val apkNameLogs: java.util.ArrayList<String> = java.util.ArrayList<String>()
             for (activity in queryIntentActivities) {
                 if (!apkNameLogs.contains(activity.activityInfo.packageName)) {
                     apkNameLogs.add(activity.activityInfo.packageName)
@@ -119,7 +119,7 @@ object AppUtil {
                     continue
                 if (!apkNameLogs.contains(packageInfo.packageName))
                     continue
-                var appBean = AppInfoBean(packageInfo.packageName,
+                val appBean = AppInfoBean(packageInfo.packageName,
                     packageInfo.applicationInfo.loadLabel(pm).toString(),
                     packageInfo.versionName,
                     packageInfo.applicationInfo.loadIcon(pm))
@@ -144,24 +144,23 @@ object AppUtil {
 
     @Suppress("DEPRECATION")
     fun checkPermission(activity: Activity, ischeckOpen: Boolean): Boolean {
-        val pm = Hicore.context.getPackageManager()
+        val pm = Hicore.context.packageManager
         val appInfo = pm.getApplicationInfo(Hicore.context.packageName, 0)
         val appOpsManager =
             Hicore.context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-        var op: Int
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            op = appOpsManager.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+        val op = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            appOpsManager.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
                 appInfo.uid,
                 appInfo.packageName)
         else
-            op = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+            appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
                 appInfo.uid,
                 appInfo.packageName)
         val opened = (op == AppOpsManager.MODE_ALLOWED)
         if (ischeckOpen == opened)
             return true
         val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
-        intent.data = Uri.fromParts("package", activity.getPackageName(), null)
+        intent.data = Uri.fromParts("package", activity.packageName, null)
         try {
             activity.startActivity(intent)
         } catch (e: ActivityNotFoundException) {

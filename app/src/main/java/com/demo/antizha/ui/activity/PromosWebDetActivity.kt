@@ -1,7 +1,6 @@
 package com.demo.antizha.ui.activity
 
 import android.app.Activity
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
@@ -119,9 +118,9 @@ class PromosWebDetActivity : BaseActivity() {
 
 
     private fun initWebView(myWebView: HiWebView) {
-        myWebView.setListener(this, onWebListener())
-        myWebView.webChromeClient = webChromeClient()
-        myWebView.webViewClient = webViewClient()
+        myWebView.setListener(this, PromosWebListener())
+        myWebView.webChromeClient = PromosWebChromeClient()
+        myWebView.webViewClient = PromosWebViewClient()
     }
 
     fun sendWebMsg(param: Parameters) {
@@ -129,21 +128,26 @@ class PromosWebDetActivity : BaseActivity() {
             try {
                 val isOnlyFullScreen: String = param.value("isOnlyFullScreen")
                 val isFullScreen: String = param.value("isfullScreen")
-                if (TextUtils.equals("yes", isFullScreen)) {
-                    mHandler.sendEmptyMessage(6)
-                } else if (TextUtils.equals("no", isFullScreen)) {
-                    mHandler.sendEmptyMessage(7)
-                } else if (TextUtils.equals("yes", isOnlyFullScreen)) {
-                    mHandler.sendEmptyMessage(6)
-                } else if (TextUtils.equals("no", isOnlyFullScreen)) {
-                    mHandler.sendEmptyMessage(7)
+                when {
+                    TextUtils.equals("yes", isFullScreen) -> {
+                        mHandler.sendEmptyMessage(6)
+                    }
+                    TextUtils.equals("no", isFullScreen) -> {
+                        mHandler.sendEmptyMessage(7)
+                    }
+                    TextUtils.equals("yes", isOnlyFullScreen) -> {
+                        mHandler.sendEmptyMessage(6)
+                    }
+                    TextUtils.equals("no", isOnlyFullScreen) -> {
+                        mHandler.sendEmptyMessage(7)
+                    }
                 }
             } catch (unused: Exception) {
             }
         }
     }
 
-    inner class onWebListener internal constructor() : OnWebListener {
+    inner class PromosWebListener internal constructor() : OnWebListener {
         // interfaces.OnWebListener
         override fun shouldIntercept(aVar: Parameters?) {
             aVar?.let { sendWebMsg(it) }
@@ -153,7 +157,7 @@ class PromosWebDetActivity : BaseActivity() {
         override fun webJsFinish() {}
     }
 
-    inner class webChromeClient internal constructor() : WebChromeClient() {
+    inner class PromosWebChromeClient internal constructor() : WebChromeClient() {
         // android.webkit.WebChromeClient
         override fun onProgressChanged(webView: WebView?, progress: Int) {
             val progressBar: ProgressBar = promosWebDetBinding.progressBar
@@ -171,7 +175,7 @@ class PromosWebDetActivity : BaseActivity() {
         }
     }
 
-    inner class webViewClient internal constructor() : WebViewClient() {
+    inner class PromosWebViewClient internal constructor() : WebViewClient() {
         // android.webkit.WebViewClient
         override fun onPageFinished(webView: WebView?, str: String?) {
             super.onPageFinished(webView, str)
@@ -192,9 +196,7 @@ class PromosWebDetActivity : BaseActivity() {
         override fun shouldOverrideUrlLoading(webView: WebView?,
                                               webResourceRequest: WebResourceRequest): Boolean {
             val atomicReference = AtomicReference<String>()
-            if (Build.VERSION.SDK_INT >= 21) {
-                atomicReference.set(webResourceRequest.url.path)
-            }
+            atomicReference.set(webResourceRequest.url.path)
             return super.shouldOverrideUrlLoading(webView, webResourceRequest)
         }
     }

@@ -29,8 +29,8 @@ class NoteDetailActivity : BaseActivity() {
         }
     }
 
-    fun initView() {
-        noteInfo = intent.getParcelableExtra<NoteListBean>("from_page_bean")!!
+    private fun initView() {
+        noteInfo = intent.getParcelableExtra("from_page_bean")!!
         infoBinding.time.text = noteInfo.vaildStartTime
         infoBinding.title.text = Html.fromHtml(noteInfo.title, FROM_HTML_MODE_LEGACY)
         infoBinding.content.text = Html.fromHtml(noteInfo.content, FROM_HTML_MODE_LEGACY)

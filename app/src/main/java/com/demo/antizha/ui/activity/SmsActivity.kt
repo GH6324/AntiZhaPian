@@ -7,7 +7,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.listener.OnItemChildClickListener
 import com.demo.antizha.R
 import com.demo.antizha.adapter.SmsBean
 import com.demo.antizha.adapter.SmsDeleteAdapter
@@ -15,12 +15,14 @@ import com.demo.antizha.databinding.ActivityCallBinding
 import com.hjq.toast.ToastUtils
 
 
-class SmsActivity : BaseActivity(), SmsDeleteAdapter.ItemClickListener {
+class SmsActivity : BaseActivity() {
+    companion object{
+        const val MAX_COUNT = 20
+    }
     private lateinit var infoBinding: ActivityCallBinding
     private val smss: ArrayList<SmsBean> = ArrayList()
     private lateinit var smsDeleteAdapter: SmsDeleteAdapter
     private lateinit var startEdit: ActivityResultLauncher<Intent>
-    private val MaxCount = 20
 
     override fun initPage() {
         infoBinding = ActivityCallBinding.inflate(layoutInflater)
@@ -28,21 +30,28 @@ class SmsActivity : BaseActivity(), SmsDeleteAdapter.ItemClickListener {
         infoBinding.piTitle.tvTitle.text = "添加诈骗短信"
         infoBinding.lySelect.tvSelectTip.text = "选择短信"
         infoBinding.lySelect.tvInputTip.text = "手动输入"
-        infoBinding.lyComplete.tvCommitTip.text = "最多可选择" + MaxCount + "条短信"
+        infoBinding.lyComplete.tvCommitTip.text = "最多可选择" + MAX_COUNT + "条短信"
         initActivityResultLauncher()
         getIntentData()
         val lym = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        infoBinding.recyclerview.setLayoutManager(lym)
+        infoBinding.recyclerview.layoutManager = lym
         smsDeleteAdapter = SmsDeleteAdapter(R.layout.recyclerview_sms_record_select, smss)
-        smsDeleteAdapter.bindToRecyclerView(infoBinding.recyclerview)
-        infoBinding.recyclerview.setAdapter(smsDeleteAdapter)
-        smsDeleteAdapter.setOnItemChildClickListener(BaseQuickAdapter.OnItemChildClickListener { adapter, view, position ->
-            if (view.getId() == R.id.iv_clear) {
+        infoBinding.recyclerview.adapter = smsDeleteAdapter
+        smsDeleteAdapter.setOnItemChildClickListener(OnItemChildClickListener { adapter, view, position ->
+            val id: Int = view.id
+            if (id == R.id.iv_clear) {
                 smss.removeAt(position)
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemRemoved(position)
+            } else if (id == R.id.iv_edit){
+                val smsBean = smss[position]
+                if (smsBean.isInput) {
+                    smsBean.index = position
+                    val intent = Intent(this, SmsAddActivity::class.java)
+                    intent.putExtra("sms", smsBean)
+                    startEdit.launch(intent)
+                }
             }
         })
-        smsDeleteAdapter.setOnItemClickListener(this)
         infoBinding.piTitle.ivBack.setOnClickListener {
             onBackPressed()
         }
@@ -50,8 +59,8 @@ class SmsActivity : BaseActivity(), SmsDeleteAdapter.ItemClickListener {
             onBackPressed()
         }
         infoBinding.lySelect.llInput.setOnClickListener {
-            if (smss.size == MaxCount) {
-                ToastUtils.show("最多可选择" + MaxCount + "条短信")
+            if (smss.size == MAX_COUNT) {
+                ToastUtils.show("最多可选择" + MAX_COUNT + "条短信")
                 return@setOnClickListener
             }
             val intent = Intent(this, SmsAddActivity::class.java)
@@ -67,24 +76,14 @@ class SmsActivity : BaseActivity(), SmsDeleteAdapter.ItemClickListener {
         super.onBackPressed()
     }
 
-    fun getIntentData() {
-        var list = intent.getParcelableArrayListExtra<SmsBean>("sms")
+    private fun getIntentData() {
+        val list = intent.getParcelableArrayListExtra<SmsBean>("sms")
         if (list != null) {
             smss.addAll(list)
         }
     }
 
-    override fun onItemClickListener(i: Int, list: List<SmsBean>) {
-        val smsBean = list[i]
-        if (smsBean.isInput) {
-            smsBean.index = i
-            val intent = Intent(this, SmsAddActivity::class.java)
-            intent.putExtra("sms", smsBean)
-            startEdit.launch(intent)
-        }
-    }
-
-    fun initActivityResultLauncher() {
+    private fun initActivityResultLauncher() {
         startEdit =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 if (result.resultCode != Activity.RESULT_OK)
@@ -93,11 +92,14 @@ class SmsActivity : BaseActivity(), SmsDeleteAdapter.ItemClickListener {
                     return@registerForActivityResult
                 val sms = result.data!!.extras!!.getParcelable<SmsBean>("sms")
                 if (sms != null) {
-                    if (sms.index == -1)
+                    if (sms.index == -1) {
                         smss.add(sms)
-                    else
+                        smsDeleteAdapter.notifyItemInserted(smss.size - 1)
+                    }
+                    else {
                         smss[sms.index] = sms
-                    smsDeleteAdapter.notifyDataSetChanged()
+                        smsDeleteAdapter.notifyItemChanged(sms.index)
+                    }
                 }
             }
     }

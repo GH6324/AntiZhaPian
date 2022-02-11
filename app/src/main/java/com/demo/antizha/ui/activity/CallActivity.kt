@@ -25,7 +25,7 @@ class CallBean : Parcelable {
     var suspectInfoID: String? = null
     var type = 0
 
-    constructor() {}
+    constructor()
     constructor(str: String?, str2: String?, str3: String?, i: Int, z: Boolean) {
         number = str
         crime_time = str2
@@ -94,8 +94,8 @@ class CallActivity : BaseActivity() {
         infoBinding = ActivityCallBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "添加诈骗电话"
-        infoBinding.lySelect.tvSelectTip.setText("选择通话记录")
-        infoBinding.lySelect.tvInputTip.setText("手动输入")
+        infoBinding.lySelect.tvSelectTip.text = "选择通话记录"
+        infoBinding.lySelect.tvInputTip.text = "手动输入"
         infoBinding.lyComplete.tvCommitTip.text = "最多可选择" + 20 + "条举报电话"
         initData()
         infoBinding.piTitle.ivBack.setOnClickListener {
@@ -108,7 +108,7 @@ class CallActivity : BaseActivity() {
             inputCallBeans.clear()
             val hashSet: HashSet<String> = HashSet()
             for (i in 0 until etContents.size) {
-                val call = etContents[i].getText().toString()
+                val call = etContents[i].text.toString()
                 if (!TextUtils.isEmpty(call)) {
                     hashSet.add(call)
                 }
@@ -134,12 +134,11 @@ class CallActivity : BaseActivity() {
     }
 
     fun initData() {
-        var list: ArrayList<CallBean>?
-        try {
-            list = intent.getParcelableArrayListExtra<CallBean>("call")
+        val list: ArrayList<CallBean>? = try {
+            intent.getParcelableArrayListExtra("call")
         } catch (e: Exception) {
             e.printStackTrace()
-            list = null
+            null
         }
         val selectLogs = ArrayList<CallBean>()
         val inputLogs = ArrayList<CallBean>()

@@ -40,16 +40,16 @@
 
                 <TextView
                     android:id="@+id/tv_question"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_10"
-                    android:layout_marginTop="@dimen/dp_20"
                     android:layout_marginRight="@dimen/dp_15"
                     android:text="如何删除已发布的信息？"
                     android:textColor="#292d39"
                     android:textSize="@dimen/sp_17"
                     android:textStyle="bold"
                     app:layout_constrainedWidth="true"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/iv_ic_qa"
                     app:layout_constraintRight_toRightOf="parent" />
 

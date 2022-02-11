@@ -4,7 +4,6 @@ import android.R
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Typeface
-import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.demo.antizha.ui.Hicore
@@ -18,6 +17,7 @@ abstract class BaseActivity : AppCompatActivity() {
     companion object {
         var haveLiuhai = false
         var liuhaiHeight = 0
+        val activityList: ArrayList<BaseActivity> = ArrayList()
     }
 
     var mActivity: Activity? = null
@@ -25,6 +25,19 @@ abstract class BaseActivity : AppCompatActivity() {
     private var mProgressDialogBar: ProgressDialogBar? = null
 
     abstract fun initPage()
+
+    fun removeAllActivity(exception: String): Activity? {
+        var exAct: Activity? = null
+        for (act in activityList) {
+            val actName = act.javaClass.name
+            if (actName != exception) {
+                if (!act.isFinishing)
+                    act.finish()
+            } else
+                exAct = act
+        }
+        return exAct
+    }
 
     open fun isDouble(): Boolean {
         return Hicore.app.isDouble()
@@ -39,13 +52,19 @@ abstract class BaseActivity : AppCompatActivity() {
             startActivity(intent)
         }
         mActivity = this
-        typ_ME = Typeface.createFromAsset(getAssets(), "DIN-Medium.otf")
+        typ_ME = Typeface.createFromAsset(assets, "DIN-Medium.otf")
         adjustFontScale(this)
         supportActionBar?.hide()
         setStatusBar()
         initPage()
         haveLiuhai = NotchUtils.haveLiuhai(this)
         liuhaiHeight = NotchUtils.liuhaiHeight(this)
+        activityList.add(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        activityList.remove(this)
     }
 
     private fun setBlackStatusBar() {
@@ -58,12 +77,8 @@ abstract class BaseActivity : AppCompatActivity() {
             resources.getColor(R.color.white, null))
     }
 
-    protected fun setStatusBar() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            setWhiteStatusBar()
-        } else {
-            setBlackStatusBar()
-        }
+    private fun setStatusBar() {
+        setWhiteStatusBar()
         StatusBarCompat.translucentStatusBar(this, true, true)
     }
 
@@ -72,7 +87,7 @@ abstract class BaseActivity : AppCompatActivity() {
             if (mProgressDialogBar == null) {
                 mProgressDialogBar = ProgressDialogBar.create(this)
             }
-            if (mProgressDialogBar!!.isShowing()) {
+            if (mProgressDialogBar!!.isShowing) {
                 return
             }
             mProgressDialogBar!!.setProgress(str)
@@ -83,7 +98,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun hideProgressDialog() {
-        if (mProgressDialogBar != null && mProgressDialogBar!!.isShowing()) {
+        if (mProgressDialogBar != null && mProgressDialogBar!!.isShowing) {
             mProgressDialogBar!!.dismiss()
         }
     }

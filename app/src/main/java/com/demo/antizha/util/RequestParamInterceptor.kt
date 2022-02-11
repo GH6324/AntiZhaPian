@@ -25,14 +25,14 @@ class RequestParamInterceptor : Interceptor {
         }
     }
 
-    fun signStr(): String {
-        val a2: String = MD5Utils.getMd5String_char_lowercase("hicore123")
-        val a3: String = MD5Utils.getMd5String_char_lowercase(("android" + "/api/file/upload" + a2)
+    private fun signStr(): String {
+        val a2: String = MD5Utils.getMd5StringCharLowercase("hicore123")
+        val a3: String = MD5Utils.getMd5StringCharLowercase(("android/api/file/upload$a2")
             .lowercase(Locale.getDefault()))
         return "android $a3"
     }
 
-    fun setHeader(builder: Request.Builder?) {
+    private fun setHeader(builder: Request.Builder?) {
         if (builder != null) {
             builder.addHeader("deviceid", UserInfoBean.imei)
             builder.addHeader("os-version", SystemUtils.getOsVer())

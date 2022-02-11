@@ -17,38 +17,38 @@ class OneKeyScreenRecordActivity : BaseActivity() {
         setContentView(infoBinding.root)
         StatusBarCompat.translucentStatusBar(this, true, false)
         infoBinding.piTitle.tvTitle.text = "音频录制"
-        infoBinding.piTitle.tvTitle.setTypeface(typ_ME)
-        infoBinding.recyclerview.setLayoutManager(LinearLayoutManager(this,
+        infoBinding.piTitle.tvTitle.typeface = typ_ME
+        infoBinding.recyclerview.layoutManager = LinearLayoutManager(this,
             RecyclerView.HORIZONTAL,
-            false))
-        infoBinding.chronometer.setVisibility(View.INVISIBLE)
+            false)
+        infoBinding.chronometer.visibility = View.INVISIBLE
         infoBinding.rgMediaType.setOnCheckedChangeListener(OnCheckedChangeListener())
         infoBinding.piTitle.ivBack.setOnClickListener {
             finish()
         }
     }
 
-    fun OnMediaIsVideo() {
-        infoBinding.ivAudioRecord.setVisibility(View.GONE)
-        infoBinding.ivVideoRecord.setVisibility(View.VISIBLE)
-        infoBinding.video.setChecked(true)
-        infoBinding.audio.setChecked(false)
+    fun onMediaIsVideo() {
+        infoBinding.ivAudioRecord.visibility = View.GONE
+        infoBinding.ivVideoRecord.visibility = View.VISIBLE
+        infoBinding.video.isChecked = true
+        infoBinding.audio.isChecked = false
     }
 
-    fun OnMediaIsAudio() {
-        infoBinding.ivAudioRecord.setVisibility(View.VISIBLE)
-        infoBinding.ivVideoRecord.setVisibility(View.GONE)
-        infoBinding.audio.setChecked(true)
-        infoBinding.video.setChecked(false)
+    fun onMediaIsAudio() {
+        infoBinding.ivAudioRecord.visibility = View.VISIBLE
+        infoBinding.ivVideoRecord.visibility = View.GONE
+        infoBinding.audio.isChecked = true
+        infoBinding.video.isChecked = false
     }
 
     inner class OnCheckedChangeListener internal constructor() :
         RadioGroup.OnCheckedChangeListener {
         override fun onCheckedChanged(radioGroup: RadioGroup, ResId: Int) {
             if (ResId == R.id.video) {
-                OnMediaIsVideo()
+                onMediaIsVideo()
             } else if (ResId == R.id.audio) {
-                OnMediaIsAudio()
+                onMediaIsAudio()
             }
         }
     }

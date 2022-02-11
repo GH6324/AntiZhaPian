@@ -27,7 +27,7 @@ open class BaseDialog : Dialog {
     var heightDialog = 0.0F
     var heightDialogdp = 0.0F
     var widthDialogdp = 0.0F
-    var mGravityLayout: Int = 0
+    private var mGravityLayout: Int = 0
 
     constructor(context: Context) : super(context) {
         mContext = context
@@ -44,14 +44,14 @@ open class BaseDialog : Dialog {
         mWindow = window!!
         lp = mWindow.attributes
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            display = context.getDisplay()!!
-            dm = mContext.resources.getDisplayMetrics()
-            metrics = (mContext as Activity).windowManager.getCurrentWindowMetrics()
+            display = context.display!!
+            dm = mContext.resources.displayMetrics
+            metrics = (mContext as Activity).windowManager.currentWindowMetrics
         } else {
             val windowManager = (mContext as Activity).windowManager
             display = windowManager.defaultDisplay
             dm = DisplayMetrics()
-            display.getMetrics(dm);
+            display.getMetrics(dm)
         }
     }
 
@@ -59,7 +59,7 @@ open class BaseDialog : Dialog {
         return (f2 * mContext.resources.displayMetrics.density + 0.5f).toInt()
     }
 
-    val statusBarHeight: Int
+    private val statusBarHeight: Int
         get() = try {
             val cls = Class.forName("com.android.internal.R\$dimen")
             val tfield = cls.getField("status_bar_height")
@@ -79,9 +79,9 @@ open class BaseDialog : Dialog {
         layoutParams.gravity = mGravityLayout
         if (widthDialog > 0.0) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                layoutParams.width = (metrics.getBounds().width().toDouble() * widthDialog).toInt()
+                layoutParams.width = (metrics.bounds.width().toDouble() * widthDialog).toInt()
             else
-                layoutParams.width = (display.getWidth() * widthDialog).toInt()
+                layoutParams.width = (display.width * widthDialog).toInt()
         } else {
             val f2 = widthDialogdp
             if (f2 > 0.0f) {
@@ -90,16 +90,16 @@ open class BaseDialog : Dialog {
                 layoutParams.width = -2
             } else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                    layoutParams.width = metrics.getBounds().width()
+                    layoutParams.width = metrics.bounds.width()
                 else
-                    layoutParams.width = display.getWidth()
+                    layoutParams.width = display.width
             }
         }
         if (heightDialog > 0.0) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                lp.height = (metrics.getBounds().height().toDouble() * heightDialog).toInt()
+                lp.height = (metrics.bounds.height().toDouble() * heightDialog).toInt()
             else
-                lp.height = (display.getHeight() * heightDialog).toInt()
+                lp.height = (display.height * heightDialog).toInt()
         } else {
             val f3 = heightDialogdp
             if (f3 > 0.0f) {
@@ -108,9 +108,9 @@ open class BaseDialog : Dialog {
                 lp.height = -2
             } else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                    lp.height = metrics.getBounds().height() - statusBarHeight
+                    lp.height = metrics.bounds.height() - statusBarHeight
                 else
-                    lp.height = display.getHeight() - statusBarHeight
+                    lp.height = display.height - statusBarHeight
             }
         }
         mWindow.attributes = lp

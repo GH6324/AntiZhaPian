@@ -1,9 +1,6 @@
 package com.demo.antizha.ui.activity
 
-import android.app.Activity
 import com.demo.antizha.databinding.ActivityAidReportBinding
-import com.demo.antizha.databinding.ActivityIdCheckBinding
-import qiu.niorgai.StatusBarCompat
 
 class ReporterAidActivity:BaseActivity() {
     private lateinit var infoBinding: ActivityAidReportBinding

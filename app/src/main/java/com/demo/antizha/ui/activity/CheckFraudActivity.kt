@@ -27,9 +27,7 @@ class CheckFraudBean : Parcelable {
     var text: String = ""
     var isCheat = 0
     var type = 0
-
-    constructor() {}
-
+    constructor()
     constructor(source: Parcel) {
         bankName = source.readString().toString()
         content = source.readString().toString()
@@ -89,17 +87,17 @@ class CheckFraudActivity : BaseActivity() {
             infoBinding.etContent.setText("")
         }
         infoBinding.piTitle.ivRight.setOnClickListener {
-            if (shareBean != null && !TextUtils.isEmpty(shareBean.downloadUrl)) {
+            if (!TextUtils.isEmpty(shareBean.downloadUrl)) {
                 val shareConfigBean2: ShareConfigBean = this.shareBean
                 val str = shareConfigBean2.downloadUrl
                 shareConfigBean2.downloadUrl =
-                    str!!.replace("{0}", (System.currentTimeMillis() / 3000).toString())
+                    str.replace("{0}", (System.currentTimeMillis() / 3000).toString())
             }
             val mShareDialog = HiShareDialog(this, shareBean, 2)
             mShareDialog.show()
         }
         infoBinding.confirm.setOnClickListener {
-            val obj: String = infoBinding.etContent.getText().toString()
+            val obj: String = infoBinding.etContent.text.toString()
             if (TextUtils.isEmpty(obj)) {
                 ToastUtils.show("查询内容不能为空")
                 return@setOnClickListener
@@ -114,7 +112,7 @@ class CheckFraudActivity : BaseActivity() {
                         "单日核验上限为1次，请明天再试",
                         "",
                         "确定",
-                        null);
+                        null)
                 } else {
                     dayCheckCount[model] -= 1
                     weekCheckCount[model] -= 1
@@ -135,7 +133,7 @@ class CheckFraudActivity : BaseActivity() {
         infoBinding.rbChat.typeface = typ_ME
         infoBinding.etContent.typeface = typ_ME
         infoBinding.ivClear.visibility = View.GONE
-        infoBinding.etContent.addTextChangedListener(EditUtil.textWatcher(EditAfterListener()))
+        infoBinding.etContent.addTextChangedListener(EditUtil.TextWatcher(EditAfterListener()))
         infoBinding.rbPay.tag = 0
         infoBinding.rbUrl.tag = 1
         infoBinding.rbChat.tag = 2
@@ -157,27 +155,25 @@ class CheckFraudActivity : BaseActivity() {
         this.model = model
         refCountTip(model)
         infoBinding.etContent.setText("")
-        if (model == 1) {
-            radioState(infoBinding.rbUrl,
-                infoBinding.rbPay,
-                infoBinding.rbChat,
-                R.mipmap.ic_fraud_radio_center)
-            infoBinding.etContent.hint = "请输入或粘贴要查询的IP或URL网址"
-            infoBinding.llScan.visibility = View.VISIBLE
-        } else if (model == 2) {
-            radioState(infoBinding.rbChat,
-                infoBinding.rbPay,
-                infoBinding.rbUrl,
-                R.mipmap.ic_fraud_radio_right)
-            infoBinding.etContent.hint = "请输入或粘贴要查询的QQ或微信账号"
-            infoBinding.llScan.visibility = View.GONE
-        } else {
-            radioState(infoBinding.rbPay,
-                infoBinding.rbUrl,
-                infoBinding.rbChat,
-                R.mipmap.ic_fraud_radio_left)
-            infoBinding.etContent.hint = "请输入或粘贴要查询的银行卡号或支付账户"
-            infoBinding.llScan.visibility = View.GONE
+        when(model) {
+            1 -> {
+                radioState(infoBinding.rbUrl,infoBinding.rbPay,
+                    infoBinding.rbChat,R.mipmap.ic_fraud_radio_center)
+                infoBinding.etContent.hint = "请输入或粘贴要查询的IP或URL网址"
+                infoBinding.llScan.visibility = View.VISIBLE
+            }
+            2-> {
+                radioState(infoBinding.rbChat,infoBinding.rbPay,
+                    infoBinding.rbUrl,R.mipmap.ic_fraud_radio_right)
+                infoBinding.etContent.hint = "请输入或粘贴要查询的QQ或微信账号"
+                infoBinding.llScan.visibility = View.GONE
+            }
+            else-> {
+                radioState(infoBinding.rbPay,infoBinding.rbUrl,
+                    infoBinding.rbChat,R.mipmap.ic_fraud_radio_left)
+                infoBinding.etContent.hint = "请输入或粘贴要查询的银行卡号或支付账户"
+                infoBinding.llScan.visibility = View.GONE
+            }
         }
     }
 

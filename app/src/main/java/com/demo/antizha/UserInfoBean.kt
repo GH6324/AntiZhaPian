@@ -58,7 +58,7 @@ object UserInfoBean {
     var innerVersion = 0
     var getVerTime: String = ""        //上次获取新颁布的日期，和当前不同就该刷新了
 
-    fun Init() {
+    fun init() {
         val context: Context = Hicore.context
         val settings: SharedPreferences = context.getSharedPreferences("setting", 0)
         accountId = settings.getString("account", "").toString()
@@ -66,7 +66,7 @@ object UserInfoBean {
         useorigimei = settings.getBoolean("originalimei", false)
         if (TextUtils.isEmpty(imei)) {
             val timei =
-                Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID)
+                Settings.System.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
             imei = if (useorigimei) timei else toHexStr(CRC64.digest(timei.toByteArray()).bytes)
         }
         name = settings.getString("name", "").toString()
@@ -102,7 +102,7 @@ object UserInfoBean {
         }
         checkUpdate()
         getToken()
-        CalcProgress()
+        calcProgress()
     }
 
     fun commit() {
@@ -131,7 +131,7 @@ object UserInfoBean {
         editor.putInt("innerVersion", innerVersion)
         editor.putString("getVerTime", getVerTime)
         editor.apply()
-        CalcProgress()
+        calcProgress()
     }
 
     fun setVer(ver: String, verCode: Int) {
@@ -145,7 +145,7 @@ object UserInfoBean {
         }
     }
 
-    fun CalcProgress() {
+    fun calcProgress() {
         perfectProgress = 0
         if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(id)) {
             perfectProgress += 30
@@ -198,13 +198,13 @@ object UserInfoBean {
                 return
             val provinces: List<AddressBean.HiProvince> = AddressBean.getHiProvince()
             for (province in provinces) {
-                if (!province.name.equals(regions[0]))
+                if (province.name != regions[0])
                     continue
                 for (city in province.cityList) {
-                    if (!city.name.equals(regions[1]))
+                    if (city.name != regions[1])
                         continue
                     for (town in city.townList) {
-                        if (town.name.equals(regions[2])) {
+                        if (town.name == regions[2]) {
                             val random = Random()
                             val flongitude =
                                 town.longitude.toFloat() + (random.nextInt(200) - 100).toFloat() / 1000.0F
@@ -233,7 +233,7 @@ object UserInfoBean {
     fun getToken() {
         try {
             val path =
-                Hicore.context.getExternalFilesDir(null)?.getPath()
+                Hicore.context.getExternalFilesDir(null)?.path
             val file = File(path, "note_national.xml")
             //file.exists()总是返回false
             if (!file.canRead())
@@ -243,13 +243,13 @@ object UserInfoBean {
             val builder: DocumentBuilder = factory.newDocumentBuilder()
             val document: Document = builder.parse(iStream)
             val stringList: NodeList = document.getElementsByTagName("string")
-            for (i in 0 until stringList.getLength()) {
+            for (i in 0 until stringList.length) {
                 val node = stringList.item(i)
-                val nodeName = node.attributes.item(0).getTextContent()
+                val nodeName = node.attributes.item(0).textContent
                 if (nodeName.equals("sp_user_bean")) {
                     class TokenPackage(val token: String)
 
-                    val value = node.getTextContent()
+                    val value = node.textContent
                     val token = Gson().fromJson(value, TokenPackage::class.java)
                     if (token != null) {
                         val tokenSub: List<String> = token.token.split(".")
@@ -298,10 +298,7 @@ object UserInfoBean {
         var TokenType: Int = 1
     }
 
-    open class PayLoad(name: String, value: Any) {
-        var name: String = name
-        var value: Any = value
-    }
+    open class PayLoad(var name: String, var value: Any)
 
     class PayLoads {
         var sub: ArrayList<PayLoad> = ArrayList<PayLoad>()
@@ -319,26 +316,29 @@ object UserInfoBean {
         override fun write(out: JsonWriter, value: PayLoads) {
             out.beginObject()
             for (payLoad in value.sub) {
-                if (payLoad.value is String) {
-                    out.name(payLoad.name).value(payLoad.value as String)
-                } else if (payLoad.value is Long) {
-                    out.name(payLoad.name).value(payLoad.value as Long)
-                } else if (payLoad.value is Int) {
-                    out.name(payLoad.name).value(payLoad.value as Int)
+                when (payLoad.value) {
+                    is String -> {
+                        out.name(payLoad.name).value(payLoad.value as String)
+                    }
+                    is Long -> {
+                        out.name(payLoad.name).value(payLoad.value as Long)
+                    }
+                    is Int -> {
+                        out.name(payLoad.name).value(payLoad.value as Int)
+                    }
                 }
             }
             out.endObject()
         }
 
         @Throws(IOException::class)
-        override fun read(jread: JsonReader?): PayLoads? {
-            var pl = PayLoads()
+        override fun read(jread: JsonReader?): PayLoads {
+            val pl = PayLoads()
             if (jread == null)
                 return pl
             jread.beginObject()
             while (jread.hasNext()) {
-                val name = jread.nextName()
-                when (name) {
+                when (val name = jread.nextName()) {
                     "exp" -> pl.sub.add(PayLoad("exp", jread.nextLong()))
                     else -> pl.sub.add(PayLoad(name, jread.nextString()))
                 }
@@ -372,21 +372,20 @@ object UserInfoBean {
         val payload = Base64.getUrlEncoder().withoutPadding()
             .encodeToString(payLoadJson.toByteArray(StandardCharsets.UTF_8))
         val seed = "hicore2020051518".toByteArray(charset("UTF_8"))
-        val value = (header + "." + payload).toByteArray(charset("UTF_8"))
+        val value = ("$header.$payload").toByteArray(charset("UTF_8"))
         val sign = Base64.getUrlEncoder().withoutPadding().encodeToString(hmacSha1(seed, value))
         return String.format("Bearer %s.%s.%s", header, payload, sign)
     }
 }
 
 
-class Dp2Px {
-    constructor(context: Context) {
-        density = context.resources.displayMetrics.density
-    }
-
+class Dp2Px(context: Context) {
     var density: Float = 0.0F
     fun dp2px(value: Int): Int {
         return (value * density + 0.5).toInt()
+    }
+    init {
+        density = context.resources.displayMetrics.density
     }
 }
 
@@ -428,32 +427,29 @@ fun getRoundBitmapByShader(
     val bitmapShader = BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
     //给着色器配置matrix
     bitmapShader.setLocalMatrix(matrix)
-    paint.setShader(bitmapShader)
+    paint.shader = bitmapShader
     //创建矩形区域并且预留出border
-    val rect = RectF(
-        boarder.toFloat(), boarder.toFloat(),
-        (outWidth - boarder).toFloat(), (outHeight - boarder).toFloat()
-    )
+    val rect = RectF(boarder, boarder,(outWidth - boarder), (outHeight - boarder))
     //把传入的bitmap绘制到圆角矩形区域内
     canvas.drawRoundRect(rect, radius, radius, paint)
     if (boarder > 0) {
         //绘制boarder
         val boarderPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        boarderPaint.setColor(Color.GREEN)
-        boarderPaint.setStyle(Paint.Style.STROKE)
-        boarderPaint.setStrokeWidth(boarder)
+        boarderPaint.color = Color.GREEN
+        boarderPaint.style = Paint.Style.STROKE
+        boarderPaint.strokeWidth = boarder
         canvas.drawRoundRect(rect, radius, radius, boarderPaint)
     }
     return desBitmap
 }
 
 fun str2time(str: String): Long {
-    try {
+    return try {
         val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(str)
-        return if (date == null) 0 else date.getTime()
+        date?.time ?: 0
     } catch (e2: Exception) {
         e2.printStackTrace()
-        return 0
+        0
     }
 }
 
@@ -462,13 +458,18 @@ fun optimizationTimeStr(str: String): String {
         return ""
     }
     val currentTimeMillis: Long = (System.currentTimeMillis() - str2time(str)) / 1000
-    if (currentTimeMillis < 30) {
-        return "刚刚"
-    } else if (currentTimeMillis < 3600) {
-        return (currentTimeMillis / 60).toString() + "分钟前"
-    } else if (currentTimeMillis >= 86400) {
-        return str.substring(0, 11)
-    } else {
-        return (currentTimeMillis / 3600).toString() + "小时前"
+    return when {
+        currentTimeMillis < 30 -> {
+            "刚刚"
+        }
+        currentTimeMillis < 3600 -> {
+            (currentTimeMillis / 60).toString() + "分钟前"
+        }
+        currentTimeMillis >= 86400 -> {
+            str.substring(0, 11)
+        }
+        else -> {
+            (currentTimeMillis / 3600).toString() + "小时前"
+        }
     }
 }

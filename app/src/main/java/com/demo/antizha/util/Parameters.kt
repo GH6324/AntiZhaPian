@@ -1,14 +1,12 @@
 package com.demo.antizha.util
 
-import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.collections.set
 
 class Parameters {
     private val parameters: MutableMap<String?, MutableMap<Int, Any>?> =
-        LinkedHashMap<String?, MutableMap<Int, Any>?>()
+        LinkedHashMap()
 
-    var valueMaxCount = -1
+    private var valueMaxCount = -1
 
     private var valueCount = 0
 
@@ -27,10 +25,10 @@ class Parameters {
                         parameters[key] = map
                     }
                     val valueOf = Integer.valueOf(uniqueKey++)
-                    map[valueOf] = if (value == null) "" else value
+                    map[valueOf] = value ?: ""
                     return
                 }
-                throw IllegalStateException("parameters.maxCountFail: " + valueMaxCount)
+                throw IllegalStateException("parameters.maxCountFail: $valueMaxCount")
             }
             throw IllegalArgumentException("Please use value which is primitive type like: String,Integer,Long and so on. But not Collection !")
         }
@@ -38,7 +36,7 @@ class Parameters {
 
     fun value(str: String): String {
         val map: Map<Int, Any>? = parameters[str]
-        if (map == null || map.size == 0) {
+        if (map == null || map.isEmpty()) {
             return ""
         }
         val obj = map.values.iterator().next().toString()
@@ -57,7 +55,7 @@ class Parameters {
     }
 
     private fun toStringArray(values: MutableCollection<Any>): ArrayList<String> {
-        var strArray = ArrayList<String>()
+        val strArray = ArrayList<String>()
         for (obj in values)
             strArray.add(obj.toString())
         return strArray
@@ -65,9 +63,9 @@ class Parameters {
 
     fun values(key: String): ArrayList<String> {
         val map = parameters[key]
-        if (map == null)
-            return ArrayList<String>()
+        return if (map == null)
+            ArrayList()
         else
-            return toStringArray(map.values)
+            toStringArray(map.values)
     }
 }

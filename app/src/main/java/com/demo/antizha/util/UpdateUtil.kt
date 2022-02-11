@@ -1,9 +1,7 @@
 package com.demo.antizha.util
 
-import android.content.pm.PackageInfo
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.getDataByPost
-import com.demo.antizha.ui.Hicore
 import com.google.gson.Gson
 import java.util.*
 
@@ -20,20 +18,20 @@ object UpdateUtil {
 
     class DownloadInfoPackage(val data: DownloadInfo, val code: Int)
 
-    fun <T> buildParam(timeStamp: String, t: T): HashMap<String, String>? {
-        var sign: String = ""
-        var jsonEncrypt: String = ""
+    fun <T> buildParam(timeStamp: String, t: T): HashMap<String, String> {
+        var sign = ""
+        var jsonEncrypt = ""
 
         val hashMap: HashMap<String, String> = HashMap()
         try {
-            var json = ResponseDataTypeAdaptor.buildGson().toJson(t)
-            sign = MD5Utils.getMd5String_utf8(json).lowercase(Locale.getDefault())
-            var signHash = MD5Utils.getMd5String_utf8(sign).lowercase(Locale.getDefault())
-            var timeHash = MD5Utils.getMd5Half(timeStamp + "").lowercase(Locale.getDefault())
-            try {
-                jsonEncrypt = AESUtil.cipherEncrypt(json, signHash, timeHash)
+            val json = ResponseDataTypeAdaptor.buildGson().toJson(t)
+            sign = MD5Utils.getMd5StringUtf8(json).lowercase(Locale.getDefault())
+            val signHash = MD5Utils.getMd5StringUtf8(sign).lowercase(Locale.getDefault())
+            val timeHash = MD5Utils.getMd5Half(timeStamp + "").lowercase(Locale.getDefault())
+            jsonEncrypt = try {
+                AESUtil.cipherEncrypt(json, signHash, timeHash)
             } catch (e2: Exception) {
-                jsonEncrypt = ""
+                ""
             }
         } catch (e3: Exception) {
             e3.printStackTrace()
@@ -51,10 +49,7 @@ object UpdateUtil {
     fun checkVer() {
         val registerBody = RegisterBody()
         registerBody.imei = UserInfoBean.imei
-        val packageInfo: PackageInfo =
-            Hicore.app.getPackageManager().getPackageInfo(Hicore.app.getPackageName(), 0)
-        var ver = packageInfo.getLongVersionCode()
-        registerBody.innerversion = (ver and 0xffffffff).toString()
+        registerBody.innerversion = UserInfoBean.innerVersion.toString()
         val str = System.currentTimeMillis().toString() + ""
         val hashMap = buildParam(str, registerBody)
 
@@ -68,13 +63,15 @@ object UpdateUtil {
 
     @Suppress("UNUSED_PARAMETER")
     fun onGetVersion(data: String, saveFile: String) {
+        if (data[0] != '{')
+            return
         val hashMap = Gson().fromJson(data, HashMap::class.java)
-        var signHash =
-            MD5Utils.getMd5String_utf8(hashMap["sign"].toString()).lowercase(Locale.getDefault())
-        var timeHash =
+        val signHash =
+            MD5Utils.getMd5StringUtf8(hashMap["sign"].toString()).lowercase(Locale.getDefault())
+        val timeHash =
             MD5Utils.getMd5Half(hashMap["timestamp"].toString()).lowercase(Locale.getDefault())
 
-        var json = AESUtil.cipherDecrypt(hashMap["sData"].toString(), signHash, timeHash)
+        val json = AESUtil.cipherDecrypt(hashMap["sData"].toString(), signHash, timeHash)
         val ver = Gson().fromJson(json, DownloadInfoPackage::class.java)
         if (ver.code == 0)
             UserInfoBean.setVer(ver.data.version.toString(), ver.data.innerVersion)

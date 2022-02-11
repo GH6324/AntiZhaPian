@@ -28,8 +28,8 @@ object PictureUtil {
             return true
         if (opened) {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            intent.data = Uri.fromParts("package", activity.getPackageName(), null)
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.data = Uri.fromParts("package", activity.packageName, null)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             activity.startActivity(intent)
         } else
             activity.requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)

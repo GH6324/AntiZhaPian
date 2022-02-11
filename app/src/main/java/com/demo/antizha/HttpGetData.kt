@@ -20,8 +20,8 @@ fun getDataByGet(url: String,
         if (addHead)
             builder.addInterceptor(RequestParamInterceptor())
         val client = builder.build()
-        var requestb = Request.Builder().get().url(url)
-        var request = requestb.build()
+        val requestb = Request.Builder().get().url(url)
+        val request = requestb.build()
 
         val call = client.newCall(request)
         //异步请求
@@ -42,10 +42,10 @@ fun getDataByPost(url: String,
             builder.addInterceptor(RequestParamInterceptor())
         val client = builder.build()
         val json = Gson().toJson(bodyMap)
-        var requestb = Request.Builder()
+        val requestb = Request.Builder()
             .post(json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()))
             .url(url)
-        var request = requestb.build()
+        val request = requestb.build()
         val call = client.newCall(request)
         //异步请求
         callBack(call, saveFile, callBackFunc)
@@ -56,12 +56,12 @@ fun getDataByPost(url: String,
 
 fun callBack(call: Call, saveFile: String, callBackFunc: (data: String, saveFile: String) -> Unit) {
     call.enqueue(object : Callback {
-        override fun onFailure(call: okhttp3.Call, e: IOException) {
+        override fun onFailure(call: Call, e: IOException) {
             callBackFunc(" ", "")
         }
 
         @Throws(IOException::class)
-        override fun onResponse(call: okhttp3.Call, response: Response) {
+        override fun onResponse(call: Call, response: Response) {
             //更新界面必须在UI线程里调用，所以需要用Handler
             Handler(Looper.getMainLooper()).postDelayed({
                 //notifyDataSetChanged必须在UI线程里调用，所以需要用Handler
@@ -72,7 +72,7 @@ fun callBack(call: Call, saveFile: String, callBackFunc: (data: String, saveFile
 }
 
 fun saveBuff2File(data: String, saveFile: String) {
-    val path = Hicore.context.getExternalFilesDir(null)?.getPath()
+    val path = Hicore.context.getExternalFilesDir(null)?.path
     val file = File(path, saveFile)
     val fileWriter = FileOutputStream(file, false)
     fileWriter.write(data.toByteArray(charset("UTF_8")))
@@ -81,7 +81,7 @@ fun saveBuff2File(data: String, saveFile: String) {
 }
 
 fun loadBuff4File(readFile: String): String {
-    val path = Hicore.context.getExternalFilesDir(null)?.getPath()
+    val path = Hicore.context.getExternalFilesDir(null)?.path
     val file = File(path, readFile)
     //file.exists()总是返回false
     if (!file.canRead())

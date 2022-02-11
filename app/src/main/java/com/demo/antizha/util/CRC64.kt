@@ -17,10 +17,10 @@ class CRC64 {
             for (b in crcTable.indices) {
                 var r = b.toLong()
                 for (i in 0..7) {
-                    if (r and 1 == 1L)
-                        r = (r ushr 1) xor poly
+                    r = if (r and 1 == 1L)
+                        (r ushr 1) xor poly
                     else
-                        r = r ushr 1
+                        r ushr 1
                 }
                 crcTable[b] = r
             }

@@ -15,7 +15,7 @@ object SystemProperties {
     fun getString(key: String?): String? {
         var value: String? = null
         try {
-            var cls = Class.forName("android.os.SystemProperties")
+            val cls = Class.forName("android.os.SystemProperties")
             val hideMethod = cls.getMethod("get", String::class.java)
             val tobject = cls.newInstance()
             value = hideMethod.invoke(tobject, key) as String

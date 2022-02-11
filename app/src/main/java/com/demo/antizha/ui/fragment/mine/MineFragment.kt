@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.demo.antizha.BuildConfig
 import com.demo.antizha.R
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.ui.activity.*
@@ -28,7 +29,7 @@ class MineFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mineViewModel =
-            ViewModelProvider(this).get(MineViewModel::class.java)
+            ViewModelProvider(this)[MineViewModel::class.java]
         root = inflater.inflate(R.layout.fragment_mine, container, false)
 
         val head: ConstraintLayout = root.findViewById(R.id.cl_head)
@@ -56,7 +57,7 @@ class MineFragment : Fragment() {
             val intentInfo = Intent(activity, WebActivity::class.java)
             intentInfo.putExtra(WebActivity.EXTRA_WEB_TITLE, "用户手册")
             intentInfo.putExtra(WebActivity.EXTRA_WEB_URL,
-                "https://fzapph5.gjfzpt.cn/UserManual/?time=" + System.currentTimeMillis() / 3000)
+                BuildConfig.RELEASE_H5_URL + "/UserManual/?time=" + System.currentTimeMillis() / 3000)
             startActivity(intentInfo)
         }
         val feedback: RelativeLayout = root.findViewById(R.id.ll_feedback)

@@ -8,9 +8,9 @@ import com.demo.antizha.R
 
 
 class ProgressDialogBar : Dialog {
-    constructor(context: Context?) : super(context!!) {}
+    constructor(context: Context?) : super(context!!)
 
-    constructor(context: Context?, i: Int) : super(context!!, i) {}
+    constructor(context: Context?, i: Int) : super(context!!, i)
 
     companion object {
         var progressDialogBar: ProgressDialogBar? = null

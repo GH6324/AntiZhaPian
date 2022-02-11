@@ -14,10 +14,12 @@ import java.util.*
 
 
 class WebsiteActivity : BaseActivity() {
+    companion object{
+        const val MAX_COUNT = 20
+    }
     private lateinit var infoBinding: ActivityWeburlBinding
     private val etContents: LinkedList<EditText> = LinkedList<EditText>()
     private val ivClears: LinkedList<ImageView> = LinkedList<ImageView>()
-    private val MAX_COUNT = 20
 
     override fun initPage() {
         infoBinding = ActivityWeburlBinding.inflate(layoutInflater)

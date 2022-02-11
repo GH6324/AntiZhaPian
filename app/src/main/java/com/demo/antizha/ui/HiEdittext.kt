@@ -8,15 +8,12 @@ import android.widget.EditText
 
 @SuppressLint("AppCompatCustomView")
 class HiEdittext : EditText {
-    constructor(context: Context?) : super(context) {}
-
     override fun dispatchTouchEvent(motionEvent: MotionEvent): Boolean {
         parent.requestDisallowInterceptTouchEvent(true)
         return super.dispatchTouchEvent(motionEvent)
     }
 
-    constructor(context: Context?, attributeSet: AttributeSet?) : super(context, attributeSet) {}
+    constructor(context: Context?, attributeSet: AttributeSet?) : super(context, attributeSet)
     constructor(context: Context?, attributeSet: AttributeSet?, i: Int) :
-            super(context, attributeSet, i) {
-    }
+            super(context, attributeSet, i)
 }

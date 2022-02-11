@@ -5,9 +5,9 @@ class RegisterBody {
     var idNumber: String? = null
     var imei: String? = null
     var innerversion: String? = null
-    var loginType = 0
+    var loginType: Int? = null
     var name: String? = null
-    var os = 0
+    var os: Int? = null
     var osVersion: String? = null
     var pCode: String? = null
     var password: String? = null
@@ -19,7 +19,7 @@ class RegisterBody {
     var verificationLogID: String? = null
 
     override fun toString(): String {
-        return "RegisterBody{phoneNum='" + phoneNum + "', password='" + password + "', appVersion='" + appVersion + "', os=" + os + ", osVersion='" + osVersion + "', imei='" + imei + "', requestIP='" + requestIP + "', region='" + region + "'}"
+        return "RegisterBody{phoneNum='$phoneNum', password='$password', appVersion='$appVersion', os=$os, osVersion='$osVersion', imei='$imei', requestIP='$requestIP', region='$region'}"
     }
 
 }

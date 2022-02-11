@@ -14,11 +14,11 @@ class FeedbackDetailActivity : BaseActivity() {
     override fun initPage() {
         infoBinding = ActivityFeedbackQuestionBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
-        infoBinding.piTitle.tvTitle.setText("问题详情")
-        infoBinding.tvQuestion.setText(intent.getStringExtra("extra_question"))
-        infoBinding.tvAnswer.setText(intent.getStringExtra("extra_answer"))
-        infoBinding.tvGoFeedback.setText(Html.fromHtml("还没有解决您的问题？前往<font color=#2B4CFF>意见反馈</font>",
-            Html.FROM_HTML_MODE_LEGACY))
+        infoBinding.piTitle.tvTitle.text = "问题详情"
+        infoBinding.tvQuestion.text = intent.getStringExtra("extra_question")
+        infoBinding.tvAnswer.text = intent.getStringExtra("extra_answer")
+        infoBinding.tvGoFeedback.text = Html.fromHtml("还没有解决您的问题？前往<font color=#2B4CFF>意见反馈</font>",
+            Html.FROM_HTML_MODE_LEGACY)
         infoBinding.piTitle.ivBack.setOnClickListener {
             finish()
         }

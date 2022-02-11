@@ -28,11 +28,12 @@ class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private var lastIndex = 0
     private var mFragments = ArrayList<Fragment>()
-
+    companion object {
+        const val SPLASH_TIME: Long = 5000
+    }
     @Suppress("DEPRECATION")
     override fun initPage() {
         dp2px = Dp2Px(Hicore.context)
-        val SPLASH_TIME: Long = 5000
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         //隐藏状态栏
@@ -44,9 +45,9 @@ class MainActivity : BaseActivity() {
                 WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
             window.attributes = lp
         } else
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        UserInfoBean.Init()
+            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        UserInfoBean.init()
         binding.navView.setOnItemSelectedListener(
             object : NavigationBarView.OnItemSelectedListener {
                 override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -82,7 +83,7 @@ class MainActivity : BaseActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                 binding.root.windowInsetsController?.show(WindowInsets.Type.statusBars())
             else
-                getWindow().setFlags(0, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                window.setFlags(0, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         }, SPLASH_TIME)
         initData()
     }
@@ -99,9 +100,12 @@ class MainActivity : BaseActivity() {
                 override fun createFragment(position: Int): Fragment = mFragments[position]
             }
         }
-        binding.viewPager.setCurrentItem(0)
+        binding.viewPager.currentItem = 0
     }
 
+    fun setCurrentPage(i: Int) {
+        binding.viewPager.currentItem = i
+    }
 
     private fun resetIcon(navView: BottomNavigationView) {
         val home = navView.menu.findItem(R.id.navigation_home)

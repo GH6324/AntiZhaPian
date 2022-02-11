@@ -21,10 +21,9 @@ object AddressBean {
     open class HiAddressListener : OnAddressPickListener {
         override fun onAddressPicked(province: Province?, city: City?, county: County?) {}
         open fun onClear() {}
-        open fun onData(arrayList: ArrayList<Province?>?) {}
     }
 
-    open class AreaBase() {
+    open class AreaBase {
         var code: String = ""
         var name: String = ""
     }
@@ -46,10 +45,10 @@ object AddressBean {
         var cityList: List<HiCity> = ArrayList()
     }
 
-    var hiProvinces: List<HiProvince> = ArrayList<HiProvince>() //address直接导出的结构
-    var provinces: ArrayList<Province> = ArrayList<Province>()  //地区选择器使用的结构
+    private var hiProvinces: List<HiProvince> = ArrayList() //address直接导出的结构
+    private var provinces: ArrayList<Province> = ArrayList()  //地区选择器使用的结构
     fun getHiProvince(): List<HiProvince> {
-        if (hiProvinces.size == 0) {
+        if (hiProvinces.isEmpty()) {
             val inputStream = FileUtil.openfile("address.txt")
             hiProvinces = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
                 object : TypeToken<List<HiProvince>>() {}.type)
@@ -60,7 +59,7 @@ object AddressBean {
     }
 
     fun getProvince(): ArrayList<Province> {
-        if (hiProvinces.size == 0) {
+        if (hiProvinces.isEmpty()) {
             val inputStream = FileUtil.openfile("address.txt")
             hiProvinces = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
                 object : TypeToken<List<HiProvince>>() {}.type)
@@ -77,26 +76,25 @@ object AddressBean {
         val picker = AddressPicker(activity, getProvince())
         picker.setHideProvince(false)
         picker.setHideCounty(false)
-        picker.setTextColor(activity.getResources()
-            .getColor(com.demo.antizha.R.color.colorGray, null))
-        picker.setSubmitTextColor(activity.getResources().getColor(R.color.black, null))
-        picker.setCancelTextColor(activity.getResources().getColor(R.color.colorGray, null))
-        picker.setDividerColor(activity.getResources().getColor(R.color.colorGray, null))
+        picker.setTextColor(activity.resources.getColor(R.color.colorGray, null))
+        picker.setSubmitTextColor(activity.resources.getColor(R.color.black, null))
+        picker.setCancelTextColor(activity.resources.getColor(R.color.colorGray, null))
+        picker.setDividerColor(activity.resources.getColor(R.color.colorGray, null))
         picker.setColumnWeight(0.25f, 0.5f, 0.25f)
         if (showClear) {
-            val tvTtile = TextView(picker.getContext())
-            tvTtile.layoutParams = LinearLayout.LayoutParams(-1, -1)
-            tvTtile.visibility = View.VISIBLE
-            tvTtile.text = "清空"
-            tvTtile.gravity = Gravity.CENTER
-            tvTtile.setTextColor(activity.getResources().getColor(R.color.black, null))
-            tvTtile.setOnClickListener(object : View.OnClickListener {
+            val tvTitle = TextView(picker.context)
+            tvTitle.layoutParams = LinearLayout.LayoutParams(-1, -1)
+            tvTitle.visibility = View.VISIBLE
+            tvTitle.text = "清空"
+            tvTitle.gravity = Gravity.CENTER
+            tvTitle.setTextColor(activity.resources.getColor(R.color.black, null))
+            tvTitle.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(view: View?) {
                     picker.dismiss()
                     listener.onClear()
                 }
             })
-            picker.setTitleView(tvTtile)
+            picker.titleView = tvTitle
         }
         if (!TextUtils.isEmpty(region)) {
             val regions = TextUtils.split(region, "\\.")
@@ -108,18 +106,18 @@ object AddressBean {
         return picker
     }
 
-    fun initProvinceList() {
+    private fun initProvinceList() {
         for (prov in hiProvinces) {
-            var province = Province()
+            val province = Province()
             province.areaId = prov.code
             province.areaName = prov.name
             for (cit in prov.cityList) {
-                var city = City()
+                val city = City()
                 city.areaId = cit.code
                 city.areaName = cit.name
                 city.provinceId = prov.code
                 for (town in cit.townList) {
-                    var county = County()
+                    val county = County()
                     county.areaId = town.code
                     county.areaName = town.name
                     county.cityId = cit.code
