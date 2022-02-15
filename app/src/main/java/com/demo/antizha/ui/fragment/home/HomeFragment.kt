@@ -1,5 +1,6 @@
 package com.demo.antizha.ui.fragment.home
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -18,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.demo.antizha.*
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.IClickListener
 import com.demo.antizha.ui.activity.*
 import com.demo.antizha.util.AppUtil
@@ -43,21 +44,17 @@ class ToolViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     var image: ImageView = view.findViewById(R.id.iv_icon) as ImageView
 }
 
-class ToolHolderAdapte(private var homeFragment: HomeFragment,
-                       private var context: Context,
-                       private var list: ArrayList<ToolBean>) :
+class ToolHolderAdapter(private var homeFragment: HomeFragment,
+                        private var context: Context,
+                        private var list: ArrayList<ToolBean>) :
     RecyclerView.Adapter<ToolViewHolder>() {
-
-    init {
-        notifyDataSetChanged()
-    }
 
     override fun onBindViewHolder(holder: ToolViewHolder, i: Int) {
         holder.name.text = list[i].name
         holder.image.setImageResource(list[i].imageId)
         holder.itemView.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                if (!Hicore.app.isDouble()) {
+                if (!HiCore.app.isDouble()) {
                     if (list.size <= 0)
                         return
                     val adapterPosition = holder.absoluteAdapterPosition
@@ -139,26 +136,22 @@ class NewCaseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     var image: ImageView = view.findViewById(R.id.iv_topic_pic) as ImageView
 }
 
-class NewCaseHolderAdapte(
+class NewCaseHolderAdapter(
     private var context: Context,
     private var view: View,
     private var recycle: RecyclerView,
     private var list: ArrayList<NewCase>
 ) : RecyclerView.Adapter<NewCaseViewHolder>() {
 
-    init {
-        notifyDataSetChanged()
-    }
-
     override fun onBindViewHolder(holder: NewCaseViewHolder, i: Int) {
-        holder.time.text = list[i].author + " " + optimizationTimeStr(list[i].updateTime)
+        holder.time.text = "${list[i].author}  ${optimizationTimeStr(list[i].updateTime)}"
         holder.title.text = list[i].title
         Glide.with(view).load(list[i].cdnCover).into(holder.image)
         holder.itemView.setOnClickListener(object : View.OnClickListener {
             val url: String = list[holder.absoluteAdapterPosition].localFilePath
             val id: String = list[holder.absoluteAdapterPosition].id
             override fun onClick(v: View?) {
-                if (!Hicore.app.isDouble()) {
+                if (!HiCore.app.isDouble()) {
                     val intent = Intent(context, PromosWebDetActivity::class.java)
                     intent.putExtra("extra_web_title", "国家反诈中心")
                     val adcode =
@@ -236,13 +229,14 @@ class BanderAdapter(
                 .into(holder.imageView)
         }
     }
+
 }
 
 class HomeFragment : Fragment(), IClickListener {
     private lateinit var mActivity: Activity
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var root: View
-    private lateinit var newCaseAdapter: NewCaseHolderAdapte
+    private lateinit var newCaseAdapter: NewCaseHolderAdapter
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var banderAdapter: BanderAdapter
     private var pageIndex = 1
@@ -278,7 +272,7 @@ class HomeFragment : Fragment(), IClickListener {
         banner.addBannerLifecycleObserver(this)
         banner.setBannerRound(20f)
         banner.setLoopTime(5000)
-        banner.indicator = RoundLinesIndicator(Hicore.getContext())
+        banner.indicator = RoundLinesIndicator(HiCore.getContext())
         banderAdapter = BanderAdapter(imageList)
         banner.setAdapter(banderAdapter)
         val mOnWebListener = object : OnBannerListener<BanderBean> {
@@ -297,9 +291,10 @@ class HomeFragment : Fragment(), IClickListener {
         loadBander()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun initTool() {
         val toolText = arrayOf("我要举报", "举报助手", "来电预警", "身份核实")
-        val toolimage = arrayOf(
+        val toolImage = arrayOf(
             R.drawable.iv_home_report,
             R.drawable.iv_home_case,
             R.drawable.iv_home_warn,
@@ -307,14 +302,15 @@ class HomeFragment : Fragment(), IClickListener {
         )
         val toolBeans = ArrayList<ToolBean>()
         for ((i, text) in toolText.withIndex()) {
-            val toolBean = ToolBean(i, text, toolimage[i])
+            val toolBean = ToolBean(i, text, toolImage[i])
             toolBeans.add(toolBean)
         }
 
         val toolRecycle: RecyclerView = root.findViewById(R.id.rcy_tool)
         toolRecycle.layoutManager = GridLayoutManager(root.context, 4)
-        val toolAdapter = ToolHolderAdapte(this, root.context, toolBeans)
+        val toolAdapter = ToolHolderAdapter(this, root.context, toolBeans)
         toolRecycle.adapter = toolAdapter
+        toolAdapter.notifyDataSetChanged()
     }
 
     private fun initWarnCheck() {
@@ -333,7 +329,7 @@ class HomeFragment : Fragment(), IClickListener {
         val newCaseRecycle: RecyclerView = root.findViewById(R.id.rcy_newcase)
         newCaseRecycle.layoutManager = LinearLayoutManager(root.context)
         newCaseAdapter =
-            NewCaseHolderAdapte(root.context, root, newCaseRecycle, ArrayList())
+            NewCaseHolderAdapter(root.context, root, newCaseRecycle, ArrayList())
         newCaseRecycle.adapter = newCaseAdapter
     }
 
@@ -381,7 +377,7 @@ class HomeFragment : Fragment(), IClickListener {
         //https://fzapp.gjfzpt.cn/hicore/api/Information/querylatestcases?Page=1&Rows=2&Sort=releasetime&Order=desc
         getDataByGet(
             BuildConfig.RELEASE_API_URL+ "/api/Information/querylatestcases?Page=${page}&Rows=${row}&Sort=releasetime&Order=desc",
-            addHead = true, "newcase$page.txt", callBackFunc = this::addNewCase)
+            addHead = true, "newcase${page}.txt", callBackFunc = this::addNewCase)
     }
 
     private fun onNormalSave(data: String, saveFile: String) {
@@ -433,6 +429,7 @@ class HomeFragment : Fragment(), IClickListener {
         addNewBander(buff)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun addNewBander(data: String) {
         if (data[0] != '{')
             return

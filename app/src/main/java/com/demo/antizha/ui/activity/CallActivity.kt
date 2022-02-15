@@ -21,7 +21,7 @@ class CallBean : Parcelable {
     var isInput = false
     var isSelect = false
     var number: String? = null
-    var plcae: String? = null
+    var place: String? = null
     var suspectInfoID: String? = null
     var type = 0
 
@@ -29,7 +29,7 @@ class CallBean : Parcelable {
     constructor(str: String?, str2: String?, str3: String?, i: Int, z: Boolean) {
         number = str
         crime_time = str2
-        plcae = str3
+        place = str3
         type = i
         isSelect = z
         isInput = !isSelect
@@ -38,7 +38,7 @@ class CallBean : Parcelable {
     constructor(str: String?, str2: String?, str3: String?, i: Int, z: Boolean, j: Long) {
         number = str
         crime_time = str2
-        plcae = str3
+        place = str3
         type = i
         isSelect = z
         duration = j
@@ -51,7 +51,7 @@ class CallBean : Parcelable {
         isInput = source.readInt() > 0
         isSelect = source.readInt() > 0
         number = source.readString()
-        plcae = source.readString()
+        place = source.readString()
         suspectInfoID = source.readString()
         type = source.readInt()
     }
@@ -66,7 +66,7 @@ class CallBean : Parcelable {
         dest.writeInt(if (isInput) 1 else 0)
         dest.writeInt(if (isSelect) 1 else 0)
         dest.writeString(number)
-        dest.writeString(plcae)
+        dest.writeString(place)
         dest.writeString(suspectInfoID)
         dest.writeInt(type)
     }
@@ -89,6 +89,7 @@ class CallActivity : BaseActivity() {
     private var ivClears: ArrayList<ImageView> = ArrayList()
     private val selectCallBeans: ArrayList<CallBean> = ArrayList()
     private val inputCallBeans: ArrayList<CallBean> = ArrayList()
+    private val mMaxSelectNum = 20
 
     override fun initPage() {
         infoBinding = ActivityCallBinding.inflate(layoutInflater)
@@ -96,7 +97,7 @@ class CallActivity : BaseActivity() {
         infoBinding.piTitle.tvTitle.text = "添加诈骗电话"
         infoBinding.lySelect.tvSelectTip.text = "选择通话记录"
         infoBinding.lySelect.tvInputTip.text = "手动输入"
-        infoBinding.lyComplete.tvCommitTip.text = "最多可选择" + 20 + "条举报电话"
+        infoBinding.lyComplete.tvCommitTip.text = "最多可选择${mMaxSelectNum}条举报电话"
         initData()
         infoBinding.piTitle.ivBack.setOnClickListener {
             val intent = Intent()
@@ -129,7 +130,8 @@ class CallActivity : BaseActivity() {
             //需要权限
         }
         infoBinding.lySelect.llInput.setOnClickListener {
-            inputNumber("")
+            if (selectCallBeans.size + infoBinding.llInputPart.childCount < mMaxSelectNum)
+                inputNumber("")
         }
     }
 
@@ -153,7 +155,6 @@ class CallActivity : BaseActivity() {
         }
         if (selectLogs.size > 0) {
             selectCallBeans.addAll(selectLogs)
-            //this.CallBeanAdapter.notifyDataSetChanged()
         }
         if (inputLogs.size > 0) {
             inputCallBeans.addAll(inputLogs)

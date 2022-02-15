@@ -30,7 +30,7 @@ class CheckFraudResultActivity : BaseActivity() {
             else -> infoBinding.piTitle.tvTitle.text = "支付风险查询"
         }
         infoBinding.tvType.visibility = View.GONE
-        infoBinding.tvCotent.text = "查询内容：" + checkFraudBean.content
+        infoBinding.tvCotent.text = "查询内容：${checkFraudBean.content}"
         infoBinding.ivPicture.setImageResource(R.mipmap.ic_fraud_safe)
         infoBinding.tvCheckResult.text = "未知"
         infoBinding.tvCheckResult.setTextColor(

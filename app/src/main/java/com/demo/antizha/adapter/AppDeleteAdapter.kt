@@ -5,7 +5,7 @@ import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.demo.antizha.R
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.activity.BaseUploadActivity
 import com.demo.antizha.util.AppUtil.AppInfoBean
 
@@ -20,7 +20,7 @@ class AppDeleteAdapter(i: Int, list: ArrayList<AppInfoBean>?, /* renamed from: a
         if (item.appIcon != null)
             holder.setImageDrawable(R.id.app_icon, item.appIcon)
 
-        val formatFileSize: String = Formatter.formatFileSize(Hicore.app, item.size)
+        val formatFileSize: String = Formatter.formatFileSize(HiCore.app, item.size)
         holder.setText(R.id.tv_app_name, item.appName)
         holder.setText(R.id.tv_app_version,
             "版本:" + item.version + "  |  " + formatFileSize)

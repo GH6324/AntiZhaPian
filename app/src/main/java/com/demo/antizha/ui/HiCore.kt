@@ -11,9 +11,9 @@ import com.hjq.toast.ToastUtils
 import java.util.*
 
 
-class Hicore : Application() {
+class HiCore : Application() {
     companion object {
-        lateinit var app: Hicore
+        lateinit var app: HiCore
         lateinit var context: Application
         var mLastClickTime: Long = 0
         fun getContext(): Context {

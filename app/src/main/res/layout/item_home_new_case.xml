@@ -16,7 +16,7 @@
             android:id="@+id/iv_topic_pic"
             android:layout_width="100dp"
             android:layout_height="70dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true" />
 
         <TextView
@@ -24,8 +24,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/iv_topic_pic"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/iv_topic_pic"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/iv_topic_pic"
             android:ellipsize="end"
             android:maxLines="2"
             android:text="警惕!以“新冠疫苗”之名诈骗来袭!"
@@ -37,8 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/iv_topic_pic"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/iv_topic_pic"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/iv_topic_pic"
             android:ellipsize="end"
             android:maxLines="2"
             android:text="北京市海淀区派出所 2021-01-15"

@@ -18,13 +18,13 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="32dp"
+                android:layout_marginStart="32dp"
                 android:layout_marginTop="@dimen/dp_20"
                 android:text="请选择账号类型"
                 android:textColor="#333333"
@@ -39,7 +39,8 @@
                 android:layout_marginRight="15dp"
                 android:background="@drawable/bg_white_crop"
                 android:paddingTop="20dp"
-                android:paddingLeft="15dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="0dp"
                 android:paddingBottom="20dp"
                 app:flChildSpacing="30dp"
                 app:flRowSpacing="16dp" />
@@ -54,14 +55,15 @@
                 android:background="@drawable/bg_white_crop"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="10dp"
-                android:paddingRight="15dp">
+                android:paddingStart="10dp"
+                android:paddingEnd="15dp">
 
                 <TextView
                     android:id="@+id/tv_acc_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="0dp"
                     android:text="账号"
                     android:textColor="#333333"
                     android:textSize="15sp" />
@@ -70,11 +72,11 @@
                     android:id="@+id/et_account"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginStart="@dimen/dp_10"
                     android:layout_weight="1"
                     android:background="@color/white"
                     android:ellipsize="end"
-                    android:gravity="right|center_vertical|center_horizontal|center"
+                    android:gravity="end|center_vertical"
                     android:hint="请输入账号"
                     android:maxLength="50"
                     android:maxLines="1"
@@ -93,7 +95,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="@dimen/dp_20"
                     android:text="其他类型"
                     android:textColor="#333333"
@@ -114,7 +116,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="0dp"
                         android:text="其他社交类型"
                         android:textColor="#333333"
                         android:textSize="15sp" />
@@ -123,10 +126,10 @@
                         android:id="@+id/et_tag_other"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_marginStart="@dimen/dp_10"
                         android:layout_weight="1"
                         android:background="@color/white"
-                        android:gravity="right|center_vertical|center_horizontal|center"
+                        android:gravity="end|center_vertical"
                         android:hint="请输入其他社交类型名称"
                         android:maxLength="12"
                         android:singleLine="true"
@@ -149,7 +152,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="0dp"
                         android:text="其他类型账号"
                         android:textColor="#333333"
                         android:textSize="15sp" />
@@ -158,10 +162,10 @@
                         android:id="@+id/et_account_other"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_marginStart="@dimen/dp_10"
                         android:layout_weight="1"
                         android:background="@color/white"
-                        android:gravity="right|center_vertical|center_horizontal|center"
+                        android:gravity="end|center_vertical"
                         android:hint="请输入账号"
                         android:textColor="#999999"
                         android:textSize="@dimen/sp_15"

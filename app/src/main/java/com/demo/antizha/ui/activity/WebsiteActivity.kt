@@ -25,7 +25,7 @@ class WebsiteActivity : BaseActivity() {
         infoBinding = ActivityWeburlBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "添加诈骗网址"
-        infoBinding.lyComplete.tvCommitTip.text = "最多可添加" + MAX_COUNT.toString() + "条网址"
+        infoBinding.lyComplete.tvCommitTip.text = "最多可添加${MAX_COUNT}条网址"
         infoBinding.lyComplete.btnCommit.text = "确定"
         infoBinding.vLine.visibility = View.GONE
         infoBinding.flSelectHistory.visibility = View.GONE
@@ -81,7 +81,7 @@ class WebsiteActivity : BaseActivity() {
         if (etContents.size < MAX_COUNT) {
             return false
         }
-        ToastUtils.show("最多可添加" + MAX_COUNT.toString() + "条网址")
+        ToastUtils.show("最多可添加${MAX_COUNT}条网址")
         return true
     }
 

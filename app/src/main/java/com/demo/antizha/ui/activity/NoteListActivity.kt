@@ -1,5 +1,6 @@
 package com.demo.antizha.ui.activity
 
+import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -52,6 +53,7 @@ class NoteListActivity : BaseActivity() {
     }
 
     inner class OnRefresh internal constructor() : OnRefreshListener {
+        @SuppressLint("NotifyDataSetChanged")
         override fun onRefresh(refreshLayout: RefreshLayout) {
             Handler(Looper.getMainLooper()).postDelayed({
                 val inputStream = FileUtil.openfile("noticelist.txt")

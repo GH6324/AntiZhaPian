@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.demo.antizha.R
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.activity.BaseUploadActivity
 
 class PictureSelectAdapter(resId: Int, private var medias: ArrayList<String>) :
@@ -71,7 +71,7 @@ class PictureSelectAdapter(resId: Int, private var medias: ArrayList<String>) :
         ivClear.visibility = View.VISIBLE
         ivSelect.visibility = View.VISIBLE
         tvUploadState.visibility = View.VISIBLE
-        Glide.with(Hicore.context).load(localMedia).into(ivSelect)
+        Glide.with(HiCore.context).load(localMedia).into(ivSelect)
     }
     override fun convert(holder: BaseViewHolder, item: String) {
         if (styleVideo == style) {

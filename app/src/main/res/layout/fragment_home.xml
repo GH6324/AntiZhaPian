@@ -12,7 +12,7 @@
         android:id="@+id/pi_title"
         layout="@layout/fragment_home_head" />
 
-    <com.scwang.smart.refresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -68,7 +68,7 @@
                         android:id="@+id/fl_virus_check"
                         android:layout_width="fill_parent"
                         android:layout_height="75.0dip"
-                        android:layout_marginRight="2.0dip"
+                        android:layout_marginEnd="2.0dip"
                         android:layout_weight="1.0"
                         android:background="@drawable/card_corner_white_bg">
 
@@ -76,7 +76,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="15.0dip"
+                            android:layout_marginStart="15.0dip"
                             android:orientation="vertical">
 
                             <TextView
@@ -98,7 +98,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:scaleType="centerCrop"
                             android:src="@drawable/iv_scaov_bg" />
 
@@ -106,7 +106,7 @@
                             android:id="@+id/ll_checkapp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:layout_margin="8.0dip">
 
                             <ImageView
@@ -123,7 +123,7 @@
                         android:id="@+id/fl_fruad_check"
                         android:layout_width="fill_parent"
                         android:layout_height="75.0dip"
-                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginStart="2.0dip"
                         android:layout_weight="1.0"
                         android:background="@drawable/card_corner_white_bg">
 
@@ -131,7 +131,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="15.0dip"
+                            android:layout_marginStart="15.0dip"
                             android:orientation="vertical">
 
                             <TextView
@@ -153,14 +153,14 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:scaleType="centerCrop"
                             android:src="@drawable/iv_scaov_bg" />
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:layout_margin="8.0dip"
                             android:scaleType="centerCrop"
                             android:src="@drawable/iv_virus_check" />

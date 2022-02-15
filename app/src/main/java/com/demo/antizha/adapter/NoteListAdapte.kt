@@ -66,11 +66,8 @@ class NoteHolder(view: View) : RecyclerView.ViewHolder(view) {
 
 class NoteListAdapte(val mActivity: Activity, var list: ArrayList<NoteListBean>) :
     RecyclerView.Adapter<NoteHolder>() {
-    init {
-        notifyDataSetChanged()
-    }
 
-    fun subTitle(str: String): String {
+    private fun subTitle(str: String): String {
         return if (str.length <= 18) {
             str
         } else (str.subSequence(0, 18) as Any).toString() + "..."

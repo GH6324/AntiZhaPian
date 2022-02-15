@@ -15,7 +15,7 @@ class AboutUsActivity : BaseActivity() {
         infoBinding = ActivityAboutUsBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "关于我们"
-        infoBinding.tvAppVersion.text = "v" + UserInfoBean.version
+        infoBinding.tvAppVersion.text = "v${UserInfoBean.version}"
         infoBinding.piTitle.ivBack.setOnClickListener {
             finish()
         }

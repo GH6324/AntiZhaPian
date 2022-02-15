@@ -10,7 +10,7 @@ class AudioActivity : BaseActivity() {
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "添加录音"
         infoBinding.lySelect.tvSelectTip.text = "添加"
-        infoBinding.lyComplete.tvCommitTip.text = "最多可选择" + 9 + "条录音"
+        infoBinding.lyComplete.tvCommitTip.text = "最多可选择9条录音"
         infoBinding.piTitle.ivBack.setOnClickListener {
             finish()
         }

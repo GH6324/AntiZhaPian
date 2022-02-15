@@ -1,12 +1,12 @@
 package com.demo.antizha.ui.activity
 
-import android.R
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.R
+import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.ProgressDialogBar
 import com.demo.antizha.util.NotchUtils
 import com.demo.antizha.util.SystemUtils.adjustFontScale
@@ -40,7 +40,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun isDouble(): Boolean {
-        return Hicore.app.isDouble()
+        return HiCore.app.isDouble()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -73,7 +73,7 @@ class SocialAccountEditActivity : BaseActivity() {
             infoBinding.llAccNomar.visibility = View.VISIBLE
             socialAccount!!.accountName = type
         }
-        infoBinding.tvAccName.text = type + "账号"
+        infoBinding.tvAccName.text = "${type}账号"
         if (socialTypeIdx >= 0) {
             flowLayout[socialTypeIdx].isSelected = false
             (flowLayout[socialTypeIdx] as TextView).setTextColor(resources.getColor(R.color._1F1F1F,

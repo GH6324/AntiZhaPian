@@ -11,8 +11,8 @@ import android.webkit.*
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityWebBinding
 import com.demo.antizha.interfaces.IHandler
+import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.HiWebView
-import com.demo.antizha.ui.Hicore
 import com.demo.antizha.ui.IClickListener
 import com.demo.antizha.ui.SwipBackLayout
 import com.demo.antizha.util.DialogUtils
@@ -59,7 +59,7 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
         infoBinding.llProgress.visibility = View.VISIBLE
         fromUnsealedUrl()
         infoBinding.piTitle.ivBack.setOnClickListener {
-            if (!Hicore.app.isDouble())
+            if (!HiCore.app.isDouble())
                 onBackPressed()
         }
     }

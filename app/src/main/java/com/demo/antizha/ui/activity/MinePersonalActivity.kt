@@ -5,8 +5,8 @@ import android.content.Intent
 import android.text.TextUtils
 import android.view.View
 import com.demo.antizha.R
+import com.demo.antizha.UserInfoBean
 import com.demo.antizha.databinding.ActivityMinePersonalBinding
-import com.demo.antizha.*
 import qiu.niorgai.StatusBarCompat
 
 //AddressBean
@@ -43,7 +43,7 @@ class MinePersonalActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun onSuccRequest() {
-        infoBinding.tvProgress.text = "已完善" + UserInfoBean.perfectProgress + "%"
+        infoBinding.tvProgress.text = "已完善${UserInfoBean.perfectProgress}%"
         infoBinding.pbProgress.progress = UserInfoBean.perfectProgress
 
         if (!TextUtils.isEmpty(UserInfoBean.name) && !TextUtils.isEmpty(UserInfoBean.id)) {
@@ -56,12 +56,12 @@ class MinePersonalActivity : BaseActivity(), View.OnClickListener {
             infoBinding.userName.visibility = View.GONE
         }
         if (!TextUtils.isEmpty(UserInfoBean.name)) {
-            infoBinding.userName.text = "*" + UserInfoBean.name
+            infoBinding.userName.text = "*${UserInfoBean.name}"
         } else {
             infoBinding.userName.text = ""
         }
         if (!TextUtils.isEmpty(UserInfoBean.id)) {
-            infoBinding.userID.text = UserInfoBean.id[0] + "****************" + UserInfoBean.id[1]
+            infoBinding.userID.text = "${UserInfoBean.id[0]}****************${UserInfoBean.id[1]}"
         } else {
             infoBinding.userID.text = ""
         }
@@ -75,7 +75,7 @@ class MinePersonalActivity : BaseActivity(), View.OnClickListener {
         } else {
             infoBinding.tvEmergCont.text = UserInfoBean.urgentContactname
             infoBinding.tvEmergPhone.visibility = View.VISIBLE
-            infoBinding.tvEmergPhone.text = "手机号：" + UserInfoBean.urgentContactmob
+            infoBinding.tvEmergPhone.text = "手机号：${UserInfoBean.urgentContactmob}"
             infoBinding.tvAddEmerg.visibility = View.GONE
         }
         if (!TextUtils.isEmpty(UserInfoBean.qq)) {

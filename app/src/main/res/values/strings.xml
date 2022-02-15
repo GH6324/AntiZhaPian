@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">国家反诈中心</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Heipi</string>
-    <string name="title_notifications">Mine</string>
-    <string name="title_mine">Hello,</string>
+    <string name="title_home">首页</string>
+    <string name="title_dashboard">骗局曝光</string>
+    <string name="title_notifications">我的</string>
+    <string name="title_mine">您好,</string>
     <string name="load_end">没有更多数据</string>
     <string name="load_error">网络加载失败</string>
     <string name="load_failed">加载失败，请点我重试</string>
@@ -27,4 +27,17 @@
     <string name="srl_header_secondary">释放进入二楼</string>
     <string name="srl_header_update">上次更新 M-d HH:mm</string>
     <string name="id_check_state">将核实请求发送至对方，对方使用被请求的手机号码注册登录本APP进行人脸识别核实身份，结果在核实记录中查看。请求有效时限为24小时\n\n该功能用于在非面对面情况下明确对方真实身份，结果仅供辅助参考，建议结合其他方法综合判断。</string>
+    <string name="qq_account">QQ账号</string>
+    <string name="to_fill_it">去填写</string>
+    <string name="please_fill_it">请填写</string>
+    <string name="arraw">箭头</string>
+    <string name="email">电子邮箱</string>
+    <string name="email_examples">abc@qq.com</string>
+    <string name="wx_account">微信账号</string>
+    <string name="social_set">社交通讯信息</string>
+    <string name="social_account_examples">1234567</string>
+    <string name="phone_num_examples">13878787878</string>
+    <string name="to_add">去添加</string>
+    <string name="to_select">请选择</string>
+    <string name="area_detail">详细地址：</string>
 </resources>

@@ -2,7 +2,7 @@ package com.demo.antizha.util
 
 import android.text.TextUtils
 import com.demo.antizha.UserInfoBean
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import okhttp3.FormBody
 import okhttp3.Interceptor
 import okhttp3.Request
@@ -39,7 +39,7 @@ class RequestParamInterceptor : Interceptor {
             builder.addHeader("os-type", "0")
             builder.addHeader("os-brand", SystemUtils.getBrand())
             builder.addHeader("os-model", SystemUtils.getModel())
-            builder.addHeader("market", Hicore.app.getChannel())
+            builder.addHeader("market", HiCore.app.getChannel())
             builder.addHeader("app-version", UserInfoBean.version)
             builder.addHeader("imei", UserInfoBean.imei)
             builder.addHeader("app-version-code", UserInfoBean.innerVersion.toString() + "")

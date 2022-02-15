@@ -19,7 +19,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.provider.Settings
 import androidx.core.graphics.drawable.toBitmap
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import java.io.ByteArrayOutputStream
 
 
@@ -53,7 +53,7 @@ object AppUtil {
             apkName = source.readString().toString()
             appName = source.readString().toString()
             version = source.readString().toString()
-            appIcon = BitmapDrawable(Hicore.app.resources,
+            appIcon = BitmapDrawable(HiCore.app.resources,
                 BytesBitmap.getBitmap(source.createByteArray()!!))
             checkState = source.readInt()
             size = source.readLong()
@@ -99,9 +99,9 @@ object AppUtil {
     @SuppressLint("ServiceCast")
     fun getAppinfos(): ArrayList<AppInfoBean> {
         if (list.size == 0) {
-            val pm = Hicore.context.packageManager
+            val pm = HiCore.context.packageManager
             val sm =
-                Hicore.context.getSystemService(Context.STORAGE_STATS_SERVICE) as StorageStatsManager
+                HiCore.context.getSystemService(Context.STORAGE_STATS_SERVICE) as StorageStatsManager
             val packageInfos: List<PackageInfo> = pm.getInstalledPackages(0)
 
             val intent = Intent("android.intent.action.MAIN", null as Uri?)
@@ -144,10 +144,10 @@ object AppUtil {
 
     @Suppress("DEPRECATION")
     fun checkPermission(activity: Activity, ischeckOpen: Boolean): Boolean {
-        val pm = Hicore.context.packageManager
-        val appInfo = pm.getApplicationInfo(Hicore.context.packageName, 0)
+        val pm = HiCore.context.packageManager
+        val appInfo = pm.getApplicationInfo(HiCore.context.packageName, 0)
         val appOpsManager =
-            Hicore.context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+            HiCore.context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
         val op = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
             appOpsManager.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
                 appInfo.uid,

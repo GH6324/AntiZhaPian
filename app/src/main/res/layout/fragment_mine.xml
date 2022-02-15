@@ -11,7 +11,7 @@
 
     <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:paddingBottom="20.0dip">
 
         <FrameLayout
@@ -51,7 +51,7 @@
                     android:paddingBottom="3.0dip"
                     android:text="反诈小白"
                     android:textColor="@color/white"
-                    android:textSize="10.0sp"
+                    android:textSize="11.0sp"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="@id/headimg"
@@ -250,9 +250,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@id/ll_user_sc"
-                        android:layout_marginLeft="-16.0dip"
+                        android:layout_marginStart="-16.0dip"
                         android:layout_marginTop="7.0dip"
-                        android:layout_toRightOf="@id/ll_user_sc"
+                        android:layout_toEndOf="@id/ll_user_sc"
                         android:background="@drawable/iv_user_tip"
                         android:gravity="center"
                         android:paddingLeft="2.0dip"
@@ -312,8 +312,8 @@
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="10.0dip"
-                            android:layout_toRightOf="@id/iv_yjfk"
+                            android:layout_marginStart="10.0dip"
+                            android:layout_toEndOf="@id/iv_yjfk"
                             android:gravity="center_vertical"
                             android:text="反馈与帮助"
                             android:textColor="#ff333333"
@@ -322,18 +322,18 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginRight="10.0dip"
+                            android:layout_marginEnd="10.0dip"
                             android:src="@mipmap/arrow_gray_right" />
 
                         <View
                             android:layout_width="fill_parent"
                             android:layout_height="0.5500001dip"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginLeft="5.0dip"
-                            android:layout_marginRight="10.0dip"
+                            android:layout_marginStart="5.0dip"
+                            android:layout_marginEnd="10.0dip"
                             android:background="@color/divide_line" />
                     </RelativeLayout>
 
@@ -358,8 +358,8 @@
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="10.0dip"
-                            android:layout_toRightOf="@id/iv_gywe"
+                            android:layout_marginStart="10.0dip"
+                            android:layout_toEndOf="@id/iv_gywe"
                             android:gravity="center_vertical"
                             android:text="关于我们"
                             android:textColor="#ff333333"
@@ -368,18 +368,18 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginRight="10.0dip"
+                            android:layout_marginEnd="10.0dip"
                             android:src="@mipmap/arrow_gray_right" />
 
                         <View
                             android:layout_width="fill_parent"
                             android:layout_height="0.5500001dip"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginLeft="5.0dip"
-                            android:layout_marginRight="10.0dip"
+                            android:layout_marginStart="5.0dip"
+                            android:layout_marginEnd="10.0dip"
                             android:background="@color/divide_line" />
                     </RelativeLayout>
 
@@ -404,8 +404,8 @@
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="10.0dip"
-                            android:layout_toRightOf="@id/iv_setting"
+                            android:layout_marginStart="10.0dip"
+                            android:layout_toEndOf="@id/iv_setting"
                             android:gravity="center_vertical"
                             android:text="设置"
                             android:textColor="#ff333333"
@@ -414,10 +414,10 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginRight="10.0dip"
+                            android:layout_marginEnd="10.0dip"
                             android:src="@mipmap/arrow_gray_right" />
                     </RelativeLayout>
                 </LinearLayout>
@@ -487,16 +487,16 @@
             android:id="@+id/fl_check_in"
             android:layout_width="115.0dip"
             android:layout_height="38.0dip"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:layout_marginTop="90.0dip"
-            android:layout_marginRight="-5.0dip"
+            android:layout_marginEnd="-5.0dip"
             android:background="@drawable/iv_reward_bg"
             android:visibility="gone">
 
             <ImageView
                 android:layout_width="13.0dip"
                 android:layout_height="13.0dip"
-                android:layout_marginLeft="20.0dip"
+                android:layout_marginStart="20.0dip"
                 android:layout_marginTop="9.0dip"
                 android:scaleType="centerCrop"
                 android:src="@drawable/iv_caler" />
@@ -504,7 +504,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="38.0dip"
+                android:layout_marginStart="38.0dip"
                 android:layout_marginTop="8.0dip"
                 android:text="签到领积分"
                 android:textColor="#ffffffff"

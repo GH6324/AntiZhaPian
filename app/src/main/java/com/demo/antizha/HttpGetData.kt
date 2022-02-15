@@ -2,7 +2,7 @@ package com.demo.antizha
 
 import android.os.Handler
 import android.os.Looper
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import com.demo.antizha.util.RequestParamInterceptor
 import com.google.gson.Gson
 import okhttp3.*
@@ -64,7 +64,6 @@ fun callBack(call: Call, saveFile: String, callBackFunc: (data: String, saveFile
         override fun onResponse(call: Call, response: Response) {
             //更新界面必须在UI线程里调用，所以需要用Handler
             Handler(Looper.getMainLooper()).postDelayed({
-                //notifyDataSetChanged必须在UI线程里调用，所以需要用Handler
                 callBackFunc("" + response.body?.string(), saveFile)
             }, 0)
         }
@@ -72,7 +71,7 @@ fun callBack(call: Call, saveFile: String, callBackFunc: (data: String, saveFile
 }
 
 fun saveBuff2File(data: String, saveFile: String) {
-    val path = Hicore.context.getExternalFilesDir(null)?.path
+    val path = HiCore.context.getExternalFilesDir(null)?.path
     val file = File(path, saveFile)
     val fileWriter = FileOutputStream(file, false)
     fileWriter.write(data.toByteArray(charset("UTF_8")))
@@ -81,7 +80,7 @@ fun saveBuff2File(data: String, saveFile: String) {
 }
 
 fun loadBuff4File(readFile: String): String {
-    val path = Hicore.context.getExternalFilesDir(null)?.path
+    val path = HiCore.context.getExternalFilesDir(null)?.path
     val file = File(path, readFile)
     //file.exists()总是返回false
     if (!file.canRead())

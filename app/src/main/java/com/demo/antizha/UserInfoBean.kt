@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.graphics.*
 import android.provider.Settings
 import android.text.TextUtils
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import com.demo.antizha.util.AddressBean
 import com.demo.antizha.util.CRC64
 import com.demo.antizha.util.UpdateUtil
@@ -59,7 +59,7 @@ object UserInfoBean {
     var getVerTime: String = ""        //上次获取新颁布的日期，和当前不同就该刷新了
 
     fun init() {
-        val context: Context = Hicore.context
+        val context: Context = HiCore.context
         val settings: SharedPreferences = context.getSharedPreferences("setting", 0)
         accountId = settings.getString("account", "").toString()
         imei = settings.getString("imei", "").toString()
@@ -106,7 +106,7 @@ object UserInfoBean {
     }
 
     fun commit() {
-        val context: Context = Hicore.context
+        val context: Context = HiCore.context
         val settings: SharedPreferences = context.getSharedPreferences("setting", 0)
         val editor: SharedPreferences.Editor = settings.edit()
         editor.putString("account", accountId)
@@ -136,7 +136,7 @@ object UserInfoBean {
 
     fun setVer(ver: String, verCode: Int) {
         if (!TextUtils.equals(ver, version) || innerVersion != verCode) {
-            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd") // HH:mm:ss
+            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) // HH:mm:ss
             val currentDate = Date(System.currentTimeMillis())
             getVerTime = simpleDateFormat.format(currentDate)
             version = ver
@@ -189,7 +189,7 @@ object UserInfoBean {
     }
 
     fun checkLongitudeLatitude() {
-        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd") // HH:mm:ss
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) // HH:mm:ss
         val currentDate = Date(System.currentTimeMillis())
         val dateString = simpleDateFormat.format(currentDate)
         if (!dateString.equals(refTudeTime)) {
@@ -222,7 +222,7 @@ object UserInfoBean {
     }
 
     fun checkUpdate() {
-        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd") // HH:mm:ss
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) // HH:mm:ss
         val currentDate = Date(System.currentTimeMillis())
         val dateString = simpleDateFormat.format(currentDate)
         if (!dateString.equals(getVerTime)) {
@@ -233,7 +233,7 @@ object UserInfoBean {
     fun getToken() {
         try {
             val path =
-                Hicore.context.getExternalFilesDir(null)?.path
+                HiCore.context.getExternalFilesDir(null)?.path
             val file = File(path, "note_national.xml")
             //file.exists()总是返回false
             if (!file.canRead())
@@ -445,7 +445,7 @@ fun getRoundBitmapByShader(
 
 fun str2time(str: String): Long {
     return try {
-        val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(str)
+        val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(str)
         date?.time ?: 0
     } catch (e2: Exception) {
         e2.printStackTrace()

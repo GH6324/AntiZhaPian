@@ -3,7 +3,7 @@ package com.demo.antizha.util
 import android.content.SharedPreferences
 import android.text.TextUtils
 import android.util.Base64
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import java.security.SecureRandom
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -29,7 +29,7 @@ object AESUtil {
     private fun createSecretKey(str: String): ByteArray? {
         if (cryptoSalt == null || cryptoSalt!!.size != 32) {
             val sharedPreferences: SharedPreferences =
-                Hicore.app.getSharedPreferences("crypto_info", 0)
+                HiCore.app.getSharedPreferences("crypto_info", 0)
             val string = sharedPreferences.getString("salt", "").toString()
             if (!TextUtils.isEmpty(string)) {
                 cryptoSalt = splitString2ByteArray(string)

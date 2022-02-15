@@ -58,7 +58,7 @@ class StatusBarCompatLollipop {
         window.setStatusBarColor(statusColor);
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
 
-        ViewGroup mContentView = (ViewGroup) window.findViewById(Window.ID_ANDROID_CONTENT);
+        ViewGroup mContentView = window.findViewById(Window.ID_ANDROID_CONTENT);
         View mChildView = mContentView.getChildAt(0);
         if (mChildView != null) {
             mChildView.setFitsSystemWindows(false);
@@ -91,7 +91,7 @@ class StatusBarCompatLollipop {
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         }
 
-        ViewGroup mContentView = (ViewGroup) window.findViewById(Window.ID_ANDROID_CONTENT);
+        ViewGroup mContentView = window.findViewById(Window.ID_ANDROID_CONTENT);
         View mChildView = mContentView.getChildAt(0);
         if (mContentView.getChildAt(mContentView.getChildCount() - 1) instanceof StatusBarView) {
             mContentView.removeView(mContentView.getChildAt(mContentView.getChildCount() - 1));
@@ -128,7 +128,7 @@ class StatusBarCompatLollipop {
             }
         });
 
-        ViewGroup mContentView = (ViewGroup) window.findViewById(Window.ID_ANDROID_CONTENT);
+        ViewGroup mContentView = window.findViewById(Window.ID_ANDROID_CONTENT);
         View mChildView = mContentView.getChildAt(0);
         if (mChildView != null) {
             mChildView.setFitsSystemWindows(false);

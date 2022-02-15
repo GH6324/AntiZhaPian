@@ -23,21 +23,17 @@ import java.util.*
 
 class ScanAppInfoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     var image: ImageView = view.findViewById(R.id.app_icon) as ImageView
-    var appname: TextView = view.findViewById(R.id.tv_app_name) as TextView
+    var appName: TextView = view.findViewById(R.id.tv_app_name) as TextView
     var status: ImageView = view.findViewById(R.id.scan_state) as ImageView
 }
 
-class ScanAppInfoHolderAdapte(
+class ScanAppInfoHolderAdapter(
     private var context: Context,
     private var list: ArrayList<AppUtil.AppInfoBean>
 ) : RecyclerView.Adapter<ScanAppInfoViewHolder>() {
 
-    init {
-        notifyDataSetChanged()
-    }
-
     override fun onBindViewHolder(holder: ScanAppInfoViewHolder, i: Int) {
-        holder.appname.text = list[i].appName
+        holder.appName.text = list[i].appName
         holder.image.setImageDrawable(list[i].appIcon)
         holder.status.visibility = if (list[i].checkState == 0) View.GONE else View.VISIBLE
     }
@@ -107,13 +103,15 @@ class VirusKillingActivity : BaseActivity() {
         beginScanApp()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun beginScanApp() {
         infoBinding.rvApp.visibility = View.VISIBLE
         appInfos = AppUtil.getAppinfos()
         appCount = appInfos.size
         infoBinding.rvApp.layoutManager = LinearLayoutManager(this)
-        val appAdapter = ScanAppInfoHolderAdapte(this, appInfos)
+        val appAdapter = ScanAppInfoHolderAdapter(this, appInfos)
         infoBinding.rvApp.adapter = appAdapter
+        appAdapter.notifyDataSetChanged()
         changeScanState(1)
 
         if (appScanTimer == null) {
@@ -156,6 +154,7 @@ class VirusKillingActivity : BaseActivity() {
         appScanTimer!!.schedule(appScanTask, 0, 30)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun beginScanPackage() {
         val apkInfos: ArrayList<AppUtil.AppInfoBean> = ArrayList<AppUtil.AppInfoBean>()
         /*
@@ -173,8 +172,9 @@ class VirusKillingActivity : BaseActivity() {
         }*/
         apkCount = apkInfos.size
         infoBinding.rvApk.layoutManager = LinearLayoutManager(this)
-        val appAdapter = ScanAppInfoHolderAdapte(this, apkInfos)
+        val appAdapter = ScanAppInfoHolderAdapter(this, apkInfos)
         infoBinding.rvApk.adapter = appAdapter
+        appAdapter.notifyDataSetChanged()
         if (apkScanTimer == null) {
             apkScanTimer = Timer()
         }

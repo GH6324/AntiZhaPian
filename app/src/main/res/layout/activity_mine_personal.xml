@@ -20,7 +20,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="15.0dip"
             android:paddingBottom="40.0dip"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -54,7 +54,7 @@
                     android:layout_marginTop="10.0dip"
                     android:text="已完善0%"
                     android:textColor="@color/white"
-                    android:textSize="10.0sp" />
+                    android:textSize="11.0sp" />
 
                 <ProgressBar
                     android:id="@+id/pb_progress"
@@ -70,7 +70,7 @@
                 android:id="@+id/tv_tips"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="32.0dip"
+                android:layout_marginStart="32.0dip"
                 android:layout_marginTop="20.0dip"
                 android:text="基础信息"
                 android:textColor="#ff333333"
@@ -91,7 +91,7 @@
                     android:id="@+id/tv_tips2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
+                    android:layout_marginStart="12dp"
                     android:text="完善基础信息"
                     android:textColor="#999999"
                     android:textSize="12sp"
@@ -101,7 +101,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
                     android:drawablePadding="5dp"
                     android:text="+10"
                     android:textColor="#ff7e00"
@@ -140,7 +140,7 @@
                 <LinearLayout
                     android:layout_width="0.0dip"
                     android:layout_height="0.0dip"
-                    android:gravity="center|right"
+                    android:gravity="center_vertical|end"
                     app:layout_constraintBottom_toBottomOf="@id/name_label"
                     app:layout_constraintLeft_toRightOf="@id/name_label"
                     app:layout_constraintRight_toRightOf="parent"
@@ -150,22 +150,21 @@
                         android:id="@+id/tv_idfine_var"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:drawableRight="@mipmap/arrow_gray_right"
                         android:drawablePadding="12dp"
                         android:gravity="center"
                         android:text="去身份认证"
                         android:textColor="#2b4cff"
                         android:textSize="@dimen/sp_15"
                         android:textStyle="bold"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        app:drawableRightCompat="@mipmap/arrow_gray_right" />
 
                     <TextView
                         android:id="@+id/user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/dp_8"
-                        android:gravity="right|center_vertical|center_horizontal|center"
-                        android:imeOptions="actionNext"
+                        android:layout_marginEnd="@dimen/dp_8"
+                        android:gravity="end|center_vertical"
                         android:lines="1"
                         android:singleLine="true"
                         android:textColor="#ff999999"
@@ -183,16 +182,16 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="2.0dip"
+                            android:layout_marginEnd="2.0dip"
                             android:src="@drawable/iv_var_ok" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="3.0dip"
+                            android:layout_marginStart="3.0dip"
                             android:text="已身份认证"
                             android:textColor="#3f5cff"
-                            android:textSize="10.0sp" />
+                            android:textSize="11.0sp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -220,7 +219,7 @@
                     android:id="@+id/user_ID"
                     android:layout_width="0.0dip"
                     android:layout_height="0.0dip"
-                    android:gravity="right|center_vertical|center_horizontal|center"
+                    android:gravity="end|center_vertical"
                     android:lines="1"
                     android:singleLine="true"
                     android:text=""
@@ -255,12 +254,11 @@
                     android:id="@+id/area"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginLeft="30dp"
-                    android:drawableRight="@mipmap/arrow_gray_right"
+                    android:layout_marginStart="30dp"
                     android:drawablePadding="@dimen/dp_10"
                     android:ellipsize="end"
-                    android:gravity="right|center_vertical|center_horizontal|center"
-                    android:hint="请选择"
+                    android:gravity="end|center_vertical"
+                    android:hint="@string/to_select"
                     android:singleLine="true"
                     android:textColor="#999999"
                     android:textSize="@dimen/sp_14"
@@ -268,7 +266,8 @@
                     app:layout_constraintBottom_toBottomOf="@id/area_label"
                     app:layout_constraintLeft_toRightOf="@id/area_label"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/area_label" />
+                    app:layout_constraintTop_toTopOf="@id/area_label"
+                    app:drawableRightCompat="@mipmap/arrow_gray_right" />
 
                 <View
                     android:layout_width="fill_parent"
@@ -283,7 +282,7 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="1dp"
                     android:gravity="center_vertical"
-                    android:text="详细地址："
+                    android:text="@string/area_detail"
                     android:textColor="#000000"
                     android:textSize="@dimen/sp_15"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -293,11 +292,10 @@
                     android:id="@+id/area_detail"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginLeft="30dp"
-                    android:drawableRight="@mipmap/arrow_gray_right"
+                    android:layout_marginStart="30dp"
                     android:drawablePadding="@dimen/dp_10"
                     android:ellipsize="end"
-                    android:gravity="right|center_vertical|center_horizontal|center"
+                    android:gravity="end|center_vertical"
                     android:hint="请填写详细地址"
                     android:singleLine="true"
                     android:textColor="#999999"
@@ -306,7 +304,8 @@
                     app:layout_constraintBottom_toBottomOf="@id/area_detail_label"
                     app:layout_constraintLeft_toRightOf="@id/area_detail_label"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/area_detail_label" />
+                    app:layout_constraintTop_toTopOf="@id/area_detail_label"
+                    app:drawableRightCompat="@mipmap/arrow_gray_right" />
 
                 <View
                     android:layout_width="fill_parent"
@@ -332,12 +331,11 @@
                     android:id="@+id/tv_job"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginLeft="30dp"
-                    android:drawableRight="@mipmap/arrow_gray_right"
+                    android:layout_marginStart="30dp"
                     android:drawablePadding="@dimen/dp_10"
                     android:ellipsize="end"
-                    android:gravity="right|center_vertical|center_horizontal|center"
-                    android:hint="请选择"
+                    android:gravity="end|center_vertical"
+                    android:hint="@string/to_select"
                     android:lines="2"
                     android:singleLine="true"
                     android:textColor="#999999"
@@ -346,7 +344,8 @@
                     app:layout_constraintBottom_toBottomOf="@id/job_label"
                     app:layout_constraintLeft_toRightOf="@id/job_label"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/job_label" />
+                    app:layout_constraintTop_toTopOf="@id/job_label"
+                    app:drawableRightCompat="@mipmap/arrow_gray_right" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -354,7 +353,7 @@
                 android:id="@+id/tv_emerg_tips"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="32.0dip"
+                android:layout_marginStart="32.0dip"
                 android:layout_marginTop="20.0dip"
                 android:text="紧急联系人"
                 android:textColor="#ff333333"
@@ -404,7 +403,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="-5dp"
                         android:paddingBottom="8dp"
-                        android:text="21313"
+                        android:text="@string/phone_num_examples"
                         android:textColor="#999999"
                         android:textSize="@dimen/sp_14"
                         android:visibility="gone"
@@ -416,14 +415,14 @@
                     android:id="@+id/tv_add_emerg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="18dp"
+                    android:layout_marginEnd="18dp"
                     android:background="@drawable/bg_crop_blue"
                     android:drawablePadding="@dimen/dp_5"
                     android:paddingLeft="12dp"
                     android:paddingTop="2dp"
                     android:paddingRight="12dp"
                     android:paddingBottom="2dp"
-                    android:text="去添加"
+                    android:text="@string/to_add"
                     android:textColor="#3f5cff"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -433,20 +432,21 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="3.0dip"
+                    android:layout_marginEnd="3.0dip"
                     android:src="@mipmap/arrow_gray_right"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/arraw" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/tv_address_ls_tips"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="32.0dip"
+                android:layout_marginStart="32.0dip"
                 android:layout_marginTop="20.0dip"
-                android:text="社交通讯信息"
+                android:text="@string/social_set"
                 android:textColor="#ff333333"
                 android:textSize="14.0sp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -482,7 +482,7 @@
                         android:gravity="center_vertical"
                         android:paddingTop="10.0dip"
                         android:paddingBottom="10.0dip"
-                        android:text="QQ账号"
+                        android:text="@string/qq_account"
                         android:textColor="#ff333333"
                         android:textSize="15.0sp" />
 
@@ -492,7 +492,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="-5.0dip"
                         android:paddingBottom="10.0dip"
-                        android:text="1234567"
+                        android:text="@string/social_account_examples"
                         android:textColor="#ff999999"
                         android:textSize="@dimen/sp_14"
                         android:visibility="gone"
@@ -504,14 +504,14 @@
                     android:id="@+id/tv_add_qq"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="18dp"
+                    android:layout_marginEnd="18dp"
                     android:background="@drawable/bg_crop_blue"
                     android:drawablePadding="@dimen/dp_5"
                     android:paddingLeft="12dp"
                     android:paddingTop="2dp"
                     android:paddingRight="12dp"
                     android:paddingBottom="2dp"
-                    android:text="去填写"
+                    android:text="@string/to_fill_it"
                     android:textColor="#3f5cff"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@+id/ll_qq_cont"
@@ -521,11 +521,12 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="3.0dip"
+                    android:layout_marginEnd="3.0dip"
                     android:src="@mipmap/arrow_gray_right"
                     app:layout_constraintBottom_toBottomOf="@id/ll_qq_cont"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/ll_qq_cont" />
+                    app:layout_constraintTop_toTopOf="@id/ll_qq_cont"
+                    android:contentDescription="@string/arraw" />
 
                 <View
                     android:layout_width="fill_parent"
@@ -551,7 +552,7 @@
                         android:gravity="center_vertical"
                         android:paddingTop="10.0dip"
                         android:paddingBottom="10.0dip"
-                        android:text="微信账号"
+                        android:text="@string/wx_account"
                         android:textColor="#ff333333"
                         android:textSize="15.0sp" />
 
@@ -561,7 +562,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="-5.0dip"
                         android:paddingBottom="10.0dip"
-                        android:text="1234567"
+                        android:text="@string/social_account_examples"
                         android:textColor="#ff999999"
                         android:textSize="@dimen/sp_14"
                         android:visibility="gone"
@@ -573,14 +574,14 @@
                     android:id="@+id/tv_add_wx"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="18dp"
+                    android:layout_marginEnd="18dp"
                     android:background="@drawable/bg_crop_blue"
                     android:drawablePadding="@dimen/dp_5"
                     android:paddingLeft="12dp"
                     android:paddingTop="2dp"
                     android:paddingRight="12dp"
                     android:paddingBottom="2dp"
-                    android:text="去填写"
+                    android:text="@string/to_fill_it"
                     android:textColor="#3f5cff"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@+id/ll_wx_cont"
@@ -590,11 +591,12 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="3.0dip"
+                    android:layout_marginEnd="3.0dip"
                     android:src="@mipmap/arrow_gray_right"
                     app:layout_constraintBottom_toBottomOf="@id/ll_wx_cont"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/ll_wx_cont" />
+                    app:layout_constraintTop_toTopOf="@id/ll_wx_cont"
+                    android:contentDescription="@string/arraw" />
 
                 <View
                     android:layout_width="fill_parent"
@@ -620,7 +622,7 @@
                         android:gravity="center_vertical"
                         android:paddingTop="10.0dip"
                         android:paddingBottom="10.0dip"
-                        android:text="电子邮箱"
+                        android:text="@string/email"
                         android:textColor="#ff333333"
                         android:textSize="15.0sp"
                         app:layout_constraintLeft_toLeftOf="parent"
@@ -632,7 +634,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="-5.0dip"
                         android:paddingBottom="10.0dip"
-                        android:text="abc@qq.com"
+                        android:text="@string/email_examples"
                         android:textColor="#ff999999"
                         android:textSize="@dimen/sp_14"
                         android:visibility="gone"
@@ -644,14 +646,14 @@
                     android:id="@+id/tv_add_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="18dp"
+                    android:layout_marginEnd="18dp"
                     android:background="@drawable/bg_crop_blue"
                     android:drawablePadding="@dimen/dp_5"
                     android:paddingLeft="12dp"
                     android:paddingTop="2dp"
                     android:paddingRight="12dp"
                     android:paddingBottom="2dp"
-                    android:text="去填写"
+                    android:text="@string/to_fill_it"
                     android:textColor="#3f5cff"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@+id/ll_email_cont"
@@ -661,11 +663,12 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="3.0dip"
+                    android:layout_marginEnd="3.0dip"
                     android:src="@mipmap/arrow_gray_right"
                     app:layout_constraintBottom_toBottomOf="@id/ll_email_cont"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/ll_email_cont" />
+                    app:layout_constraintTop_toTopOf="@id/ll_email_cont"
+                    android:contentDescription="@string/arraw" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

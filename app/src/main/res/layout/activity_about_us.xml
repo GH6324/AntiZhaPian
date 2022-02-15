@@ -7,7 +7,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -89,7 +89,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="right|center_vertical|center_horizontal|center"
+                        android:gravity="end|center_vertical"
                         android:textColor="#999999"
                         android:textSize="@dimen/sp_14" />
 
@@ -97,7 +97,7 @@
                         android:id="@+id/tv_new_tips"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:background="@drawable/iv_version_bg"
                         android:gravity="center"
                         android:text="最新"
@@ -128,7 +128,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:gravity="right|center_vertical|center_horizontal|center"
+                        android:gravity="end|center_vertical"
                         android:src="@mipmap/arrow_gray_right" />
                 </LinearLayout>
 
@@ -154,7 +154,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:gravity="right|center_vertical|center_horizontal|center"
+                        android:gravity="end|center_vertical"
                         android:src="@mipmap/arrow_gray_right" />
                 </LinearLayout>
 
@@ -180,8 +180,8 @@
                         android:layout_height="@dimen/dp_10"
                         android:layout_alignTop="@+id/tv_polic"
                         android:layout_marginTop="@dimen/dp_5"
-                        android:layout_marginRight="@dimen/dp_5"
-                        android:layout_toLeftOf="@+id/tv_polic"
+                        android:layout_marginEnd="@dimen/dp_5"
+                        android:layout_toStartOf="@+id/tv_polic"
                         android:background="@drawable/button_bg_blue_ligth"
                         android:visibility="gone" />
 
@@ -189,8 +189,8 @@
                         android:id="@+id/tv_polic"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:gravity="right"
+                        android:layout_alignParentEnd="true"
+                        android:gravity="end"
                         android:lineSpacingExtra="@dimen/dp_5"
                         android:text="公安部打击治理电信网络\10新型违法犯罪查控中心"
                         android:textColor="#999999"
@@ -202,7 +202,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/tv_polic"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:gravity="center"
                         android:text="国家反诈中心"
@@ -232,8 +232,8 @@
                         android:id="@+id/tv_tech_sup"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="5dp"
-                        android:gravity="right|center_vertical|center_horizontal|center"
+                        android:layout_marginStart="5dp"
+                        android:gravity="end|center_vertical"
                         android:text="国家互联网应急中心"
                         android:textColor="#999999"
                         android:textSize="@dimen/sp_14" />

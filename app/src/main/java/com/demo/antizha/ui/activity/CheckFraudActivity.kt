@@ -12,7 +12,7 @@ import android.view.View
 import android.widget.RadioButton
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityCheckFraudBinding
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.IEditAfterListener
 import com.demo.antizha.ui.dialog.HiShareDialog
 import com.demo.antizha.ui.dialog.ShareConfigBean
@@ -212,7 +212,7 @@ class CheckFraudActivity : BaseActivity() {
 
     inner class OnClickListener : View.OnClickListener {
         override fun onClick(v: View?) {
-            if (Hicore.app.isDouble())
+            if (HiCore.app.isDouble())
                 return
             when (v?.id) {
                 R.id.ll_scan, R.id.rb_pay, R.id.rb_url, R.id.rb_chat -> {

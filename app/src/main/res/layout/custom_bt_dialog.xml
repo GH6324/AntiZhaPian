@@ -80,7 +80,7 @@
         android:id="@+id/iv_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|right|center_vertical|center_horizontal|center"
+        android:layout_gravity="top|end|center_vertical|center_horizontal|center"
         android:padding="10dp"
         android:src="@mipmap/ic_close_gray"
         android:visibility="gone" />

@@ -4,7 +4,7 @@ import android.text.TextUtils
 import com.demo.antizha.BuildConfig
 import com.demo.antizha.getDataByGet
 import com.demo.antizha.saveBuff2File
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import com.hjq.toast.ToastUtils
 import java.io.File
 import java.io.FileInputStream
@@ -12,11 +12,11 @@ import java.io.InputStream
 
 object FileUtil {
     fun openfile(name: String): InputStream {
-        val extPath = Hicore.context.getExternalFilesDir(null)?.path
+        val extPath = HiCore.context.getExternalFilesDir(null)?.path
         val file = File(extPath, name)
         if (file.canRead())
             return FileInputStream(file)
-        val assetManager = Hicore.app.resources.assets
+        val assetManager = HiCore.app.resources.assets
         return assetManager.open(name)
     }
 

@@ -22,7 +22,7 @@ import com.demo.antizha.R
 import com.demo.antizha.adapter.SmsBean
 import com.demo.antizha.adapter.SocialAccBean
 import com.demo.antizha.databinding.ActivityReportNewBinding
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.IClickListener
 import com.demo.antizha.util.AddressBean
 import com.demo.antizha.util.AppUtil
@@ -194,7 +194,7 @@ class ReportNewActivity : BaseActivity() {
                 if (calls.size == 0)
                     infoBinding.lyCall.tvUploadCall.text = ""
                 else
-                    infoBinding.lyCall.tvUploadCall.text = calls.size.toString() + "个"
+                    infoBinding.lyCall.tvUploadCall.text = "${calls.size}个"
             }
         startSms =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -208,7 +208,7 @@ class ReportNewActivity : BaseActivity() {
                 if (smss.size == 0)
                     infoBinding.lySms.tvUploadSms.text = ""
                 else
-                    infoBinding.lySms.tvUploadSms.text = smss.size.toString() + "个"
+                    infoBinding.lySms.tvUploadSms.text = "${smss.size}个"
             }
 
         startApp =
@@ -224,7 +224,7 @@ class ReportNewActivity : BaseActivity() {
                     infoBinding.lyApp.tvUploadApp.text = ""
                     infoBinding.lyApp.flAppBg.setBackgroundResource(R.drawable.white_corner)
                 } else {
-                    infoBinding.lyApp.tvUploadApp.text = apps.size.toString() + "个"
+                    infoBinding.lyApp.tvUploadApp.text = "${apps.size}个"
                     infoBinding.lyApp.flAppBg.setBackgroundResource(R.drawable.red_corner)
                 }
                 infoBinding.lyApp.llApp.removeAllViews()
@@ -258,7 +258,7 @@ class ReportNewActivity : BaseActivity() {
                 if (pics.size == 0) {
                     infoBinding.lyPicture.tvUploadPicture.text = ""
                 } else {
-                    infoBinding.lyPicture.tvUploadPicture.text = pics.size.toString() + "个"
+                    infoBinding.lyPicture.tvUploadPicture.text = "${pics.size}个"
                 }
                 infoBinding.lyPicture.llPic.removeAllViews()
                 for ((i, pic) in pics.withIndex()) {
@@ -272,7 +272,7 @@ class ReportNewActivity : BaseActivity() {
                         infoBinding.lyPicture.llPic.addView(inflate)
                         break
                     }
-                    Glide.with(Hicore.context).load(pic).into(ivIcon)
+                    Glide.with(HiCore.context).load(pic).into(ivIcon)
                     tvMore.visibility = View.GONE
                     ivIcon.visibility = View.VISIBLE
                     infoBinding.lyPicture.llPic.addView(inflate)
@@ -289,7 +289,7 @@ class ReportNewActivity : BaseActivity() {
                 if (urls.size == 0)
                     infoBinding.lyUrl.tvUploadUrl.text = ""
                 else
-                    infoBinding.lyUrl.tvUploadUrl.text = urls.size.toString() + "个"
+                    infoBinding.lyUrl.tvUploadUrl.text = "${urls.size}个"
             }
         startContact =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -303,7 +303,7 @@ class ReportNewActivity : BaseActivity() {
                 if (socialAccounts.size == 0)
                     infoBinding.lyContact.tvSocial.text = ""
                 else
-                    infoBinding.lyContact.tvSocial.text = socialAccounts.size.toString() + "个"
+                    infoBinding.lyContact.tvSocial.text = "${socialAccounts.size}个"
             }
         startDeal =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -318,7 +318,7 @@ class ReportNewActivity : BaseActivity() {
                 if (dealAccounts.size == 0)
                     infoBinding.lyDeal.tvTrad.text = ""
                 else
-                    infoBinding.lyDeal.tvTrad.text = dealAccounts.size.toString() + "个"
+                    infoBinding.lyDeal.tvTrad.text = "${dealAccounts.size}个"
             }
     }
 

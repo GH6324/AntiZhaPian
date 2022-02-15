@@ -1,8 +1,6 @@
 package com.demo.antizha.ui.activity
 
 import android.content.Intent
-import android.database.Cursor
-import android.net.Uri
 import android.text.TextUtils
 import androidx.recyclerview.widget.GridLayoutManager
 import com.chad.library.adapter.base.listener.OnItemChildClickListener
@@ -25,7 +23,7 @@ class PictureActivity : BaseUploadActivity() {
         infoBinding = ActivityPictureBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "添加图片"
-        infoBinding.lyComplete.tvCommitTip.text = "最多可选择" + 6 + "张图片"
+        infoBinding.lyComplete.tvCommitTip.text = "最多可选择${mMaxSelectNum}张图片"
         mLocalMedia.add("")
         getIntentData()
         infoBinding.recyclerview.layoutManager = GridLayoutManager(this, 3)
@@ -85,15 +83,6 @@ class PictureActivity : BaseUploadActivity() {
             infoBinding.lyComplete.btnCommit.text = "文件上传"
     }
 
-    fun getRealPathFromURI(uri: Uri): String {
-        val cursor: Cursor? = contentResolver.query(uri, null, null, null, null)
-        cursor!!.moveToFirst()
-        val idx: Int = cursor.getColumnIndex("_data")
-        val path = cursor.getString(idx)
-        cursor.close()
-        return path
-    }
-
     fun addMedia(path: String) {
         for (media in mLocalMedia)
             if (media == path)
@@ -118,10 +107,10 @@ class PictureActivity : BaseUploadActivity() {
     }
 
     private fun selectImage() {
-        var mediasize = mLocalMedia.size
+        var mediaSize = mLocalMedia.size
         if (TextUtils.isEmpty(mLocalMedia.last()))
-            mediasize -= 1
-        val model = PictureUtil.getImageSelectModel(this, false, 200.0F, mMaxSelectNum - mediasize)
+            mediaSize -= 1
+        val model = PictureUtil.getImageSelectModel(this, false, 200.0F, mMaxSelectNum - mediaSize)
         model.forResult(object : OnResultCallbackListener<LocalMedia?> {
             override fun onCancel() {
             }

@@ -6,7 +6,7 @@ import android.view.DisplayCutout;
 import android.view.View;
 import android.view.WindowInsets;
 
-import com.demo.antizha.ui.Hicore;
+import com.demo.antizha.ui.HiCore;
 
 import java.lang.reflect.Method;
 
@@ -26,16 +26,16 @@ public class NotchUtils {
     }
 
     public static int xiaomiliuhaiHeight() {
-        int identifier = Hicore.app.getResources().getIdentifier("notch_height", "dimen", "android");
+        int identifier = HiCore.app.getResources().getIdentifier("notch_height", "dimen", "android");
         if (identifier > 0) {
-            return Hicore.app.getResources().getDimensionPixelSize(identifier);
+            return HiCore.app.getResources().getDimensionPixelSize(identifier);
         }
         return 0;
     }
 
     public static boolean isHuaWeiNotch() {
         try {
-            ClassLoader classLoader = Hicore.app.getClassLoader();
+            ClassLoader classLoader = HiCore.app.getClassLoader();
             Class class_HwNotchSizeUtil = classLoader.loadClass("com.huawei.android.util.HwNotchSizeUtil");
             Method method_hasNotch = class_HwNotchSizeUtil.getMethod("hasNotchInScreen");
             return (boolean) method_hasNotch.invoke(class_HwNotchSizeUtil);
@@ -45,12 +45,12 @@ public class NotchUtils {
     }
 
     public static boolean isOppoNotch() {
-        return Hicore.app.getPackageManager().hasSystemFeature("com.oppo.feature.screen.heteromorphism");
+        return HiCore.app.getPackageManager().hasSystemFeature("com.oppo.feature.screen.heteromorphism");
     }
 
     public static boolean isVivoNotch() {
         try {
-            ClassLoader classLoader = Hicore.app.getClassLoader();
+            ClassLoader classLoader = HiCore.app.getClassLoader();
             Class class_FtFeature = classLoader.loadClass("android.util.FtFeature");
             Method method_Feature = class_FtFeature.getMethod("isFeatureSupport", Integer.TYPE);
             return ((Boolean) method_Feature.invoke(class_FtFeature, new Object[]{32}));
@@ -60,19 +60,19 @@ public class NotchUtils {
     }
 
     public static boolean isHuawei() {
-        return "huawei".equals(Build.MANUFACTURER.toLowerCase());
+        return "huawei".equalsIgnoreCase(Build.MANUFACTURER);
     }
 
     public static boolean isOppo() {
-        return "oppo".equals(Build.MANUFACTURER.toLowerCase());
+        return "oppo".equalsIgnoreCase(Build.MANUFACTURER);
     }
 
     public static boolean isVivo() {
-        return "vivo".equals(Build.MANUFACTURER.toLowerCase());
+        return "vivo".equalsIgnoreCase(Build.MANUFACTURER);
     }
 
     public static boolean isXiaomi() {
-        return "Xiaomi".equals(Build.MANUFACTURER.toLowerCase());
+        return "xiaomi".equalsIgnoreCase(Build.MANUFACTURER);
     }
 
     private static int calcLiuhaiHeight() {
@@ -93,7 +93,7 @@ public class NotchUtils {
 
     public static int[] getHuaweiNotchSize() {
         try {
-            ClassLoader classLoader = Hicore.app.getClassLoader();
+            ClassLoader classLoader = HiCore.app.getClassLoader();
             Class class_HwNotchSizeUtil = classLoader.loadClass("com.huawei.android.util.HwNotchSizeUtil");
             Method method_getNotchSize = class_HwNotchSizeUtil.getMethod("getNotchSize");
             return (int[]) method_getNotchSize.invoke(class_HwNotchSizeUtil);
@@ -112,7 +112,7 @@ public class NotchUtils {
     }
 
     public static int dp2px(float f) {
-        return (int) ((f * Hicore.app.getResources().getDisplayMetrics().density) + 0.5f);
+        return (int) ((f * HiCore.app.getResources().getDisplayMetrics().density) + 0.5f);
     }
 
     public static String getPropertie(String key) {
@@ -120,7 +120,7 @@ public class NotchUtils {
             return "0";
         }
         try {
-            ClassLoader classLoader = Hicore.app.getClassLoader();
+            ClassLoader classLoader = HiCore.app.getClassLoader();
             Class class_SysProp = classLoader.loadClass("android.os.SystemProperties");
             Method method_SysProp = class_SysProp.getMethod("get", String.class, String.class);
             return (String) (method_SysProp.invoke(class_SysProp, key, "0"));

@@ -13,7 +13,7 @@ import android.widget.ExpandableListView.OnChildClickListener
 import android.widget.ExpandableListView.OnGroupClickListener
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityAppSelectedBinding
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import com.demo.antizha.util.AppUtil
 import com.demo.antizha.util.AppUtil.AppInfoBean
 
@@ -66,8 +66,8 @@ class AppExSelectedAdapter(val context: Context,
             appHolder.ivIcon.setImageDrawable(appIcon)
         }
         appHolder.tvAppName.text = appInfoBean.appName
-        val formatFileSize: String = Formatter.formatFileSize(Hicore.app, appInfoBean.size)
-        appHolder.tvVersion.text = "版本:" + appInfoBean.version + "  |  " + formatFileSize
+        val formatFileSize: String = Formatter.formatFileSize(HiCore.app, appInfoBean.size)
+        appHolder.tvVersion.text = "版本:${appInfoBean.version}  |  $formatFileSize"
         when {
             appInfoBean.size > 209715200 -> {
                 appHolder.ivCanSelect.visibility = View.GONE
@@ -128,7 +128,7 @@ class AppExSelectedAdapter(val context: Context,
 class AppSelectedActivity : BaseActivity() {
     companion object {
         const val SELECT_TYPE = "select_type"
-        const val SELECT_MAX = "extra_select_limite"
+        const val SELECT_MAX = "extra_select_limit"
         const val SELECT_CURRENT = "extra_select_now"
     }
 
@@ -172,11 +172,11 @@ class AppSelectedActivity : BaseActivity() {
                 titles.add("未安装安装包")
                 titles.add("已安装应用")
                 appGroups.add(ArrayList())
-                val appinfos = AppUtil.getAppinfos()
-                for (app in appinfos)
+                val appInfos = AppUtil.getAppinfos()
+                for (app in appInfos)
                     app.selected = false
-                appGroups.add(appinfos)
-                apps.addAll(appinfos)
+                appGroups.add(appInfos)
+                apps.addAll(appInfos)
                 initAdapter()
                 hideProgressDialog()
             }
@@ -194,7 +194,7 @@ class AppSelectedActivity : BaseActivity() {
         infoBinding.recyclerviewApp.setOnChildClickListener(OnChildClick())
     }
 
-    fun selectApp(appInfoBean: AppInfoBean, gVar: AppExSelectedAdapter) {
+    fun selectApp(appInfoBean: AppInfoBean, Adapter: AppExSelectedAdapter) {
         if (appInfoBean.size > 209715200) {
             Toast.makeText(this, "200M以上文件不可选择", Toast.LENGTH_SHORT).show()
             return
@@ -212,7 +212,7 @@ class AppSelectedActivity : BaseActivity() {
             appSelected.remove(appInfoBean)
             appInfoBean.selected = false
         }
-        gVar.notifyDataSetChanged()
+        Adapter.notifyDataSetChanged()
     }
 
     private fun resetSelect() {

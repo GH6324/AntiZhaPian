@@ -21,7 +21,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.demo.antizha.*
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.activity.PromosWebDetActivity
 import com.demo.antizha.util.Parameters
 import com.demo.antizha.util.UrlAES
@@ -135,7 +135,7 @@ class WebFragment : Fragment() {
     }
 
     private fun networkConnected(): Boolean {
-        val cm: ConnectivityManager = Hicore.getContext()
+        val cm: ConnectivityManager = HiCore.getContext()
             .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network: Network? = cm.activeNetwork
         if (network != null) {
@@ -228,14 +228,14 @@ class WebFragment : Fragment() {
 
                 }
                 val isOnlyFullScreen: String = param.value("isOnlyFullScreen")
-                val isfullScreen: String = param.value("isfullScreen")
+                val isFullScreen: String = param.value("isfullScreen")
                 val stylecolor: String = param.value("stylecolor")
                 when {
-                    TextUtils.equals("yes", isfullScreen) -> {
+                    TextUtils.equals("yes", isFullScreen) -> {
                         //EventBus.getDefault().postSticky(a(100, null))
                         mHandler.sendEmptyMessage(0)
                     }
-                    TextUtils.equals("no", isfullScreen) -> {
+                    TextUtils.equals("no", isFullScreen) -> {
                         //EventBus.getDefault().postSticky(a(101, null))
                         mHandler.sendEmptyMessage(1)
                     }

@@ -18,7 +18,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.demo.antizha.BuildConfig
 import com.demo.antizha.R
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.activity.WebActivity
 import com.hjq.toast.ToastUtils
 
@@ -31,7 +31,7 @@ object Utils {
     }
 
     fun copyToClipboard(str: String?) {
-        (Hicore.app.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager)
+        (HiCore.app.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager)
             .setPrimaryClip(ClipData.newPlainText("data", str))
         ToastUtils.show("复制成功")
     }
@@ -78,7 +78,7 @@ object Utils {
                               str3: String,
                               str4: String,
                               str5: String): CharSequence {
-        val app: Hicore = Hicore.app
+        val app: HiCore = HiCore.app
         val spannableStringBuilder = SpannableStringBuilder()
         spannableStringBuilder.append((str + str4 + str2 + str5 + str3) as CharSequence)
         spannableStringBuilder.setSpan(ClauseClickableSpan(activity),

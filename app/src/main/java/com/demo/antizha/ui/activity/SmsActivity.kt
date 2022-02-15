@@ -30,7 +30,7 @@ class SmsActivity : BaseActivity() {
         infoBinding.piTitle.tvTitle.text = "添加诈骗短信"
         infoBinding.lySelect.tvSelectTip.text = "选择短信"
         infoBinding.lySelect.tvInputTip.text = "手动输入"
-        infoBinding.lyComplete.tvCommitTip.text = "最多可选择" + MAX_COUNT + "条短信"
+        infoBinding.lyComplete.tvCommitTip.text = "最多可选择${MAX_COUNT}条短信"
         initActivityResultLauncher()
         getIntentData()
         val lym = LinearLayoutManager(this, RecyclerView.VERTICAL, false)

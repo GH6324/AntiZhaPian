@@ -1,5 +1,6 @@
 package com.demo.antizha.ui.activity
 //选择行业窗口
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -21,18 +22,14 @@ class IndustryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     var select: ImageView = view.findViewById(R.id.iv_select) as ImageView
 }
 
-class IndustryHolderAdapte(private var context: Context,
-                           private var list: ArrayList<IndustryBean>) :
+class IndustryHolderAdapter(private var context: Context,
+                            private var list: ArrayList<IndustryBean>) :
     RecyclerView.Adapter<IndustryViewHolder>() {
     private lateinit var onItemClickListener: OnItemClickListener
     var select: Int = -1
 
     interface OnItemClickListener {
         fun onItemClick(view: View, position: Int)
-    }
-
-    init {
-        notifyDataSetChanged()
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
@@ -68,7 +65,8 @@ class IndustryBeanData(val code: Int, var data: ArrayList<IndustryBean>)
 
 class IndustryActivity : BaseActivity() {
     private lateinit var infoBinding: ActivityIndustryListBinding
-    private var industrys: ArrayList<IndustryBean> = ArrayList()
+    private var industryList: ArrayList<IndustryBean> = ArrayList()
+    @SuppressLint("NotifyDataSetChanged")
     override fun initPage() {
         infoBinding = ActivityIndustryListBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
@@ -76,17 +74,18 @@ class IndustryActivity : BaseActivity() {
         
         initIndustrys()
         infoBinding.rvList.layoutManager = LinearLayoutManager(this)
-        val industrysAdapter = IndustryHolderAdapte(this, industrys)
+        val industrysAdapter = IndustryHolderAdapter(this, industryList)
         infoBinding.rvList.adapter = industrysAdapter
+        industrysAdapter.notifyDataSetChanged()
 
         val position = getIndustrysPos(UserInfoBean.professionName)
         industrysAdapter.select = position
         industrysAdapter.notifyItemChanged(position)
         if (position > 0)
             infoBinding.rvList.smoothScrollToPosition(position)
-        industrysAdapter.setOnItemClickListener(object : IndustryHolderAdapte.OnItemClickListener {
+        industrysAdapter.setOnItemClickListener(object : IndustryHolderAdapter.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
-                val industry: String = industrys[position].positionName
+                val industry: String = industryList[position].positionName
                 if (industry != UserInfoBean.professionName) {
                     UserInfoBean.professionName = industry
                     UserInfoBean.commit()
@@ -104,12 +103,12 @@ class IndustryActivity : BaseActivity() {
         val data: IndustryBeanData = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
             object : TypeToken<IndustryBeanData>() {}.type)
         inputStream.close()
-        industrys = data.data
+        industryList = data.data
     }
 
-    private fun getIndustrysPos(pname: String): Int {
-        for ((i, industry) in industrys.withIndex()) {
-            if (industry.positionName == pname)
+    private fun getIndustrysPos(name: String): Int {
+        for ((i, industry) in industryList.withIndex()) {
+            if (industry.positionName == name)
                 return i
         }
         return 0

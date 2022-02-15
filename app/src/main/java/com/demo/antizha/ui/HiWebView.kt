@@ -122,7 +122,7 @@ class HiWebView : WebView {
             val hashMap = HashMap<Any, Any>()
             hashMap["deviceid"] = UserInfoBean.imei
             hashMap["os-version"] = "0"
-            hashMap["market"] = Hicore.app.getChannel()
+            hashMap["market"] = HiCore.app.getChannel()
             hashMap["app-version"] = UserInfoBean.version
             hashMap["app-version-code"] = UserInfoBean.innerVersion.toString()
             hashMap["haveLiuhai"] = BaseActivity.liuhaiHeight.toString()

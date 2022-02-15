@@ -15,7 +15,6 @@ import qiu.niorgai.StatusBarCompat
 class WarnPrimessActivity : BaseActivity() {
     private lateinit var infoBinding: ActivityWarnPrimessBinding
     private var mOpenCount = ""
-    private val mSumCount = 4
     private var mOldShowCount = -1
 
     override fun initPage() {

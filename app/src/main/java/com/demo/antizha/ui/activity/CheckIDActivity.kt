@@ -3,7 +3,7 @@ package com.demo.antizha.ui.activity
 import android.app.Activity
 import android.widget.Toast
 import com.demo.antizha.databinding.ActivityIdCheckBinding
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.IClickListener
 import com.demo.antizha.util.DialogUtils
 import qiu.niorgai.StatusBarCompat
@@ -21,7 +21,7 @@ class CheckIDActivity: BaseActivity(), IClickListener {
         infoBinding.btnIdvrfySend.setOnClickListener {
             val checkID: String = infoBinding.etCheckPhone.text.toString()
             if (checkID.trim { it <= ' ' }.length < 11) {
-                val toast = Toast.makeText(Hicore.app, "请输入正确手机号~", Toast.LENGTH_SHORT)
+                val toast = Toast.makeText(HiCore.app, "请输入正确手机号~", Toast.LENGTH_SHORT)
                 toast.setGravity(17, 0, 0)
                 toast.show()
             } else {
@@ -33,7 +33,7 @@ class CheckIDActivity: BaseActivity(), IClickListener {
 
     }
     override fun clickOKBtn(){
-        val toast = Toast.makeText(Hicore.app, "发送成功", Toast.LENGTH_SHORT)
+        val toast = Toast.makeText(HiCore.app, "发送成功", Toast.LENGTH_SHORT)
         toast.setGravity(17, 0, 0)
         toast.show()
     }

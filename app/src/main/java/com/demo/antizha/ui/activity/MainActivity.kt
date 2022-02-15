@@ -15,7 +15,7 @@ import com.demo.antizha.R
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.databinding.ActivityMainBinding
 import com.demo.antizha.dp2px
-import com.demo.antizha.ui.Hicore
+import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.fragment.home.HomeFragment
 import com.demo.antizha.ui.fragment.mine.MineFragment
 import com.demo.antizha.ui.fragment.web.WebFragment
@@ -33,7 +33,7 @@ class MainActivity : BaseActivity() {
     }
     @Suppress("DEPRECATION")
     override fun initPage() {
-        dp2px = Dp2Px(Hicore.context)
+        dp2px = Dp2Px(HiCore.context)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         //隐藏状态栏

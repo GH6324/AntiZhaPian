@@ -77,16 +77,15 @@ class MineFragment : Fragment() {
         super.onResume()
         val phoneNumber: TextView = root.findViewById(R.id.tv_phone)
         if (!TextUtils.isEmpty(UserInfoBean.mobileNumber)) {
-            phoneNumber.text =
-                getString(R.string.title_mine) + " " + UserInfoBean.mobileNumber.substring(0, 3) +
-                        "******" + UserInfoBean.mobileNumber.substring(UserInfoBean.mobileNumber.length - 2)
+            val str = UserInfoBean.mobileNumber
+            phoneNumber.text ="您好, ${str.substring(0, 3)}******${str.substring(str.length - 2)}"
         } else {
             phoneNumber.text = generatePhoneNumber()
         }
         val imei: TextView = root.findViewById(R.id.tv_imei)
         imei.text = UserInfoBean.imei
-        val accountid: TextView = root.findViewById(R.id.tv_accountid)
-        accountid.text = UserInfoBean.accountId
+        val accountId: TextView = root.findViewById(R.id.tv_accountid)
+        accountId.text = UserInfoBean.accountId
         val ver: LinearLayout = root.findViewById(R.id.ll_version)
         ver.visibility = if (TextUtils.isEmpty(UserInfoBean.name)) View.VISIBLE else View.GONE
     }

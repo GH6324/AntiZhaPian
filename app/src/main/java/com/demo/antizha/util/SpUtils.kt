@@ -1,10 +1,7 @@
 package com.demo.antizha.util
 
-import com.demo.antizha.ui.Hicore
-
 import android.content.SharedPreferences
-
-
+import com.demo.antizha.ui.HiCore
 
 
 class SpUtils {
@@ -17,7 +14,7 @@ class SpUtils {
         const val primissLock = "primiss_lock"
         private fun getSharedPreferences(): SharedPreferences? {
             if (sharedPreferences == null) {
-                sharedPreferences = Hicore.app.getSharedPreferences("note_national", 0)
+                sharedPreferences = HiCore.app.getSharedPreferences("note_national", 0)
             }
             return sharedPreferences
         }

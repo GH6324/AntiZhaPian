@@ -9,6 +9,7 @@ import android.text.InputType
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import cn.qqtheme.framework.entity.City
 import cn.qqtheme.framework.entity.County
@@ -32,6 +33,8 @@ class PersonalInfoAddActivity : BaseActivity() {
         const val pageAreaDetail = "AreaDetail"
         const val pageEmerg = "Emerg"
         const val pageContacts = "Contacts"
+        //前，后字符数，一共字符数，星号数，总长
+        val etSet = arrayOf(arrayOf(1,1,2,16,18), arrayOf(3,2,5,6,11))
     }
 
     private var pageType: String = ""
@@ -65,6 +68,8 @@ class PersonalInfoAddActivity : BaseActivity() {
         setContentView(infoBinding.root)
         StatusBarCompat.translucentStatusBar(this as Activity, true, false)
         pageType = intent.getStringExtra("from_page_type").toString()
+        infoBinding.etIdNum.tag = 0
+        infoBinding.etPhoneNum.tag = 1
         initPages()
 
 
@@ -126,12 +131,12 @@ class PersonalInfoAddActivity : BaseActivity() {
                 builder.setNeutralButton("随机生成") { _, _ ->
                     var account = ""
                     val strtemplate = "1111aaaa-aaaa-aaaa-aaaa-aaaa11111111"
-                    val nummap = "1234567890"
-                    val hexmap = "1234567890abcdefabcdef"
+                    val numMap = "1234567890"
+                    val hexMap = "1234567890abcdefabcdef"
                     for (element in strtemplate) {
                         when (element) {
-                            '1' -> account += nummap[(nummap.indices).random()]
-                            'a' -> account += hexmap[(hexmap.indices).random()]
+                            '1' -> account += numMap[(numMap.indices).random()]
+                            'a' -> account += hexMap[(hexMap.indices).random()]
                             '-' -> account += "-"
                         }
                     }
@@ -152,18 +157,21 @@ class PersonalInfoAddActivity : BaseActivity() {
             if (isClosed)
                 ToastUtils.show("权限已经全部关闭")
         }
+        val editFocusChangeListener = OnEditFocusChangeListener()
+        infoBinding.etIdNum.onFocusChangeListener = editFocusChangeListener
+        infoBinding.etPhoneNum.onFocusChangeListener = editFocusChangeListener
         infoBinding.btnConfirm.setOnClickListener {
             when (pageType) {
                 pageBase -> {
                     val name: String = infoBinding.etName.text.toString()
-                    val id: String = infoBinding.etIdNum.text.toString()
-                    val mobileNumber: String = infoBinding.etPhoneNum.text.toString()
-                    if (!TextUtils.isEmpty(id) && !stringIsUserID(id)) {
+                    val id: String = editCompleteToSimplify(infoBinding.etIdNum, false)
+                    val mobileNumber: String = editCompleteToSimplify(infoBinding.etPhoneNum, false)
+                    if (!TextUtils.isEmpty(id) && !stringIsUserID(id) && id.length != 2) {
                         Toast.makeText(this@PersonalInfoAddActivity, "身份证格式不对", Toast.LENGTH_SHORT)
                             .show()
                         return@setOnClickListener
                     }
-                    if (!TextUtils.isEmpty(mobileNumber) && !stringIsMobileNumber(mobileNumber)) {
+                    if (!TextUtils.isEmpty(mobileNumber) && !stringIsMobileNumber(mobileNumber) && mobileNumber.length != 5) {
                         Toast.makeText(this@PersonalInfoAddActivity, "电话格式不对", Toast.LENGTH_SHORT)
                             .show()
                         return@setOnClickListener
@@ -255,7 +263,35 @@ class PersonalInfoAddActivity : BaseActivity() {
     private fun stringIsMobileNumber(str: String): Boolean {
         return Pattern.compile("^1[0-9]{4}$").matcher(str).matches()
     }
+    private fun editSimplifyToComplete(v: View, resetText:Boolean):String{
+        val tag = v.tag as Int
+        var str = (v as EditText).text.toString()
+        if (str.length == etSet[tag][2]){
+            str = str.substring(0, etSet[tag][0]) + "*".repeat(etSet[tag][3]) + str.substring(str.length - etSet[tag][1])
+            if (resetText)
+                v.setText(str)
+        }
+        return str
+    }
+    private fun editCompleteToSimplify(v: View, resetText:Boolean):String{
+        val tag = v.tag as Int
+        var str = (v as EditText).text.toString()
+        if (str.length == etSet[tag][4]) {
+            str = str.substring(0, etSet[tag][0]) + str.substring(str.length - etSet[tag][1])
+            if (resetText)
+                v.setText(str)
+        }
+        return str
+    }
 
+    inner class OnEditFocusChangeListener: View.OnFocusChangeListener {
+        override fun onFocusChange(v: View?, hasFocus: Boolean) {
+            if (hasFocus)
+                editCompleteToSimplify(v!!, true)
+            else
+                editSimplifyToComplete(v!!, true)
+        }
+    }
     private fun initPages() {
         when (pageType) {
             pageBase -> {
@@ -263,11 +299,13 @@ class PersonalInfoAddActivity : BaseActivity() {
                 infoBinding.clBaseCont.visibility = View.VISIBLE
                 infoBinding.etName.setText(UserInfoBean.name)
                 infoBinding.etIdNum.setText(UserInfoBean.id)
+                editSimplifyToComplete(infoBinding.etIdNum, true)
                 infoBinding.etPhoneNum.setText(UserInfoBean.mobileNumber)
+                editSimplifyToComplete(infoBinding.etPhoneNum, true)
                 infoBinding.etAccountNum.setText(UserInfoBean.accountId)
                 infoBinding.sbOriginalimei.isChecked = UserInfoBean.useorigimei
                 val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-                infoBinding.tvApktime.text = "编译时间 " + sdf.format(Date(BuildConfig.BUILD_TIME))
+                infoBinding.tvApktime.text = "编译时间 ${sdf.format(Date(BuildConfig.BUILD_TIME))}"
                 if (TextUtils.isEmpty(UserInfoBean.accountId))
                     infoBinding.etAccountNum.inputType = InputType.TYPE_NULL
 

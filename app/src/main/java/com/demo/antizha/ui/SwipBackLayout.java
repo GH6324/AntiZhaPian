@@ -23,18 +23,18 @@ import java.util.List;
 /* loaded from: classes3.dex */
 public class SwipBackLayout extends FrameLayout {
     private View mContentView;
-    private int O;
+    private final int O;
     private int P;
     private int b0;
     private int c0;
-    private Scroller d0;
+    private final Scroller d0;
     private int width;
     private boolean f0;
     private boolean g0;
     private boolean mEnable;
-    private Activity mActivity;
-    private List<ViewPager> j0;
-    private Drawable mShadowLeft;
+    private final Activity mActivity;
+    private final List<ViewPager> j0;
+    private final Drawable mShadowLeft;
 
     public SwipBackLayout(Context context) {
         this(context, null);

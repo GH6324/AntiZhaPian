@@ -11,8 +11,8 @@ import android.widget.ProgressBar
 import com.demo.antizha.OnWebListener
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityPromWebDetBinding
+import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.HiWebView
-import com.demo.antizha.ui.Hicore
 import com.demo.antizha.ui.SwipBackLayout
 import com.demo.antizha.util.Parameters
 import qiu.niorgai.StatusBarCompat
@@ -29,11 +29,11 @@ class PromosWebDetActivity : BaseActivity() {
         promosWebDetBinding = ActivityPromWebDetBinding.inflate(layoutInflater)
         setContentView(promosWebDetBinding.root)
         promosWebDetBinding.piTitle.ivBack.setOnClickListener {
-            if (!Hicore.app.isDouble())
+            if (!HiCore.app.isDouble())
                 finish()
         }
         promosWebDetBinding.piNetworkNo.llNetworkNo.setOnClickListener {
-            if (!Hicore.app.isDouble()) {
+            if (!HiCore.app.isDouble()) {
                 promosWebDetBinding.webview.reload()
                 promosWebDetBinding.webview.visibility = View.VISIBLE
                 promosWebDetBinding.piNetworkNo.llNetworkNo.visibility = View.GONE

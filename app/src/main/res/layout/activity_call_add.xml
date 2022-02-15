@@ -27,7 +27,7 @@
         android:textColor="@color/black_dark"
         android:textSize="@dimen/sp_16"
         app:layout_constraintTop_toBottomOf="@id/pi_title"
-        android:autofillHints="" />
+        android:autofillHints=""/>
 
     <com.demo.antizha.ui.HiEdittext
         android:id="@+id/et_describe"

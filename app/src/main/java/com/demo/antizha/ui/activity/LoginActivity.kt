@@ -24,15 +24,15 @@ class LoginActivity : BaseActivity(), IEditAfterListener {
         infoBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         val number = arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")
-        var phnum = UserInfoBean.mobileNumber.substring(0, 3)
+        var phoneNum = UserInfoBean.mobileNumber.substring(0, 3)
         for (i in 0..5)
-            phnum += number.random()
-        phnum += UserInfoBean.mobileNumber.substring(UserInfoBean.mobileNumber.length - 2)
-        infoBinding.account.setText(phnum)
+            phoneNum += number.random()
+        phoneNum += UserInfoBean.mobileNumber.substring(UserInfoBean.mobileNumber.length - 2)
+        infoBinding.account.setText(phoneNum)
         val regions = TextUtils.split(UserInfoBean.region, "\\.")
         infoBinding.tvRegion.text = regions[regions.size - 1]
         initListener()
-        initCluse(false)
+        initClause(false)
     }
     private fun initListener(){
         infoBinding.pwdEye.setOnClickListener(object : View.OnClickListener {
@@ -101,7 +101,7 @@ class LoginActivity : BaseActivity(), IEditAfterListener {
         editText.addTextChangedListener(TextWatcher(iEditAfterListener!!))
     }
 
-    private fun initCluse(newUser: Boolean) {
+    private fun initClause(newUser: Boolean) {
         val a: CharSequence = Utils.createSpannableString(this,
             if (newUser) "新用户登录即完成注册，且表示您已同意\n" else "登录即同意",
             "和", "", "《服务协议》", "《隐私政策》")

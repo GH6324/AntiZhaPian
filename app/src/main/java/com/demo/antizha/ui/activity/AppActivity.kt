@@ -28,7 +28,7 @@ class AppActivity : BaseUploadActivity() {
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "添加APP应用程序"
         infoBinding.lySelect.tvSelectTip.text = "添加"
-        infoBinding.lyComplete.tvCommitTip.text = "最多可选择" + 2 + "个APP应用程序"
+        infoBinding.lyComplete.tvCommitTip.text = "最多可选择${mMaxSelectNum}个APP应用程序"
         AppUtil.checkPermission(this, true)
         getIntentData()
         val lyManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
@@ -99,7 +99,6 @@ class AppActivity : BaseUploadActivity() {
                     }
                 }
                 mAdapter.notifyItemRangeInserted(count, insertCount)
-                mAdapter.notifyDataSetChanged()
                 if (mAppBeans.size > 0)
                     infoBinding.lyComplete.btnCommit.text = "文件上传"
 
