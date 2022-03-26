@@ -1,8 +1,10 @@
 package com.demo.antizha.ui.activity
 
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
+import com.demo.antizha.BuildConfig
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.databinding.ActivityAboutUsBinding
 import com.demo.antizha.util.FileUtil
@@ -27,6 +29,24 @@ class AboutUsActivity : BaseActivity() {
                 hideProgressDialog()
                 ToastUtils.show("已是最新版本")
             }, 500)
+        }
+        infoBinding.llAgreement.setOnClickListener {
+            val intentInfo = Intent(this, WebActivity::class.java)
+            intentInfo.putExtra(WebActivity.EXTRA_WEB_TITLE, "服务协议")
+            intentInfo.putExtra(
+                WebActivity.EXTRA_WEB_URL,
+                BuildConfig.RELEASE_H5_URL + "/Agreements/clause.html?time=" + System.currentTimeMillis() / 3000
+            )
+            startActivity(intentInfo)
+        }
+        infoBinding.llPolicy.setOnClickListener {
+            val intentInfo = Intent(this, WebActivity::class.java)
+            intentInfo.putExtra(WebActivity.EXTRA_WEB_TITLE, "隐私政策")
+            intentInfo.putExtra(
+                WebActivity.EXTRA_WEB_URL,
+                BuildConfig.RELEASE_H5_URL + "/Agreements/policy.html?time=" + System.currentTimeMillis() / 3000
+            )
+            startActivity(intentInfo)
         }
     }
 
