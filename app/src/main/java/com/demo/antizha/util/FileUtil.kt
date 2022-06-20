@@ -47,6 +47,8 @@ object FileUtil {
     }
 
     private fun onNormalSave(data: String, saveFile: String) {
+        if (TextUtils.isEmpty(data))
+            return
         if (data[0] != '{')
             return
         if (!TextUtils.isEmpty(saveFile)) {

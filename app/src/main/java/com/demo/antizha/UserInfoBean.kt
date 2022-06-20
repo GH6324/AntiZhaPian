@@ -232,8 +232,8 @@ object UserInfoBean {
 
     fun getToken() {
         try {
-            val path =
-                HiCore.context.getExternalFilesDir(null)?.path
+            ///sdcard/Android/data/com.demo.antizha/files/note_national.xml
+            val path = HiCore.context.getExternalFilesDir(null)?.path
             val file = File(path, "note_national.xml")
             //file.exists()总是返回false
             if (!file.canRead())
@@ -257,8 +257,10 @@ object UserInfoBean {
                             return
                         val payLoadJson =
                             String(Base64.getUrlDecoder().decode(tokenSub[1]), charset("UTF-8"))
-                        val gsonBuilder = GsonBuilder().registerTypeAdapter(PayLoads::class.java,
-                            PayLoadAdapter())
+                        val gsonBuilder = GsonBuilder().registerTypeAdapter(
+                            PayLoads::class.java,
+                            PayLoadAdapter()
+                        )
                         val gson = gsonBuilder.create()
                         val pl = gson.fromJson(payLoadJson, PayLoads::class.java)
                         val currentTime = System.currentTimeMillis() / 1000
@@ -351,7 +353,8 @@ object UserInfoBean {
     fun makeToken(): String {       //伪造TOKEN的算法应该是正确的，但是没有正确的seed，算不出正确的TOKEN
         val headerJson = """{"alg":"HS256","typ":"JWT"}"""
         val header = Base64.getUrlEncoder().withoutPadding().encodeToString(
-            headerJson.toByteArray(StandardCharsets.UTF_8))
+            headerJson.toByteArray(StandardCharsets.UTF_8)
+        )
 
         val gsonBuilder = GsonBuilder().registerTypeAdapter(PayLoads::class.java, PayLoadAdapter())
         val gson = gsonBuilder.create()
@@ -384,6 +387,7 @@ class Dp2Px(context: Context) {
     fun dp2px(value: Int): Int {
         return (value * density + 0.5).toInt()
     }
+
     init {
         density = context.resources.displayMetrics.density
     }
@@ -429,7 +433,7 @@ fun getRoundBitmapByShader(
     bitmapShader.setLocalMatrix(matrix)
     paint.shader = bitmapShader
     //创建矩形区域并且预留出border
-    val rect = RectF(boarder, boarder,(outWidth - boarder), (outHeight - boarder))
+    val rect = RectF(boarder, boarder, (outWidth - boarder), (outHeight - boarder))
     //把传入的bitmap绘制到圆角矩形区域内
     canvas.drawRoundRect(rect, radius, radius, paint)
     if (boarder > 0) {
