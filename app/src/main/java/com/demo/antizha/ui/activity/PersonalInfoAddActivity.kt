@@ -33,8 +33,9 @@ class PersonalInfoAddActivity : BaseActivity() {
         const val pageAreaDetail = "AreaDetail"
         const val pageEmerg = "Emerg"
         const val pageContacts = "Contacts"
+
         //前，后字符数，一共字符数，星号数，总长
-        val etSet = arrayOf(arrayOf(1,1,2,16,18), arrayOf(3,2,5,6,11))
+        val etSet = arrayOf(arrayOf(1, 1, 2, 16, 18), arrayOf(3, 2, 5, 6, 11))
     }
 
     private var pageType: String = ""
@@ -108,10 +109,12 @@ class PersonalInfoAddActivity : BaseActivity() {
             picker.show()
             */
             val picker =
-                AddressBean.createAddressPicker(this,
+                AddressBean.createAddressPicker(
+                    this,
                     infoBinding.etArea.text.toString(),
                     false,
-                    AddressListener())
+                    AddressListener()
+                )
             picker.show()
         }
         infoBinding.etAccountNum.setOnClickListener {
@@ -186,6 +189,12 @@ class PersonalInfoAddActivity : BaseActivity() {
                     }
                     if (accountId != UserInfoBean.accountId) {
                         UserInfoBean.accountId = accountId
+                        changed = true
+                    }
+                    val appVersion: String = infoBinding.etAppVersion.text.toString()
+                    if (appVersion != UserInfoBean.version) {
+                        UserInfoBean.version = appVersion
+                        changed = true
                     }
                     val imei = Settings.System.getString(
                         applicationContext?.contentResolver,
@@ -263,17 +272,22 @@ class PersonalInfoAddActivity : BaseActivity() {
     private fun stringIsMobileNumber(str: String): Boolean {
         return Pattern.compile("^1[0-9]{4}$").matcher(str).matches()
     }
-    private fun editSimplifyToComplete(v: View, resetText:Boolean):String{
+
+    private fun editSimplifyToComplete(v: View, resetText: Boolean): String {
         val tag = v.tag as Int
         var str = (v as EditText).text.toString()
-        if (str.length == etSet[tag][2]){
-            str = str.substring(0, etSet[tag][0]) + "*".repeat(etSet[tag][3]) + str.substring(str.length - etSet[tag][1])
+        if (str.length == etSet[tag][2]) {
+            str = str.substring(
+                0,
+                etSet[tag][0]
+            ) + "*".repeat(etSet[tag][3]) + str.substring(str.length - etSet[tag][1])
             if (resetText)
                 v.setText(str)
         }
         return str
     }
-    private fun editCompleteToSimplify(v: View, resetText:Boolean):String{
+
+    private fun editCompleteToSimplify(v: View, resetText: Boolean): String {
         val tag = v.tag as Int
         var str = (v as EditText).text.toString()
         if (str.length == etSet[tag][4]) {
@@ -284,7 +298,7 @@ class PersonalInfoAddActivity : BaseActivity() {
         return str
     }
 
-    inner class OnEditFocusChangeListener: View.OnFocusChangeListener {
+    inner class OnEditFocusChangeListener : View.OnFocusChangeListener {
         override fun onFocusChange(v: View?, hasFocus: Boolean) {
             if (hasFocus)
                 editCompleteToSimplify(v!!, true)
@@ -292,6 +306,7 @@ class PersonalInfoAddActivity : BaseActivity() {
                 editSimplifyToComplete(v!!, true)
         }
     }
+
     private fun initPages() {
         when (pageType) {
             pageBase -> {
@@ -303,6 +318,7 @@ class PersonalInfoAddActivity : BaseActivity() {
                 infoBinding.etPhoneNum.setText(UserInfoBean.mobileNumber)
                 editSimplifyToComplete(infoBinding.etPhoneNum, true)
                 infoBinding.etAccountNum.setText(UserInfoBean.accountId)
+                infoBinding.etAppVersion.setText(UserInfoBean.version)
                 infoBinding.sbOriginalimei.isChecked = UserInfoBean.useorigimei
                 val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                 infoBinding.tvApktime.text = "编译时间 ${sdf.format(Date(BuildConfig.BUILD_TIME))}"
@@ -311,7 +327,7 @@ class PersonalInfoAddActivity : BaseActivity() {
 
                 val params: ViewGroup.MarginLayoutParams =
                     infoBinding.btnConfirm.layoutParams as ViewGroup.MarginLayoutParams
-                params.topMargin = dp2px(300F)
+                params.topMargin = dp2px(350F)
                 infoBinding.btnConfirm.layoutParams = params
                 infoBinding.btnConfirm.requestLayout()
             }

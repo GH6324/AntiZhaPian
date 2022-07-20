@@ -84,8 +84,8 @@ object UserInfoBean {
         longitude = settings.getString("longitude", "").toString()
         latitude = settings.getString("latitude", "").toString()
         refTudeTime = settings.getString("refTudeTime", "").toString()
-        version = settings.getString("version", "").toString()
-        innerVersion = settings.getInt("innerVersion", 0)
+        version = settings.getString("version", "1.1.29").toString()
+        innerVersion = settings.getInt("innerVersion", 111)
         getVerTime = settings.getString("getVerTime", "").toString()
 
         clusterID = 365268909

@@ -52,20 +52,28 @@ object UpdateUtil {
         registerBody.innerversion = UserInfoBean.innerVersion.toString()
         val str = System.currentTimeMillis().toString() + ""
         val hashMap = buildParam(str, registerBody)
-
         getDataByPost(
             "https://fzapp.gjfzpt.cn/hicore/api/AppVersion/checkv2",
             bodyMap = hashMap,
             addHead = true,
             "",
-            callBackFunc = ::onGetVersion)
+            callBackFunc = ::onGetVersion
+        )
     }
 
+    /*新颁布返回类似信息，无法获得最新版本号*/
+    /*{"code":2,"msg":"当前版本过低，请前往应用市场下载最新版本"}*/
     @Suppress("UNUSED_PARAMETER")
     fun onGetVersion(data: String, saveFile: String) {
         if (data[0] != '{')
             return
         val hashMap = Gson().fromJson(data, HashMap::class.java)
+        if (!hashMap.containsKey("sign") || !hashMap.containsKey("timestamp") ||
+            !hashMap.containsKey("sData")
+        )
+            return
+        if (hashMap["code"].toString() == "2")
+            return
         val signHash =
             MD5Utils.getMd5StringUtf8(hashMap["sign"].toString()).lowercase(Locale.getDefault())
         val timeHash =
