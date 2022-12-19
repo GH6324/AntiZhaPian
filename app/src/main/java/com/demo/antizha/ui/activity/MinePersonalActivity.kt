@@ -24,14 +24,6 @@ class MinePersonalActivity : BaseActivity(), View.OnClickListener {
         infoBinding.userID.setOnClickListener(this)
         infoBinding.area.setOnClickListener(this)
         infoBinding.areaDetail.setOnClickListener(this)
-        infoBinding.tvJob.setOnClickListener(this)
-        infoBinding.tvEmergPhone.setOnClickListener(this)
-        infoBinding.tvEmergCont.setOnClickListener(this)
-        infoBinding.tvAddEmerg.setOnClickListener(this)
-        infoBinding.tvAddQq.setOnClickListener(this)
-        infoBinding.tvAddWx.setOnClickListener(this)
-        infoBinding.tvAddEmail.setOnClickListener(this)
-        infoBinding.llAddressLsCont.setOnClickListener(this)
         infoBinding.piTitle.ivBack.setOnClickListener {
             finish()
         }
@@ -67,41 +59,7 @@ class MinePersonalActivity : BaseActivity(), View.OnClickListener {
         }
         infoBinding.area.text = UserInfoBean.region
         infoBinding.areaDetail.text = UserInfoBean.addr
-        infoBinding.tvJob.text = UserInfoBean.professionName
-        if (TextUtils.isEmpty(UserInfoBean.urgentContactname) || TextUtils.isEmpty(UserInfoBean.urgentContactmob)) {
-            infoBinding.tvEmergCont.text = "添加紧急联系人"
-            infoBinding.tvEmergPhone.visibility = View.GONE
-            infoBinding.tvAddEmerg.visibility = View.VISIBLE
-        } else {
-            infoBinding.tvEmergCont.text = UserInfoBean.urgentContactname
-            infoBinding.tvEmergPhone.visibility = View.VISIBLE
-            infoBinding.tvEmergPhone.text = "手机号：${UserInfoBean.urgentContactmob}"
-            infoBinding.tvAddEmerg.visibility = View.GONE
-        }
-        if (!TextUtils.isEmpty(UserInfoBean.qq)) {
-            infoBinding.tvQqCont.visibility = View.VISIBLE
-            infoBinding.tvQqCont.text = UserInfoBean.qq
-            infoBinding.tvAddQq.visibility = View.GONE
-        } else {
-            infoBinding.tvQqCont.visibility = View.GONE
-            infoBinding.tvAddQq.visibility = View.VISIBLE
-        }
-        if (!TextUtils.isEmpty(UserInfoBean.wechat)) {
-            infoBinding.tvWxCont.visibility = View.VISIBLE
-            infoBinding.tvWxCont.text = UserInfoBean.wechat
-            infoBinding.tvAddWx.visibility = View.GONE
-        } else {
-            infoBinding.tvWxCont.visibility = View.GONE
-            infoBinding.tvAddWx.visibility = View.VISIBLE
-        }
-        if (!TextUtils.isEmpty(UserInfoBean.email)) {
-            infoBinding.tvEmailCont.visibility = View.VISIBLE
-            infoBinding.tvEmailCont.text = UserInfoBean.email
-            infoBinding.tvAddEmail.visibility = View.GONE
-        } else {
-            infoBinding.tvEmailCont.visibility = View.GONE
-            infoBinding.tvAddEmail.visibility = View.VISIBLE
-        }
+        infoBinding.regArea.text = UserInfoBean.region
     }
 
     override fun onClick(view: View) {
@@ -120,20 +78,6 @@ class MinePersonalActivity : BaseActivity(), View.OnClickListener {
             R.id.area_detail -> {
                 val intent = Intent(this, PersonalInfoAddActivity::class.java)
                 intent.putExtra("from_page_type", PersonalInfoAddActivity.pageAreaDetail)
-                startActivity(intent)
-            }
-            R.id.tv_emerg_phone, R.id.tv_add_emerg, R.id.tv_emerg_cont -> {
-                val intent = Intent(this, PersonalInfoAddActivity::class.java)
-                intent.putExtra("from_page_type", PersonalInfoAddActivity.pageEmerg)
-                startActivity(intent)
-            }
-            R.id.ll_address_ls_cont, R.id.tv_add_qq, R.id.tv_add_wx, R.id.tv_add_email -> {
-                val intent = Intent(this, PersonalInfoAddActivity::class.java)
-                intent.putExtra("from_page_type", PersonalInfoAddActivity.pageContacts)
-                startActivity(intent)
-            }
-            R.id.tv_job -> {
-                val intent = Intent(this, IndustryActivity::class.java)
                 startActivity(intent)
             }
         }

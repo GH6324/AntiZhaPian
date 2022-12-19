@@ -1,4 +1,4 @@
-package com.demo.antizha.ui
+package com.demo.antizha.interfaces
 
 interface IClickListener {
     fun cancelBtn()

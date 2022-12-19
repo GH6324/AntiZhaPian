@@ -5,9 +5,9 @@ class RegisterBody {
     var idNumber: String? = null
     var imei: String? = null
     var innerversion: String? = null
-    var loginType: Int? = null
+    var loginType: Int = 0
     var name: String? = null
-    var os: Int? = null
+    var os: Int = 0
     var osVersion: String? = null
     var pCode: String? = null
     var password: String? = null

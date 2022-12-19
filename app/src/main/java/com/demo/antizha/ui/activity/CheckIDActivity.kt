@@ -3,12 +3,12 @@ package com.demo.antizha.ui.activity
 import android.app.Activity
 import android.widget.Toast
 import com.demo.antizha.databinding.ActivityIdCheckBinding
+import com.demo.antizha.interfaces.IClickListener
 import com.demo.antizha.ui.HiCore
-import com.demo.antizha.ui.IClickListener
 import com.demo.antizha.util.DialogUtils
 import qiu.niorgai.StatusBarCompat
 
-class CheckIDActivity: BaseActivity(), IClickListener {
+class CheckIDActivity : BaseActivity(), IClickListener {
     private lateinit var infoBinding: ActivityIdCheckBinding
     override fun initPage() {
         infoBinding = ActivityIdCheckBinding.inflate(layoutInflater)
@@ -25,14 +25,21 @@ class CheckIDActivity: BaseActivity(), IClickListener {
                 toast.setGravity(17, 0, 0)
                 toast.show()
             } else {
-                DialogUtils.showNormalDialog(mActivity, "向该号码发送身份核实请求?", checkID, "取消", "确认发送", this)
+                DialogUtils.showNormalDialog(mActivity,
+                    "向该号码发送身份核实请求?",
+                    checkID,
+                    "取消",
+                    "确认发送",
+                    this)
             }
         }
     }
-    override fun cancelBtn(){
+
+    override fun cancelBtn() {
 
     }
-    override fun clickOKBtn(){
+
+    override fun clickOKBtn() {
         val toast = Toast.makeText(HiCore.app, "发送成功", Toast.LENGTH_SHORT)
         toast.setGravity(17, 0, 0)
         toast.show()

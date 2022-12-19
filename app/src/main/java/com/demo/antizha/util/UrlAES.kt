@@ -14,7 +14,9 @@ object UrlAES {
             if (TextUtils.isEmpty(str)) {
                 ""
             } else
-                cipherDecrypt(str.replace(" ".toRegex(), "+"), "hicore2020051518", "hicore2020051518")
+                cipherDecrypt(str.replace(" ".toRegex(), "+"),
+                    "hicore2020051518",
+                    "hicore2020051518")
         } catch (unused: Exception) {
             ""
         }

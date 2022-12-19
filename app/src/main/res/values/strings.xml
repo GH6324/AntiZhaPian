@@ -40,4 +40,6 @@
     <string name="to_add">去添加</string>
     <string name="to_select">请选择</string>
     <string name="area_detail">详细地址：</string>
+    <string name="update_btn_str">立即更新</string>
+    <string name="report_time_tips">欢迎您举报涉诈电话、短信、APP、网址、社交账号、交易账户等线索。如果您现在已经被骗，请立即拨打&lt;font color=#2B4CFF&gt;  &lt;big&gt;110&lt;/big&gt;  &lt;/font&gt;报警，或迅速前往当地公安机关报案。</string>
 </resources>

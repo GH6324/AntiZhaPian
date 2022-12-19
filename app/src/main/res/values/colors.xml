@@ -31,6 +31,11 @@
     <color name="colorWhite88">#88ffffff</color>
     <color name="div_line">#ffeaebee</color>
     <color name="divide_line">#ffeaebee</color>
+    <color name="easy_touch_ball_menu_blue">#455882</color>
+    <color name="easy_touch_ball_menu_gray">#544a4a</color>
+    <color name="easy_touch_ball_menu_green">#50783c</color>
+    <color name="easy_touch_ball_menu_orange">#b4503c</color>
+    <color name="easy_touch_ball_menu_red">#a35150</color>
     <color name="eeeeee">#eeeeee</color>
     <color name="fraud_result_color">#324678</color>
     <color name="fraud_result_color_light">#8d99b7</color>

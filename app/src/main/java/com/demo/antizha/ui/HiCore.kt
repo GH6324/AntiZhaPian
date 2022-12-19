@@ -75,7 +75,7 @@ class HiCore : Application() {
                 PackageManager.GET_META_DATA).metaData.getString("CHANNEL").toString()
         } catch (e2: Exception) {
             e2.printStackTrace()
-            "oss"
+            "huawei"
         }
     }
 }

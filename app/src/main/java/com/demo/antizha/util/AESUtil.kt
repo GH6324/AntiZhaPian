@@ -175,4 +175,30 @@ object AESUtil {
         instance.init(Cipher.DECRYPT_MODE, secretKeySpec, IvParameterSpec(iv.toByteArray(charSet)))
         return String(instance.doFinal(Base64.decode(str, 0)), charSet)
     }
+
+    @Throws(java.lang.Exception::class)
+    fun cipherEncrypt_ZeroPadding(str: String, keySalt: ByteArray, iv: String): String {
+        val instance = Cipher.getInstance("AES/CBC/NoPadding")
+
+        val blockSize = instance!!.blockSize
+        val dataBytes: ByteArray = str.toByteArray(charSet)
+        var plaintextLength = dataBytes.size
+        if (plaintextLength % blockSize !== 0) {
+            plaintextLength += (blockSize - plaintextLength % blockSize)
+        }
+        val plaintext = ByteArray(plaintextLength)
+        System.arraycopy(dataBytes, 0, plaintext, 0, dataBytes.size)
+
+        val secretKeySpec = SecretKeySpec(keySalt, str_AES)
+        instance.init(Cipher.ENCRYPT_MODE, secretKeySpec, IvParameterSpec(iv.toByteArray(charSet)))
+        return Base64.encodeToString(instance.doFinal(plaintext), 0).trim()
+    }
+
+    @Throws(java.lang.Exception::class)
+    fun cipherDecrypt_ZeroPadding(str: String?, keySalt: ByteArray, iv: String): String {
+        val instance = Cipher.getInstance("AES/CBC/NoPadding")
+        val secretKeySpec = SecretKeySpec(keySalt, str_AES)
+        instance.init(Cipher.DECRYPT_MODE, secretKeySpec, IvParameterSpec(iv.toByteArray(charSet)))
+        return String(instance.doFinal(Base64.decode(str, 0)), charSet).trimEnd(0.toChar())
+    }
 }

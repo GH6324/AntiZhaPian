@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import com.demo.antizha.databinding.ActivitySettingBinding
-import com.demo.antizha.ui.IClickListener
+import com.demo.antizha.interfaces.IClickListener
 import com.demo.antizha.util.DataCleanManager
 import com.demo.antizha.util.DialogUtils
 

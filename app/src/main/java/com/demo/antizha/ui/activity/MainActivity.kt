@@ -15,6 +15,10 @@ import com.demo.antizha.R
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.databinding.ActivityMainBinding
 import com.demo.antizha.dp2px
+import com.demo.antizha.interfaces.IOneClickListener
+import com.demo.antizha.md.JniHandStamp
+import com.demo.antizha.newwork.DictionaryUtils
+import com.demo.antizha.newwork.UpdateUtil
 import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.fragment.home.HomeFragment
 import com.demo.antizha.ui.fragment.mine.MineFragment
@@ -28,9 +32,13 @@ class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private var lastIndex = 0
     private var mFragments = ArrayList<Fragment>()
+    private var beginSec: Long = 0
+    private lateinit var mHomeFragment: HomeFragment
+
     companion object {
         const val SPLASH_TIME: Long = 5000
     }
+
     @Suppress("DEPRECATION")
     override fun initPage() {
         dp2px = Dp2Px(HiCore.context)
@@ -48,6 +56,14 @@ class MainActivity : BaseActivity() {
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
         UserInfoBean.init()
+        //初始化网络
+        JniHandStamp.handshareKeyAsyn(object : IOneClickListener {
+            override fun clickOKBtn() {
+                DictionaryUtils.getDictionary()
+                UpdateUtil.getVerInfo()
+            }
+        })
+        //
         binding.navView.setOnItemSelectedListener(
             object : NavigationBarView.OnItemSelectedListener {
                 override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -75,21 +91,31 @@ class MainActivity : BaseActivity() {
                     }
                 }
             })
-        Handler(Looper.getMainLooper()).postDelayed({
-            binding.splash.root.visibility = View.GONE
-            binding.navView.visibility = View.VISIBLE
-            binding.viewPager.visibility = View.VISIBLE
-            StatusBarCompat.translucentStatusBar(this, true, true)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                binding.root.windowInsetsController?.show(WindowInsets.Type.statusBars())
-            else
-                window.setFlags(0, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        }, SPLASH_TIME)
         initData()
+        closeSplash()
+    }
+
+    private fun closeSplash() {
+        val currentSec = System.currentTimeMillis()
+        if (DictionaryUtils.step < 2 || currentSec - beginSec < SPLASH_TIME || UpdateUtil.uppVerDlg != null) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                closeSplash()
+            }, 500)
+            return
+        }
+        binding.splash.root.visibility = View.GONE
+        binding.navView.visibility = View.VISIBLE
+        binding.viewPager.visibility = View.VISIBLE
+        StatusBarCompat.translucentStatusBar(this, true, true)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            binding.root.windowInsetsController?.show(WindowInsets.Type.statusBars())
+        else
+            window.setFlags(0, WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }
 
     private fun initData() {
-        mFragments.add(HomeFragment())
+        mHomeFragment = HomeFragment()
+        mFragments.add(mHomeFragment)
         mFragments.add(WebFragment())
         mFragments.add(MineFragment())
         binding.viewPager.run {
@@ -101,6 +127,8 @@ class MainActivity : BaseActivity() {
             }
         }
         binding.viewPager.currentItem = 0
+        UpdateUtil.mActivity = this
+        beginSec = System.currentTimeMillis()
     }
 
     fun setCurrentPage(i: Int) {

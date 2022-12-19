@@ -25,8 +25,8 @@ open class BaseDialog : Dialog {
     private lateinit var metrics: WindowMetrics
     var widthDialog = 0.0F
     var heightDialog = 0.0F
-    var heightDialogdp = 0.0F
     var widthDialogdp = 0.0F
+    var heightDialogdp = 0.0F
     private var mGravityLayout: Int = 0
 
     constructor(context: Context) : super(context) {
@@ -127,4 +127,21 @@ open class BaseDialog : Dialog {
             mGravityLayout = 17
         }
     }
+
+    fun setHeightDialog(d: Double) {
+        heightDialog = d.toFloat()
+    }
+
+    fun setHeightDialogdp(d: Double) {
+        heightDialogdp = d.toFloat()
+    }
+
+    fun setWidthDialog(d: Double) {
+        widthDialog = d.toFloat()
+    }
+
+    fun setWidthDialogdp(d: Double) {
+        widthDialogdp = d.toFloat()
+    }
+
 }

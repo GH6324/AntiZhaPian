@@ -4,15 +4,15 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.demo.antizha.fork",
+  "applicationId": "com.hicorenational.antifraud.fork",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 1,
-      "versionName": "1.0.6",
+      "versionCode": 84,
+      "versionName": "1.1.21",
       "outputFile": "app-release.apk"
     }
   ],

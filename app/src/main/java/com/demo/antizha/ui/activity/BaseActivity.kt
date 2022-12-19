@@ -39,6 +39,15 @@ abstract class BaseActivity : AppCompatActivity() {
         return exAct
     }
 
+    fun findActivity(name: String): Activity? {
+        for (act in activityList) {
+            val actName = act.javaClass.name
+            if (actName == name)
+                return act
+        }
+        return null
+    }
+
     open fun isDouble(): Boolean {
         return HiCore.app.isDouble()
     }

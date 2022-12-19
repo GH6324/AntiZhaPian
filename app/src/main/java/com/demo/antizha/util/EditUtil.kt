@@ -1,7 +1,7 @@
 package com.demo.antizha.util
 
 import android.text.Editable
-import com.demo.antizha.ui.IEditAfterListener
+import com.demo.antizha.interfaces.IEditAfterListener
 
 
 class EditUtil {

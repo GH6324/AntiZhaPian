@@ -31,8 +31,6 @@ class PersonalInfoAddActivity : BaseActivity() {
         const val pageBase = "Base"
         const val pageArea = "Area"
         const val pageAreaDetail = "AreaDetail"
-        const val pageEmerg = "Emerg"
-        const val pageContacts = "Contacts"
 
         //前，后字符数，一共字符数，星号数，总长
         val etSet = arrayOf(arrayOf(1, 1, 2, 16, 18), arrayOf(3, 2, 5, 6, 11))
@@ -230,31 +228,6 @@ class PersonalInfoAddActivity : BaseActivity() {
                         UserInfoBean.commit()
                     }
                 }
-                pageEmerg -> {
-                    val emergName: String = infoBinding.etEmergName.text.toString()
-                    val emergPhoneNum: String = infoBinding.etEmergPhoneNum.text.toString()
-                    if (emergName != UserInfoBean.urgentContactname || emergPhoneNum != UserInfoBean.urgentContactmob) {
-                        UserInfoBean.urgentContactname = emergName
-                        UserInfoBean.urgentContactmob = emergPhoneNum
-                        UserInfoBean.commit()
-                    }
-                }
-                pageContacts -> {
-                    val qq: String = infoBinding.etQqNum.text.toString()
-                    val wx: String = infoBinding.etWxNum.text.toString()
-                    val email: String = infoBinding.etEmailNum.text.toString()
-                    if (!TextUtils.isEmpty(email) && !stringIsEmail(email)) {
-                        Toast.makeText(this@PersonalInfoAddActivity, "邮箱格式不对", Toast.LENGTH_SHORT)
-                            .show()
-                        return@setOnClickListener
-                    }
-                    if (qq != UserInfoBean.qq || wx != UserInfoBean.wechat || email != UserInfoBean.email) {
-                        UserInfoBean.qq = qq
-                        UserInfoBean.wechat = wx
-                        UserInfoBean.email = email
-                        UserInfoBean.commit()
-                    }
-                }
             }
             finish()
         }
@@ -344,19 +317,6 @@ class PersonalInfoAddActivity : BaseActivity() {
                 infoBinding.piTitle.tvTitle.text = "详细地址"
                 infoBinding.clAreaDetailContent.visibility = View.VISIBLE
                 infoBinding.etAddress.setText(UserInfoBean.addr)
-            }
-            pageEmerg -> {
-                infoBinding.piTitle.tvTitle.text = "紧急联系人"
-                infoBinding.clEmergCont.visibility = View.VISIBLE
-                infoBinding.etEmergName.setText(UserInfoBean.urgentContactname)
-                infoBinding.etEmergPhoneNum.setText(UserInfoBean.urgentContactmob)
-            }
-            pageContacts -> {
-                infoBinding.piTitle.tvTitle.text = "社交通讯信息"
-                infoBinding.clContactsCont.visibility = View.VISIBLE
-                infoBinding.etQqNum.setText(UserInfoBean.qq)
-                infoBinding.etWxNum.setText(UserInfoBean.wechat)
-                infoBinding.etEmailNum.setText(UserInfoBean.email)
             }
         }
     }

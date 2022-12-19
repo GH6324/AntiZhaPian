@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -19,13 +21,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.demo.antizha.*
+import com.demo.antizha.UnsafeOkHttpClient.getDataByGet
+import com.demo.antizha.interfaces.IApiResult
+import com.demo.antizha.interfaces.IClickListener
+import com.demo.antizha.md.JniHandStamp
+import com.demo.antizha.newwork.DictionaryUtils
 import com.demo.antizha.ui.HiCore
-import com.demo.antizha.ui.IClickListener
 import com.demo.antizha.ui.activity.*
 import com.demo.antizha.util.AppUtil
 import com.demo.antizha.util.DialogUtils
-import com.demo.antizha.util.FileUtil
+import com.demo.antizha.util.Utils
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.scwang.smart.refresh.footer.BallPulseFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -34,6 +41,7 @@ import com.youth.banner.adapter.BannerAdapter
 import com.youth.banner.indicator.RoundLinesIndicator
 import com.youth.banner.listener.OnBannerListener
 import com.youth.banner.util.BannerUtils
+import okhttp3.Headers
 import java.io.InputStreamReader
 
 
@@ -126,8 +134,8 @@ class NewCase(
     val updateTime: String,
     val title: String,
     val author: String,
-    val cdnCover: String,
-    val localFilePath: String
+    var cdnCover: String,
+    var localFilePath: String
 )
 
 class NewCaseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -239,9 +247,36 @@ class HomeFragment : Fragment(), IClickListener {
     private lateinit var newCaseAdapter: NewCaseHolderAdapter
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var banderAdapter: BanderAdapter
-    private var pageIndex = 1
-    private var pageSize = 10
-    private var total = 0
+    public var pageIndex = 0
+    private var pagecount = 2
+
+    class OnGetLatestCase : IApiResult {
+        var saveFile: String
+        var homeFragment: HomeFragment
+
+        constructor(saveFile: String, homeFragment: HomeFragment) {
+            this.saveFile = saveFile
+            this.homeFragment = homeFragment
+        }
+
+        override fun callBack(data: String, headers: Headers?) {
+            homeFragment.addLatestCase(data, saveFile, headers)
+        }
+    }
+
+    class OnGetLatestCaseV2 : IApiResult {
+        var saveFile: String
+        var homeFragment: HomeFragment
+
+        constructor(saveFile: String, homeFragment: HomeFragment) {
+            this.saveFile = saveFile
+            this.homeFragment = homeFragment
+        }
+
+        override fun callBack(data: String, headers: Headers?) {
+            homeFragment.addLatestCaseV2(data, saveFile)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -342,15 +377,10 @@ class HomeFragment : Fragment(), IClickListener {
         }
         refreshLayout.setOnLoadMoreListener { //上拉加载更多
             refreshLayout.finishLoadMore(5000/*,false*/)//传入false表示加载失败
-            if (newCaseAdapter.itemCount < total) {
-                val nextIndex = newCaseAdapter.itemCount / pageSize + 1
-                if (pageIndex < nextIndex) {
-                    pageIndex = nextIndex
-                    getNewCaseApi(pageIndex, pageSize)
-                }
-            }
+            if (pageIndex < pagecount)
+                getNewCaseApi(pageIndex + 1)
         }
-        getNewCaseApi(1, pageSize)
+        getNewCaseApi(1)
     }
 
     private fun initNoteList() {
@@ -370,36 +400,95 @@ class HomeFragment : Fragment(), IClickListener {
         startActivity(intent)
     }
 
+    class NewCaseData(var rows: ArrayList<NewCase>)
     class NewCasePackage(val data: NewCaseData?, val code: Int)
-    class NewCaseData(val total: Int, var rows: ArrayList<NewCase>)
 
-    private fun getNewCaseApi(page: Int, row: Int) {
+    private fun getNewCaseApi(page: Int) {
+        if (DictionaryUtils.step < 2) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                getNewCaseApi(page)
+            }, 500)
+            return
+        }
         //https://fzapp.gjfzpt.cn/hicore/api/Information/querylatestcases?Page=1&Rows=2&Sort=releasetime&Order=desc
         getDataByGet(
-            BuildConfig.RELEASE_API_URL+ "/api/Information/querylatestcases?Page=${page}&Rows=${row}&Sort=releasetime&Order=desc",
-            addHead = true, "newcase${page}.txt", callBackFunc = this::addNewCase)
+            BuildConfig.RELEASE_OSS_DOWNLOAD + "h5/news/index/index-${page}.json",
+            addHead = true, OnGetLatestCase("newcase${page}.txt", this))
     }
 
-    private fun onNormalSave(data: String, saveFile: String) {
-        if (data[0] != '{')
-            return
-        if (!TextUtils.isEmpty(saveFile))
-            saveBuff2File(data, saveFile)
+    private fun getNewCaseApiV2(page: Int) {
+        val hashMap: HashMap<String, String> = HashMap()
+        hashMap["Sort"] = "releasetime"
+        hashMap["Rows"] = "10"
+        hashMap["Order"] = "desc"
+        hashMap["Page"] = "${page}"
+        UnsafeOkHttpClient.getDataByPost(
+            BuildConfig.RELEASE_API_URL + "/api/Information/querylatestcasesv2",
+            bodyMap = JniHandStamp.princiHttp(hashMap),
+            addHead = true,
+            OnGetLatestCaseV2("latestcase${page}.txt", this)
+        )
     }
 
-    private fun addNewCase(data: String, saveFile: String) {
-        if (data[0] != '{')
+    fun addLatestCaseV2(data: String, saveFile: String) {
+        val text = JniHandStamp.getSData(data)
+        if (TextUtils.isEmpty(text))
             return
-        val json = Gson().fromJson(data, NewCasePackage::class.java)
+        if (text[0] != '{')
+            return
+        val json = Gson().fromJson(text, NewCasePackage::class.java)
         if (json != null && json.code == 0 && json.data != null) {
             if (!TextUtils.isEmpty(saveFile))
-                saveBuff2File(data, saveFile)
-            total = json.data.total
+                saveBuff2File(text, saveFile)
             refreshLayout.finishLoadMore()
             val oldCount = newCaseAdapter.itemCount
             newCaseAdapter.addNewCase(json.data.rows)
             newCaseAdapter.notifyItemRangeInserted(oldCount, json.data.rows.size)
-            if (newCaseAdapter.itemCount >= total) {
+            pageIndex++
+            if (pageIndex >= pagecount) {
+                val morecase: View = root.findViewById(R.id.ly_morecase)
+                morecase.visibility = View.VISIBLE
+                refreshLayout.setEnableLoadMore(false)
+            }
+        }
+
+    }
+
+    private fun getNewCaseList(data: String): ArrayList<NewCase> {
+        if (TextUtils.isEmpty(data))
+            return ArrayList<NewCase>()
+        if (data[0] != '[')
+            return ArrayList<NewCase>()
+        return Gson().fromJson<ArrayList<NewCase>>(data,
+            object : TypeToken<ArrayList<NewCase>>() {}.type)
+    }
+
+    private fun addLatestCase(data: String, saveFile: String, headers: Headers?) {
+        //服务器发送的数据明明没有压缩，却故意设置一个错误的zip标记，
+        //让客户端无法正确处理，然后去调用新的接口，这是个什么处理方式？
+        //以上是根据2.0.1代码猜的，他并没有处理age字段，
+        //而是直接在onError或解析出的数值为空里处理
+        val newCaseList = getNewCaseList(data)
+        if (newCaseList.size == 0) {
+            getNewCaseApiV2(pageIndex + 1)
+            return
+        }
+        for (NewCase in newCaseList) {
+            if (NewCase.cdnCover.substring(0, 4) != "http")
+                NewCase.cdnCover = BuildConfig.RELEASE_OSS_DOWNLOAD + "h5/" + NewCase.cdnCover
+            if (NewCase.localFilePath.substring(0, 4) != "http")
+                NewCase.localFilePath =
+                    BuildConfig.RELEASE_OSS_DOWNLOAD + "h5/" + NewCase.localFilePath
+        }
+        if (newCaseList != null) {
+            if (!TextUtils.isEmpty(saveFile))
+                saveBuff2File(data, saveFile)
+            refreshLayout.finishLoadMore()
+            val oldCount = newCaseAdapter.itemCount
+            newCaseAdapter.addNewCase(newCaseList)
+            newCaseAdapter.notifyItemRangeInserted(oldCount, newCaseList.size)
+            pageIndex++
+            if (pageIndex >= pagecount) {
                 val morecase: View = root.findViewById(R.id.ly_morecase)
                 morecase.visibility = View.VISIBLE
                 refreshLayout.setEnableLoadMore(false)
@@ -412,7 +501,7 @@ class HomeFragment : Fragment(), IClickListener {
         val createTime: String?,
         val extraID: Long?,
         val id: Long,
-        val imgPath: String,
+        var imgPath: String,
         val isShow: Int?,
         val openType: Int?,
         val sort: Int?,
@@ -422,7 +511,13 @@ class HomeFragment : Fragment(), IClickListener {
     )
 
     private fun loadBander() {
-        val inStream = FileUtil.openfile("bander.txt")
+        if (DictionaryUtils.step < 2) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                loadBander()
+            }, 500)
+            return
+        }
+        val inStream = Utils.openfile("bander.txt")
         val inputReader = InputStreamReader(inStream, charset("UTF_8"))
         val buff = inputReader.readText()
         inStream.close()
@@ -437,6 +532,8 @@ class HomeFragment : Fragment(), IClickListener {
         if (json != null && json.code == 0 && json.data != null && json.data.size > 0) {
             val imageList = ArrayList<BanderBean>()
             for (row in json.data) {
+                if (row.imgPath.substring(0, 4) != "http")
+                    row.imgPath = BuildConfig.RELEASE_OSS_DOWNLOAD + "h5/" + row.imgPath
                 imageList.add(
                     BanderBean(
                         0,

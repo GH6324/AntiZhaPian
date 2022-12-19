@@ -8,7 +8,6 @@ import android.text.TextUtils
 import com.demo.antizha.ui.HiCore
 import com.demo.antizha.util.AddressBean
 import com.demo.antizha.util.CRC64
-import com.demo.antizha.util.UpdateUtil
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.TypeAdapter
@@ -44,12 +43,6 @@ object UserInfoBean {
     var region: String = ""         //地区,比如 安徽省.淮北市.杜集区
     var adcode: String = ""         //地区码，比如 安徽省淮北市杜集区 adcode:340602
     var addr: String = ""           //详细地址
-    var professionName: String = "" //职业
-    var urgentContactname: String = ""  //紧急联系人姓名
-    var urgentContactmob: String = ""   //紧急联系人电话
-    var qq: String = ""
-    var wechat: String = ""
-    var email: String = ""
     var acctoken: String = ""           //用户TOKEN只能正常注册登录后获得，否则服务器会拒绝
     var longitude: String = ""          //设置地区的经度，每天会略做随机修改
     var latitude: String = ""           //设置地区的纬度，每天会略做随机修改
@@ -75,17 +68,11 @@ object UserInfoBean {
         region = settings.getString("region", "").toString()
         adcode = settings.getString("adcode", "").toString()
         addr = settings.getString("address", "").toString()
-        professionName = settings.getString("work", "").toString()
-        urgentContactname = settings.getString("emergency_name", "").toString()
-        urgentContactmob = settings.getString("emergency_phone", "").toString()
-        qq = settings.getString("qq", "").toString()
-        wechat = settings.getString("wechat", "").toString()
-        email = settings.getString("mail", "").toString()
         longitude = settings.getString("longitude", "").toString()
         latitude = settings.getString("latitude", "").toString()
         refTudeTime = settings.getString("refTudeTime", "").toString()
-        version = settings.getString("version", "1.1.29").toString()
-        innerVersion = settings.getInt("innerVersion", 111)
+        version = settings.getString("version", "1.1.28").toString()
+        innerVersion = settings.getInt("innerVersion", 110)
         getVerTime = settings.getString("getVerTime", "").toString()
 
         clusterID = 365268909
@@ -100,7 +87,6 @@ object UserInfoBean {
             version = BuildConfig.VERSION_NAME
             innerVersion = BuildConfig.VERSION_CODE
         }
-        checkUpdate()
         getToken()
         calcProgress()
     }
@@ -118,12 +104,6 @@ object UserInfoBean {
         editor.putString("region", region)
         editor.putString("adcode", adcode)
         editor.putString("address", addr)
-        editor.putString("work", professionName)
-        editor.putString("emergency_name", urgentContactname)
-        editor.putString("emergency_phone", urgentContactmob)
-        editor.putString("qq", qq)
-        editor.putString("wechat", wechat)
-        editor.putString("mail", email)
         editor.putString("longitude", longitude)
         editor.putString("latitude", latitude)
         editor.putString("refTudeTime", refTudeTime)
@@ -147,29 +127,17 @@ object UserInfoBean {
 
     fun calcProgress() {
         perfectProgress = 0
-        if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(id)) {
+        if (!TextUtils.isEmpty(name)) {
+            perfectProgress += 30
+        }
+        if (!TextUtils.isEmpty(id)) {
             perfectProgress += 30
         }
         if (!TextUtils.isEmpty(region)) {
-            perfectProgress += 10
-        }
-        if (!TextUtils.isEmpty(addr)) {
-            perfectProgress += 10
-        }
-        if (!TextUtils.isEmpty(professionName)) {
-            perfectProgress += 5
-        }
-        if (!TextUtils.isEmpty(urgentContactmob)) {
             perfectProgress += 20
         }
-        if (!TextUtils.isEmpty(qq)) {
-            perfectProgress += 10
-        }
-        if (!TextUtils.isEmpty(wechat)) {
-            perfectProgress += 10
-        }
-        if (!TextUtils.isEmpty(email)) {
-            perfectProgress += 5
+        if (!TextUtils.isEmpty(addr)) {
+            perfectProgress += 20
         }
         if (perfectProgress >= 100) {
             perfectProgress = 100
@@ -218,15 +186,6 @@ object UserInfoBean {
                     }
                 }
             }
-        }
-    }
-
-    fun checkUpdate() {
-        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) // HH:mm:ss
-        val currentDate = Date(System.currentTimeMillis())
-        val dateString = simpleDateFormat.format(currentDate)
-        if (!dateString.equals(getVerTime)) {
-            UpdateUtil.checkVer()
         }
     }
 

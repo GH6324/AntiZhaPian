@@ -21,9 +21,21 @@ import com.demo.antizha.R
 import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.activity.WebActivity
 import com.hjq.toast.ToastUtils
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStream
 
 
 object Utils {
+    fun openfile(name: String): InputStream {
+        val extPath = HiCore.context.getExternalFilesDir(null)?.path
+        val file = File(extPath, name)
+        if (file.canRead())
+            return FileInputStream(file)
+        val assetManager = HiCore.app.resources.assets
+        return assetManager.open(name)
+    }
+
     fun showAnimation(context: Context?, resId: Int, imageView: ImageView) {
         val loadAnimation: Animation = AnimationUtils.loadAnimation(context, resId)
         loadAnimation.interpolator = LinearInterpolator()

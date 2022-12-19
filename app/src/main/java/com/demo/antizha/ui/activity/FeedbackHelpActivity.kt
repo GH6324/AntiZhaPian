@@ -11,7 +11,7 @@ import android.widget.TextView
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityFeedbackHelpBinding
 import com.demo.antizha.util.AnimUtils
-import com.demo.antizha.util.FileUtil
+import com.demo.antizha.util.Utils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.InputStreamReader
@@ -57,7 +57,7 @@ class FeedbackHelpActivity : BaseActivity() {
     }
 
     private fun initQaList() {
-        val inputStream = FileUtil.openfile("qalist.txt")
+        val inputStream = Utils.openfile("qalist.txt")
         qaTypeBeanData = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
             object : TypeToken<QATypeBeanData>() {}.type)
         for ((i, qaType) in qaTypeBeanData.data.withIndex()) {
@@ -120,7 +120,8 @@ class FeedbackHelpActivity : BaseActivity() {
         }
     }
 
-    inner class OnQaClickListener internal constructor(private val qa: QABean) : View.OnClickListener {
+    inner class OnQaClickListener internal constructor(private val qa: QABean) :
+        View.OnClickListener {
         override fun onClick(view: View) {
             intentDetail(qa)
         }

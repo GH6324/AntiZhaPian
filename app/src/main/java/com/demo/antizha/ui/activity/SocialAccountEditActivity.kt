@@ -10,7 +10,7 @@ import androidx.core.view.get
 import com.demo.antizha.R
 import com.demo.antizha.adapter.SocialAccBean
 import com.demo.antizha.databinding.ActivitySocialAccEditBinding
-import com.demo.antizha.util.FileUtil
+import com.demo.antizha.util.Utils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hjq.toast.ToastUtils
@@ -25,6 +25,7 @@ class SocialAccountEditActivity : BaseActivity() {
     companion object {
         const val FINATYPE = "其他类型"
     }
+
     private lateinit var infoBinding: ActivitySocialAccEditBinding
     private lateinit var flowLayout: FlowLayout
     private lateinit var socialTypeData: SocialTypeData
@@ -117,7 +118,7 @@ class SocialAccountEditActivity : BaseActivity() {
     }
 
     private fun initTagAdapter() {
-        val inputStream = FileUtil.openfile("socialaccounttypes.txt")
+        val inputStream = Utils.openfile("socialaccounttypes.txt")
         socialTypeData = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
             object : TypeToken<SocialTypeData>() {}.type)
         inputStream.close()

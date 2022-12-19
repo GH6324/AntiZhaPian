@@ -10,7 +10,7 @@ import com.demo.antizha.adapter.NoteListAdapte
 import com.demo.antizha.adapter.NoteListBean
 import com.demo.antizha.databinding.ActivityNoteListBinding
 import com.demo.antizha.ui.SwipBackLayout
-import com.demo.antizha.util.FileUtil
+import com.demo.antizha.util.Utils
 import com.google.gson.Gson
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.api.RefreshLayout
@@ -56,7 +56,7 @@ class NoteListActivity : BaseActivity() {
         @SuppressLint("NotifyDataSetChanged")
         override fun onRefresh(refreshLayout: RefreshLayout) {
             Handler(Looper.getMainLooper()).postDelayed({
-                val inputStream = FileUtil.openfile("noticelist.txt")
+                val inputStream = Utils.openfile("noticelist.txt")
                 val noteListData = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
                     NoteListBeanData::class.java)
                 infoBinding.swipeRefresh.finishRefresh()

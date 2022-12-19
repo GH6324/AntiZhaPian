@@ -47,24 +47,24 @@ object AddressBean {
 
     private var hiProvinces: List<HiProvince> = ArrayList() //address直接导出的结构
     private var provinces: ArrayList<Province> = ArrayList()  //地区选择器使用的结构
+    fun initProvince() {
+        val inputStream = Utils.openfile("address.txt")
+        hiProvinces = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
+            object : TypeToken<List<HiProvince>>() {}.type)
+        initProvinceList()
+        inputStream.close()
+    }
+
     fun getHiProvince(): List<HiProvince> {
         if (hiProvinces.isEmpty()) {
-            val inputStream = FileUtil.openfile("address.txt")
-            hiProvinces = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
-                object : TypeToken<List<HiProvince>>() {}.type)
-            initProvinceList()
-            inputStream.close()
+            initProvince()
         }
         return hiProvinces
     }
 
     fun getProvince(): ArrayList<Province> {
         if (hiProvinces.isEmpty()) {
-            val inputStream = FileUtil.openfile("address.txt")
-            hiProvinces = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
-                object : TypeToken<List<HiProvince>>() {}.type)
-            initProvinceList()
-            inputStream.close()
+            initProvince()
         }
         return provinces
     }

@@ -22,8 +22,8 @@ import com.demo.antizha.R
 import com.demo.antizha.adapter.SmsBean
 import com.demo.antizha.adapter.SocialAccBean
 import com.demo.antizha.databinding.ActivityReportNewBinding
+import com.demo.antizha.interfaces.IClickListener
 import com.demo.antizha.ui.HiCore
-import com.demo.antizha.ui.IClickListener
 import com.demo.antizha.util.AddressBean
 import com.demo.antizha.util.AppUtil
 import com.demo.antizha.util.DialogUtils
@@ -51,6 +51,13 @@ class ReportNewActivity : BaseActivity() {
     private lateinit var startDeal: ActivityResultLauncher<Intent>
 
     override fun initPage() {
+        DialogUtils.showOneTimeDialog(this,
+            3,
+            "110",
+            getString(R.string.report_time_tips),
+            "",
+            "我知道了",
+            null)
         infoBinding = ActivityReportNewBinding.inflate(layoutInflater)
         setContentView(infoBinding.root)
         infoBinding.piTitle.tvTitle.text = "我要举报"
@@ -189,7 +196,8 @@ class ReportNewActivity : BaseActivity() {
                 if (result.data == null)
                     return@registerForActivityResult
                 val array: java.util.ArrayList<CallBean> =
-                    result.data!!.getParcelableArrayListExtra("call") ?: return@registerForActivityResult
+                    result.data!!.getParcelableArrayListExtra("call")
+                        ?: return@registerForActivityResult
                 calls = array
                 if (calls.size == 0)
                     infoBinding.lyCall.tvUploadCall.text = ""
@@ -203,7 +211,8 @@ class ReportNewActivity : BaseActivity() {
                 if (result.data == null)
                     return@registerForActivityResult
                 val array: java.util.ArrayList<SmsBean> =
-                    result.data!!.getParcelableArrayListExtra("sms") ?: return@registerForActivityResult
+                    result.data!!.getParcelableArrayListExtra("sms")
+                        ?: return@registerForActivityResult
                 smss = array
                 if (smss.size == 0)
                     infoBinding.lySms.tvUploadSms.text = ""
@@ -253,7 +262,8 @@ class ReportNewActivity : BaseActivity() {
                     return@registerForActivityResult
                 if (result.data == null)
                     return@registerForActivityResult
-                val array = result.data!!.getStringArrayListExtra("pics") ?: return@registerForActivityResult
+                val array = result.data!!.getStringArrayListExtra("pics")
+                    ?: return@registerForActivityResult
                 pics = array
                 if (pics.size == 0) {
                     infoBinding.lyPicture.tvUploadPicture.text = ""
@@ -284,7 +294,8 @@ class ReportNewActivity : BaseActivity() {
                     return@registerForActivityResult
                 if (result.data == null)
                     return@registerForActivityResult
-                val array = result.data!!.getStringArrayListExtra("url") ?: return@registerForActivityResult
+                val array =
+                    result.data!!.getStringArrayListExtra("url") ?: return@registerForActivityResult
                 urls = array
                 if (urls.size == 0)
                     infoBinding.lyUrl.tvUploadUrl.text = ""

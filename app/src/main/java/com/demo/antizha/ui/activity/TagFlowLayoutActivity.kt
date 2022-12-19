@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityTagflowBinding
-import com.demo.antizha.util.FileUtil
+import com.demo.antizha.util.Utils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.nex3z.flowlayout.FlowLayout
@@ -63,7 +63,7 @@ class TagFlowLayoutActivity : BaseActivity() {
 
     private fun initTagAdapter() {
         tagBean = intent.getIntExtra("int_tag_name", 0)
-        val inputStream = FileUtil.openfile("EvidenceType.txt")
+        val inputStream = Utils.openfile("EvidenceType.txt")
         val zPTypeData: ZPTypeData = Gson().fromJson(InputStreamReader(inputStream, "UTF-8"),
             object : TypeToken<ZPTypeData>() {}.type)
         for (i in zPTypeData.data.indices) {

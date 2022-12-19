@@ -12,8 +12,8 @@ import android.view.View
 import android.widget.RadioButton
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityCheckFraudBinding
+import com.demo.antizha.interfaces.IEditAfterListener
 import com.demo.antizha.ui.HiCore
-import com.demo.antizha.ui.IEditAfterListener
 import com.demo.antizha.ui.dialog.HiShareDialog
 import com.demo.antizha.ui.dialog.ShareConfigBean
 import com.demo.antizha.util.DialogUtils
@@ -27,6 +27,7 @@ class CheckFraudBean : Parcelable {
     var text: String = ""
     var isCheat = 0
     var type = 0
+
     constructor()
     constructor(source: Parcel) {
         bankName = source.readString().toString()
@@ -155,22 +156,22 @@ class CheckFraudActivity : BaseActivity() {
         this.model = model
         refCountTip(model)
         infoBinding.etContent.setText("")
-        when(model) {
+        when (model) {
             1 -> {
-                radioState(infoBinding.rbUrl,infoBinding.rbPay,
-                    infoBinding.rbChat,R.mipmap.ic_fraud_radio_center)
+                radioState(infoBinding.rbUrl, infoBinding.rbPay,
+                    infoBinding.rbChat, R.mipmap.ic_fraud_radio_center)
                 infoBinding.etContent.hint = "请输入或粘贴要查询的IP或URL网址"
                 infoBinding.llScan.visibility = View.VISIBLE
             }
-            2-> {
-                radioState(infoBinding.rbChat,infoBinding.rbPay,
-                    infoBinding.rbUrl,R.mipmap.ic_fraud_radio_right)
+            2 -> {
+                radioState(infoBinding.rbChat, infoBinding.rbPay,
+                    infoBinding.rbUrl, R.mipmap.ic_fraud_radio_right)
                 infoBinding.etContent.hint = "请输入或粘贴要查询的QQ或微信账号"
                 infoBinding.llScan.visibility = View.GONE
             }
-            else-> {
-                radioState(infoBinding.rbPay,infoBinding.rbUrl,
-                    infoBinding.rbChat,R.mipmap.ic_fraud_radio_left)
+            else -> {
+                radioState(infoBinding.rbPay, infoBinding.rbUrl,
+                    infoBinding.rbChat, R.mipmap.ic_fraud_radio_left)
                 infoBinding.etContent.hint = "请输入或粘贴要查询的银行卡号或支付账户"
                 infoBinding.llScan.visibility = View.GONE
             }

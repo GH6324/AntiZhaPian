@@ -7,7 +7,7 @@ import android.text.TextUtils
 import com.demo.antizha.BuildConfig
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.databinding.ActivityAboutUsBinding
-import com.demo.antizha.util.FileUtil
+import com.demo.antizha.newwork.FileUtil
 import com.hjq.toast.ToastUtils
 
 

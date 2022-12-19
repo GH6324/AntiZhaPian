@@ -3,8 +3,12 @@ package com.demo.antizha.util
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.text.Html
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.view.View
@@ -12,16 +16,58 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.demo.antizha.ITimerState
 import com.demo.antizha.R
+import com.demo.antizha.interfaces.IClickListener
+import com.demo.antizha.interfaces.IOneClickListener
 import com.demo.antizha.ui.BaseDialog
-import com.demo.antizha.ui.IClickListener
-import com.demo.antizha.ui.IOneClickListener
+import com.demo.antizha.ui.DownTimer
 import com.demo.antizha.ui.ProgressDialogBar
 
 
 class DialogUtils {
     companion object {
         private var progressDialogBar: ProgressDialogBar? = null
+
+        class DialogDownTimer internal constructor(
+            time: Long,
+            interval: Long,
+            val context: Context, /* renamed from: h */
+            val timerState: ITimerState) :
+            DownTimer(time, interval) {
+            override fun onTimeChang(time: Long) {
+                val context = context
+                if (context == null || (context as Activity).isFinishing) {
+                    return
+                }
+                timerState.timeCount((time / 1000).toInt())
+            }
+
+            override fun onTimer() {
+                timerState.timeOver()
+            }
+        }
+
+        class delayEnableTimerState internal constructor(
+            val button: Button,
+            val buttonTitle: String) :
+            ITimerState {
+            override fun timeCount(i: Int) {
+                val button = button
+                button.text =
+                    Html.fromHtml(buttonTitle + "&#160;&#160;&#160;<font color=#2946E6>(" + i + "s)</font>",
+                        Html.FROM_HTML_MODE_LEGACY)
+            }
+
+            override fun timeOver() {
+                val button = button
+                if (button != null) {
+                    button.isEnabled = true
+                    this.button.text = buttonTitle
+                    this.button.setTextColor(Color.parseColor("#2946E6"))
+                }
+            }
+        }
 
         fun showNormalDialog(context: Context?,
                              title: String?,
@@ -354,5 +400,64 @@ class DialogUtils {
             return baseDialog
         }
 
+        @Synchronized
+        private fun createDownTimer(context: Context, i: Int, iTimerState: ITimerState) {
+            synchronized(DialogUtils::class.java) {
+                DialogDownTimer((i * 1000).toLong(),
+                    1000L,
+                    context,
+                    iTimerState)
+            }
+        }
+
+        fun createButtonDownTimer(activity: Activity, i: Int, button: Button, str: String) {
+            createDownTimer(activity, i, delayEnableTimerState(button, str))
+        }
+
+        fun showOneTimeDialog(activity: Activity?,
+                              i: Int,
+                              phone: String,
+                              title: String,
+                              subtitle: String,
+                              confirmText: String,
+                              iClickListener: IClickListener?): Dialog? {
+            val baseDialog = BaseDialog(activity!!, R.style.base_dialog_style)
+            baseDialog.setContentView(R.layout.custom_dialog_one_time)
+            baseDialog.setGravityLayout(2)
+            baseDialog.setWidthDialog(-2.0)
+            baseDialog.setHeightDialog(-2.0)
+            baseDialog.setCancelable(false)
+            baseDialog.setCanceledOnTouchOutside(false)
+            baseDialog.initOnCreate()
+            baseDialog.show()
+            val tvTitle = baseDialog.findViewById<TextView>(R.id.title)
+            val tvSubTitle = baseDialog.findViewById<TextView>(R.id.subtitle)
+            val btConfirm = baseDialog.findViewById<Button>(R.id.button)
+            tvTitle.setText(Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY))
+            if (!TextUtils.isEmpty(subtitle)) {
+                tvSubTitle.setVisibility(View.VISIBLE)
+                tvSubTitle.setText(subtitle)
+            }
+            tvTitle.setOnClickListener(View.OnClickListener { view ->
+                val intent = Intent("android.intent.action.DIAL")
+                intent.data = Uri.parse("tel:$phone")
+                activity.startActivity(intent)
+            })
+            btConfirm.setOnClickListener(View.OnClickListener { view ->
+                iClickListener?.clickOKBtn()
+                baseDialog.dismiss()
+            })
+            if (i > 0) {
+                btConfirm.setText(Html.fromHtml(confirmText + "&#160;&#160;&#160;<font color=#2946E6>(" + i + "s)</font>",
+                    Html.FROM_HTML_MODE_LEGACY))
+                btConfirm.setEnabled(false)
+                btConfirm.setTextColor(Color.parseColor("#999999"))
+                createButtonDownTimer(activity, i, btConfirm, confirmText)
+            } else {
+                btConfirm.setText(confirmText)
+                btConfirm.setTextColor(Color.parseColor("#2946E6"))
+            }
+            return baseDialog
+        }
     }
 }

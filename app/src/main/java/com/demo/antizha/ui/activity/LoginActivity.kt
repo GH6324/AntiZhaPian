@@ -11,7 +11,7 @@ import android.widget.EditText
 import com.demo.antizha.R
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.databinding.ActivityLoginBinding
-import com.demo.antizha.ui.IEditAfterListener
+import com.demo.antizha.interfaces.IEditAfterListener
 import com.demo.antizha.util.EditUtil.TextWatcher
 import com.demo.antizha.util.Utils
 import com.hjq.toast.ToastUtils
@@ -34,7 +34,8 @@ class LoginActivity : BaseActivity(), IEditAfterListener {
         initListener()
         initClause(false)
     }
-    private fun initListener(){
+
+    private fun initListener() {
         infoBinding.pwdEye.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View?) {
                 chgPwdEye(view)
@@ -79,6 +80,7 @@ class LoginActivity : BaseActivity(), IEditAfterListener {
     override fun editLength(length: Int) {
         buttonStatus()
     }
+
     private fun buttonStatus() {
         val acc: String = infoBinding.account.text.toString().trim()
         if (acc.isNotEmpty()) {
@@ -97,7 +99,8 @@ class LoginActivity : BaseActivity(), IEditAfterListener {
         removeAllActivity("")
     }
 
-    private fun setTextChangedListener(editText: EditText, iEditAfterListener: IEditAfterListener?) {
+    private fun setTextChangedListener(editText: EditText,
+                                       iEditAfterListener: IEditAfterListener?) {
         editText.addTextChangedListener(TextWatcher(iEditAfterListener!!))
     }
 

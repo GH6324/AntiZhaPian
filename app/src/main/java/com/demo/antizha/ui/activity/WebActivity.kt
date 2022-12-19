@@ -10,10 +10,10 @@ import android.view.View
 import android.webkit.*
 import com.demo.antizha.R
 import com.demo.antizha.databinding.ActivityWebBinding
+import com.demo.antizha.interfaces.IClickListener
 import com.demo.antizha.interfaces.IHandler
 import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.HiWebView
-import com.demo.antizha.ui.IClickListener
 import com.demo.antizha.ui.SwipBackLayout
 import com.demo.antizha.util.DialogUtils
 import com.demo.antizha.util.Parameters
@@ -276,8 +276,10 @@ class WebActivity : BaseActivity(), IHandler.HandleWebActListener {
                                      request: WebResourceRequest,
                                      error: WebResourceError) {
             super.onReceivedError(webView, request, error)
-            infoBinding.piNetworkNo.llNetworkNo.visibility = View.VISIBLE
-            infoBinding.webview.visibility = View.GONE
+            if (request.isForMainFrame()) {
+                infoBinding.piNetworkNo.llNetworkNo.visibility = View.VISIBLE
+                infoBinding.webview.visibility = View.GONE
+            }
         }
 
         // android.webkit.WebViewClient
