@@ -38,15 +38,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="55dp"
+            android:autofillHints=""
             android:background="@color/transparent"
-            android:hint="填名字即可，例如：张三可填“三”"
+            android:hint="填姓，名用*代替，例如：张三可填“张*”"
             android:maxLines="1"
             android:textColor="#333333"
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_name_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_name_cont"
-            android:autofillHints="" />
+            app:layout_constraintTop_toTopOf="@id/tv_name_cont" />
 
         <View
             android:layout_width="match_parent"
@@ -70,6 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="55dp"
+            android:autofillHints=""
             android:background="@color/transparent"
             android:hint="填入首末数字即可（例如：32，5X）"
             android:maxLength="18"
@@ -77,8 +78,7 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_id_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_id_cont"
-            android:autofillHints="" />
+            app:layout_constraintTop_toTopOf="@id/tv_id_cont" />
 
         <View
             android:layout_width="match_parent"
@@ -102,6 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="55dp"
+            android:autofillHints=""
             android:background="@color/transparent"
             android:hint="填电话的前3后2共5位"
             android:inputType="phone"
@@ -110,8 +111,7 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_phone_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_phone_cont"
-            android:autofillHints="" />
+            app:layout_constraintTop_toTopOf="@id/tv_phone_cont" />
 
         <View
             android:layout_width="match_parent"
@@ -135,6 +135,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="55dp"
+            android:autofillHints=""
             android:background="@color/transparent"
             android:hint="48808f6c-c936-47b7-9b85-aaaa78787878"
             android:inputType="none"
@@ -143,8 +144,7 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_account_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_account_cont"
-            android:autofillHints="" />
+            app:layout_constraintTop_toTopOf="@id/tv_account_cont" />
 
         <TextView
             android:id="@+id/tv_app_version"
@@ -162,6 +162,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="55dp"
+            android:autofillHints=""
             android:background="@color/transparent"
             android:hint="1.1.29"
             android:inputType="none"
@@ -170,8 +171,7 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_app_version"
-            app:layout_constraintTop_toTopOf="@id/tv_app_version"
-            android:autofillHints="" />
+            app:layout_constraintTop_toTopOf="@id/tv_app_version" />
 
         <View
             android:layout_width="match_parent"
@@ -206,16 +206,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_originalimei">
 
             <TextView
                 android:id="@+id/tv_apktime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_5"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_5"
                 android:gravity="center"
                 android:text="编译时间 2022-01-01 01:01:01"
                 android:textColor="#333333"
@@ -226,8 +226,8 @@
                 style="@style/buttonCrop"
                 android:layout_width="@dimen/dp_130"
                 android:layout_height="35dp"
-                android:layout_marginTop="@dimen/dp_5"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_5"
                 android:gravity="center"
                 android:text="清理可关闭权限"
                 android:textColor="#ffffff"
@@ -302,6 +302,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="75dp"
+            android:autofillHints=""
             android:background="@color/transparent"
             android:hint="请输入详细地址"
             android:maxLines="2"
@@ -309,8 +310,7 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_address_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_address_cont"
-            android:autofillHints="" />
+            app:layout_constraintTop_toTopOf="@id/tv_address_cont" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -342,6 +342,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="75dp"
+            android:autofillHints=""
             android:background="@color/transparent"
             android:hint="请输入紧急联系人姓名"
             android:maxLength="18"
@@ -350,8 +351,7 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_emerg_name_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_emerg_name_cont"
-            android:autofillHints="" />
+            app:layout_constraintTop_toTopOf="@id/tv_emerg_name_cont" />
 
         <View
             android:layout_width="match_parent"
@@ -375,6 +375,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="75dp"
+            android:autofillHints=""
             android:background="@color/transparent"
             android:hint="请输入紧急联系人手机号"
             android:inputType="phone"
@@ -383,8 +384,7 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_emerg_phone_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_emerg_phone_cont"
-            android:autofillHints="" />
+            app:layout_constraintTop_toTopOf="@id/tv_emerg_phone_cont" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -416,6 +416,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="75dp"
+            android:autofillHints=""
             android:background="@color/transparent"
             android:hint="请输入QQ账号"
             android:inputType="number"
@@ -424,8 +425,7 @@
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_qq_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_qq_cont"
-            android:autofillHints="" />
+            app:layout_constraintTop_toTopOf="@id/tv_qq_cont" />
 
         <View
             android:layout_width="match_parent"
@@ -450,14 +450,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="75dp"
+            android:autofillHints=""
             android:background="@color/transparent"
             android:hint="请输入微信账号"
             android:textColor="#333333"
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_wx_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_wx_cont"
-            android:autofillHints="" />
+            app:layout_constraintTop_toTopOf="@id/tv_wx_cont" />
 
         <View
             android:layout_width="match_parent"
@@ -481,16 +481,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="75dp"
+            android:autofillHints=""
             android:background="@color/transparent"
-            android:inputType="textEmailAddress"
             android:hint="请输入电子邮箱地址"
+            android:inputType="textEmailAddress"
             android:singleLine="true"
             android:textColor="#333333"
             android:textColorHint="#999999"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_email_cont"
-            app:layout_constraintTop_toTopOf="@id/tv_email_cont"
-            android:autofillHints="" />
+            app:layout_constraintTop_toTopOf="@id/tv_email_cont" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button

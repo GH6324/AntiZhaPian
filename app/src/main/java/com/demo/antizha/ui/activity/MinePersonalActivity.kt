@@ -48,7 +48,7 @@ class MinePersonalActivity : BaseActivity(), View.OnClickListener {
             infoBinding.userName.visibility = View.GONE
         }
         if (!TextUtils.isEmpty(UserInfoBean.name)) {
-            infoBinding.userName.text = "*${UserInfoBean.name}"
+            infoBinding.userName.text = UserInfoBean.name
         } else {
             infoBinding.userName.text = ""
         }
@@ -58,7 +58,11 @@ class MinePersonalActivity : BaseActivity(), View.OnClickListener {
             infoBinding.userID.text = ""
         }
         infoBinding.area.text = UserInfoBean.region
-        infoBinding.areaDetail.text = UserInfoBean.addr
+        var areaDetail = ""
+        if (UserInfoBean.addr.length > 2)
+            areaDetail = "${UserInfoBean.addr[0]}" + "*".repeat(UserInfoBean.addr.length - 2) +
+                    "${UserInfoBean.addr[UserInfoBean.addr.length - 1]}"
+        infoBinding.areaDetail.text = areaDetail
         infoBinding.regArea.text = UserInfoBean.region
     }
 
