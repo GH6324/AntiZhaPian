@@ -43,6 +43,7 @@ object UserInfoBean {
     var region: String = ""         //地区,比如 安徽省.淮北市.杜集区
     var adcode: String = ""         //地区码，比如 安徽省淮北市杜集区 adcode:340602
     var addr: String = ""           //详细地址
+    var professionName: String = "" //职业
     var acctoken: String = ""           //用户TOKEN只能正常注册登录后获得，否则服务器会拒绝
     var longitude: String = ""          //设置地区的经度，每天会略做随机修改
     var latitude: String = ""           //设置地区的纬度，每天会略做随机修改
@@ -68,6 +69,7 @@ object UserInfoBean {
         region = settings.getString("region", "").toString()
         adcode = settings.getString("adcode", "").toString()
         addr = settings.getString("address", "").toString()
+        professionName = settings.getString("work", "").toString()
         longitude = settings.getString("longitude", "").toString()
         latitude = settings.getString("latitude", "").toString()
         refTudeTime = settings.getString("refTudeTime", "").toString()
@@ -104,6 +106,7 @@ object UserInfoBean {
         editor.putString("region", region)
         editor.putString("adcode", adcode)
         editor.putString("address", addr)
+        editor.putString("work", professionName)
         editor.putString("longitude", longitude)
         editor.putString("latitude", latitude)
         editor.putString("refTudeTime", refTudeTime)

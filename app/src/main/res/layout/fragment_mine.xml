@@ -186,101 +186,9 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_record_note"
-                android:layout_width="fill_parent"
-                android:layout_height="90.0dip"
-                android:layout_marginLeft="15.0dip"
-                android:layout_marginTop="20.0dip"
-                android:layout_marginRight="15.0dip"
-                android:background="@drawable/dialog_corner_bg"
-                android:baselineAligned="false">
-
-                <LinearLayout
-                    android:id="@+id/ll_record_screen"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1.0"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/iv_record_btn" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3.0dip"
-                        android:text="音频录制"
-                        android:textColor="#ff333333"
-                        android:textSize="12.0sp" />
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/ll_user_note"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1.0">
-
-                    <LinearLayout
-                        android:id="@+id/ll_user_sc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:layout_centerInParent="true"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/iv_shouce"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/iv_shouce_btn" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3.0dip"
-                            android:text="用户手册"
-                            android:textColor="#ff333333"
-                            android:textSize="12.0sp" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@id/ll_user_sc"
-                        android:layout_marginStart="-16.0dip"
-                        android:layout_marginTop="7.0dip"
-                        android:layout_toEndOf="@id/ll_user_sc"
-                        android:background="@drawable/iv_user_tip"
-                        android:gravity="center"
-                        android:paddingLeft="2.0dip"
-                        android:paddingTop="1.0dip"
-                        android:paddingRight="2.0dip"
-                        android:paddingBottom="1.0dip"
-                        android:text="国家反诈中心"
-                        android:textColor="#ffffffff"
-                        android:textSize="11.0sp"
-                        android:visibility="gone" />
-                </RelativeLayout>
-            </LinearLayout>
-
-            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/iv_share"
-                    android:layout_width="fill_parent"
-                    android:layout_height="70.0dip"
-                    android:layout_marginLeft="15.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:layout_marginRight="15.0dip"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/iv_share_img"
-                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -380,6 +288,53 @@
                             android:layout_alignParentBottom="true"
                             android:layout_marginStart="5.0dip"
                             android:layout_marginEnd="10.0dip"
+                            android:background="@color/divide_line" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/ll_user_note"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_50_h"
+                        android:orientation="horizontal"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
+
+                        <ImageView
+                            android:id="@+id/iv_shouce"
+                            android:layout_width="@dimen/dp_25"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/dp_2"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/iv_shouce_btn" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@+id/iv_shouce"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:text="用户手册"
+                            android:textColor="#333333"
+                            android:textSize="@dimen/sp_14" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="10dp"
+                            android:src="@mipmap/arrow_gray_right" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.55dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="10dp"
                             android:background="@color/divide_line" />
                     </RelativeLayout>
 

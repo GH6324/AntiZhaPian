@@ -65,11 +65,6 @@ class MineFragment : Fragment() {
             val intentInfo = Intent(activity, FeedbackHelpActivity::class.java)
             startActivity(intentInfo)
         }
-        val recordScreen: LinearLayout = root.findViewById(R.id.ll_record_screen)
-        recordScreen.setOnClickListener {
-            val intentInfo = Intent(activity, OneKeyScreenRecordActivity::class.java)
-            startActivity(intentInfo)
-        }
         return root
     }
 
@@ -78,7 +73,7 @@ class MineFragment : Fragment() {
         val phoneNumber: TextView = root.findViewById(R.id.tv_phone)
         if (!TextUtils.isEmpty(UserInfoBean.mobileNumber)) {
             val str = UserInfoBean.mobileNumber
-            phoneNumber.text ="您好, ${str.substring(0, 3)}******${str.substring(str.length - 2)}"
+            phoneNumber.text = "您好, ${str.substring(0, 3)}******${str.substring(str.length - 2)}"
         } else {
             phoneNumber.text = generatePhoneNumber()
         }

@@ -57,13 +57,21 @@ class MinePersonalActivity : BaseActivity(), View.OnClickListener {
         } else {
             infoBinding.userID.text = ""
         }
-        infoBinding.area.text = UserInfoBean.region
+        infoBinding.area.text = UserInfoBean.region.replace(".", "")
         var areaDetail = ""
         if (UserInfoBean.addr.length > 2)
             areaDetail = "${UserInfoBean.addr[0]}" + "*".repeat(UserInfoBean.addr.length - 2) +
                     "${UserInfoBean.addr[UserInfoBean.addr.length - 1]}"
         infoBinding.areaDetail.text = areaDetail
-        infoBinding.regArea.text = UserInfoBean.region
+        infoBinding.regArea.text = infoBinding.area.text
+
+        //professionName行业信息已经不填了，但是这边还在判断是否填写，应该是程序员弄错了，所以导致一直提示再完善
+        if (!TextUtils.isEmpty(UserInfoBean.name) && !TextUtils.isEmpty(UserInfoBean.id) &&
+            !TextUtils.isEmpty(UserInfoBean.region) && !TextUtils.isEmpty(UserInfoBean.addr) &&
+            !TextUtils.isEmpty(UserInfoBean.professionName)
+        ) {
+            infoBinding.llTopCointips.setVisibility(View.GONE);
+        }
     }
 
     override fun onClick(view: View) {
