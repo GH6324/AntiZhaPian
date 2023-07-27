@@ -421,7 +421,7 @@
                         android:layout_height="wrap_content"
                         android:autoLink="web"
                         android:gravity="center"
-                        android:text="https://github.com/newhying/AntiZhaPian" />
+                        android:text="https://github.com/wangdaye/AntiZhaPian" />
 
                     <TextView
                         android:id="@+id/tv_imei"
