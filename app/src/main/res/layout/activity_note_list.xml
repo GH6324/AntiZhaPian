@@ -9,7 +9,7 @@
         android:id="@+id/pi_title"
         layout="@layout/rl_title_with_back" />
 
-    <com.scwang.smart.refresh.layout.SmartRefreshLayout
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -30,5 +30,5 @@
                 android:id="@+id/ly_nodata"
                 layout="@layout/layout_no_data" />
         </FrameLayout>
-    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

@@ -183,7 +183,7 @@ object AESUtil {
         val blockSize = instance!!.blockSize
         val dataBytes: ByteArray = str.toByteArray(charSet)
         var plaintextLength = dataBytes.size
-        if (plaintextLength % blockSize !== 0) {
+        if (plaintextLength % blockSize != 0) {
             plaintextLength += (blockSize - plaintextLength % blockSize)
         }
         val plaintext = ByteArray(plaintextLength)

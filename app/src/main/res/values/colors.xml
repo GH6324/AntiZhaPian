@@ -23,6 +23,9 @@
     <color name="blue">#1a57f3</color>
     <color name="blue_dark">#2043ff</color>
     <color name="colorBack">#55f03c78</color>
+    <color name="colorBlack55">#55000000</color>
+    <color name="colorBlack70">#b2000000</color>
+    <color name="colorBlack88">#88000000</color>
     <color name="colorBlue1">#55c1e9</color>
     <color name="colorGray">#999999</color>
     <color name="colorListBackground">#e9e7e8</color>

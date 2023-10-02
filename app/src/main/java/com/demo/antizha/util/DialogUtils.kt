@@ -32,15 +32,14 @@ class DialogUtils {
         class DialogDownTimer internal constructor(
             time: Long,
             interval: Long,
-            val context: Context, /* renamed from: h */
+            val context: Context,
             val timerState: ITimerState) :
             DownTimer(time, interval) {
-            override fun onTimeChang(time: Long) {
-                val context = context
-                if (context == null || (context as Activity).isFinishing) {
+            override fun onTimeChang(j: Long) {
+                if ((context as Activity).isFinishing) {
                     return
                 }
-                timerState.timeCount((time / 1000).toInt())
+                timerState.timeCount((j / 1000).toInt())
             }
 
             override fun onTimer() {
@@ -60,12 +59,9 @@ class DialogUtils {
             }
 
             override fun timeOver() {
-                val button = button
-                if (button != null) {
-                    button.isEnabled = true
-                    this.button.text = buttonTitle
-                    this.button.setTextColor(Color.parseColor("#2946E6"))
-                }
+                button.isEnabled = true
+                this.button.text = buttonTitle
+                this.button.setTextColor(Color.parseColor("#2946E6"))
             }
         }
 
@@ -420,7 +416,7 @@ class DialogUtils {
                               title: String,
                               subtitle: String,
                               confirmText: String,
-                              iClickListener: IClickListener?): Dialog? {
+                              iClickListener: IClickListener?): Dialog {
             val baseDialog = BaseDialog(activity!!, R.style.base_dialog_style)
             baseDialog.setContentView(R.layout.custom_dialog_one_time)
             baseDialog.setGravityLayout(2)

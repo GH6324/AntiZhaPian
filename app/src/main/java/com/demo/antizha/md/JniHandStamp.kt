@@ -2,9 +2,10 @@ package com.demo.antizha.md
 
 import android.text.TextUtils
 import com.demo.antizha.BuildConfig
-import com.demo.antizha.UnsafeOkHttpClient
 import com.demo.antizha.interfaces.IApiResult
 import com.demo.antizha.interfaces.IOneClickListener
+import com.demo.antizha.newwork.UnsafeOkHttpClient
+import com.demo.antizha.util.LogUtils
 import com.demo.antizha.util.ResponseDataTypeAdaptor
 import com.google.gson.Gson
 import com.openssl.md.JniHand
@@ -30,14 +31,19 @@ object JniHandStamp {
             this.iOneClickListener = iOneClickListener
         }
 
-        override fun callBack(data: String, headers: Headers?) {
+        override fun onError() {
+            LogUtils.debug("OnGetPeer Error", "")
+        }
+
+        override fun onSuccess(data: String) {
+            LogUtils.debug("OnGetPeer Success", data)
             onPeerGetted(data)
             iOneClickListener.clickOKBtn()
         }
     }
 
     @Synchronized
-    fun <T> princiHttp(t: T?): HashMap<String, String>? {
+    fun <T> princiHttp(t: T?): HashMap<String, String> {
         val hashMap: HashMap<String, String> = HashMap()
         if (t != null) {
             val m21549a: String = ResponseDataTypeAdaptor.buildGson().toJson(t)

@@ -12,9 +12,9 @@ import com.demo.antizha.databinding.ActivityNoteListBinding
 import com.demo.antizha.ui.SwipBackLayout
 import com.demo.antizha.util.Utils
 import com.google.gson.Gson
-import com.scwang.smart.refresh.header.ClassicsHeader
-import com.scwang.smart.refresh.layout.api.RefreshLayout
-import com.scwang.smart.refresh.layout.listener.OnRefreshListener
+import com.scwang.smartrefresh.layout.header.ClassicsHeader
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import qiu.niorgai.StatusBarCompat
 import java.io.InputStreamReader
 

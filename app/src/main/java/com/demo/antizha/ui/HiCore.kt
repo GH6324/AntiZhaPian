@@ -7,9 +7,18 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.util.TypedValue
 import android.view.Gravity
+import com.bumptech.glide.annotation.GlideModule
+import com.bumptech.glide.module.AppGlideModule
 import com.hjq.toast.ToastUtils
 import java.util.*
 
+
+@GlideModule
+class GlideApp : AppGlideModule() {
+    override fun isManifestParsingEnabled(): Boolean {
+        return false
+    }
+}
 
 class HiCore : Application() {
     companion object {
@@ -48,9 +57,8 @@ class HiCore : Application() {
         }
     }
 
-    override
 
-    fun onCreate() {
+    override fun onCreate() {
         super.onCreate()
         context = this
         app = this

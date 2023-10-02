@@ -19,14 +19,14 @@
         <item name="colorPrimaryDark">#2946e6</item>
     </style>
 
-    <style name="AppTheme_AppBarOverlay" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme_AppBarOverlay" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme_NoActionBar" parent="@style/AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme_PopupOverlay" parent="@style/ThemeOverlay.AppCompat.Light"/>
+    <style name="AppTheme_PopupOverlay" parent="@style/ThemeOverlay.AppCompat.Light" />
 
     <style name="Base.ThemeOverlay.AppCompat.Light" parent="@style/Platform.ThemeOverlay.AppCompat.Light">
         <item name="android:colorForeground">@color/foreground_material_light</item>
@@ -98,6 +98,13 @@
     <style name="CustomProgressDialog" parent="@style/CustomDialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="splash" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@drawable/splash_bg</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:navigationBarColor">@color/transparent</item>
     </style>
 
     <style name="text_content_style">

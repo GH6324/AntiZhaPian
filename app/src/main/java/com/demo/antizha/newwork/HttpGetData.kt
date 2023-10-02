@@ -1,16 +1,14 @@
-package com.demo.antizha
+package com.demo.antizha.newwork
 
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
 import com.demo.antizha.interfaces.IApiResult
-import com.demo.antizha.newwork.HookDns
-import com.demo.antizha.newwork.RequestParamInterceptor
 import com.demo.antizha.ui.HiCore
+import com.demo.antizha.util.LogUtils
 import com.google.gson.Gson
 import okhttp3.*
 import java.io.*
-import java.security.SecureRandom
 import java.security.cert.CertificateException
 import java.util.concurrent.TimeUnit
 import java.util.zip.GZIPInputStream
@@ -21,6 +19,8 @@ import javax.net.ssl.X509TrustManager
 
 
 object UnsafeOkHttpClient {
+    var mHandler = object : Handler(Looper.getMainLooper()) {}
+    val timeOut: Long = 6
     val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
         @Throws(CertificateException::class)
         override fun checkClientTrusted(chain: Array<java.security.cert.X509Certificate>,
@@ -51,50 +51,130 @@ object UnsafeOkHttpClient {
         return builder
     }
 
-    fun getDataByGet(url: String, addHead: Boolean, iApiResult: IApiResult) {
-        try {
-            val builder = getBuilder()
-            if (addHead)
-                builder.addInterceptor(RequestParamInterceptor(true))
-            //val client = builder.build()
-            val client = builder.dns(HookDns()).build()
-            val requestb = Request.Builder().get().url(url)
-            val request = requestb.build()
+    /*观察者模式代码
+    private fun getObservable(call: Call): Observable<String> {
+        return Observable.create { emitter: ObservableEmitter<String> ->
+            call.enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    LogUtils.debug("getObservable ", "onFailure")
+                    emitter.onError(e)
+                }
 
-            val call = client.newCall(request)
-            //异步请求
-            asynchronousCall(call, iApiResult)
-        } catch (e: Exception) {
-            //callBackFunc("")
+                @Throws(IOException::class)
+                override fun onResponse(call: Call, response: Response) {
+                    try {
+                        LogUtils.debug("getObservable ", "onResponse")
+                        //如果不手动设置gzip，让okhttp自动处理，如果返回的数据有问题，调用bytes()的时候会异常
+                        //如果手动设置gzip，如果返回的数据有问题，则在decodeData里会抛出异常
+                        val bodyString = decodeData(response.body()?.bytes(), response.headers())
+                        emitter.onNext(bodyString)
+                        emitter.onComplete()
+                    } catch (e: IOException) {
+                        LogUtils.debug("getObservable ", "onResponse data error")
+                        emitter.onError(e)
+                    }
+                }
+            })
         }
+    }
+
+    class MiddleSubscriber : Observer<String> {
+        private var iApiResult: IApiResult
+
+        constructor(iApiResult: IApiResult) {
+            this.iApiResult = iApiResult
+        }
+
+        override fun onSubscribe(d: Disposable) {
+        }
+
+        override fun onNext(t: String) {
+            LogUtils.debug("MiddleSubscriber ", "onNext")
+            iApiResult.onSuccess(t)
+        }
+
+        override fun onError(e: Throwable) {
+            iApiResult.onError()
+        }
+
+        override fun onComplete() {
+        }
+
+    }
+    */
+
+    fun createCall(request: Request, addHead: Boolean, addGzip: Boolean): Call {
+        val builder = getBuilder()
+        if (addHead)
+            builder.addInterceptor(RequestParamInterceptor(addGzip))
+        builder.dns(HookDns()).retryOnConnectionFailure(true)
+            .connectTimeout(timeOut, TimeUnit.SECONDS)
+            .readTimeout(timeOut, TimeUnit.SECONDS)
+            .writeTimeout(timeOut, TimeUnit.SECONDS)
+        val client = builder.build()
+        return client.newCall(request)
+    }
+
+    fun asynchronousCall(call: Call, iApiResult: IApiResult) {
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                LogUtils.debug("asynchronousCall ", "onFailure")
+                //如果需要，也应该改成mHandler.post
+                iApiResult.onError()
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                LogUtils.debug("asynchronousCall ", "onResponse")
+                try {
+                    //如果不手动设置gzip，让okhttp自动处理，如果返回的数据有问题，调用bytes()的时候会异常
+                    //如果手动设置gzip，如果返回的数据有问题，则在decodeData里会抛出异常
+                    val bodyString = decodeData(response.body()?.bytes(), response.headers())
+                    mHandler.post(object : Runnable {
+                        override fun run() {
+                            iApiResult.onSuccess(bodyString)
+                        }
+                    })
+                } catch (e: IOException) {
+                    LogUtils.debug("asynchronousCall ", "onResponse data error")
+                    onFailure(call, e)
+                }
+            }
+        })
+    }
+
+    fun callRequest(request: Request, addHead: Boolean, addGzip: Boolean, iApiResult: IApiResult) {
+        val call = createCall(request, addHead, addGzip)
+        asynchronousCall(call, iApiResult)
+        /*观察者模式代码
+        val observable = getObservable(call)
+        val middleSubscriber = MiddleSubscriber(iApiResult)
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(middleSubscriber)
+         */
+    }
+
+    fun getDataByGet(url: String, addHead: Boolean, iApiResult: IApiResult) {
+        val requestBuilder = Request.Builder().get().url(url)
+        val request = requestBuilder.build()
+        LogUtils.debug("getDataByGet ", url)
+
+        callRequest(request, addHead, true, iApiResult)
     }
 
     fun getDataByPost(url: String,
                       bodyMap: HashMap<String, String>?,
                       addHead: Boolean,
                       iApiResult: IApiResult) {
-        try {
-            val sc: SSLContext = SSLContext.getInstance("TLS")
-            sc.init(null, trustAllCerts, SecureRandom())
 
-            val builder = getBuilder()
-            if (addHead)
-                builder.addInterceptor(RequestParamInterceptor(false))
-            //val client = builder.build()
-            val client = builder.dns(HookDns()).build()
-            val json = if (bodyMap == null) "{}" else Gson().toJson(bodyMap)
+        val json = if (bodyMap == null) "{}" else Gson().toJson(bodyMap)
+        val requestBuilder = Request.Builder()
+            .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json))
+            .url(url)
+        val request = requestBuilder.build()
+        LogUtils.debug("getDataByPost ", url)
 
-            val requestb = Request.Builder()
-                //.post(json.toRequestBody("application/json; charset=UTF-8".toMediaTypeOrNull()))
-                .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json))
-                .url(url)
-            val request = requestb.build()
-            val call = client.newCall(request)
-            //异步请求
-            asynchronousCall(call, iApiResult)
-        } catch (e: Exception) {
-            //callBackFunc("")
-        }
+        callRequest(request, addHead, false, iApiResult)
     }
 
     fun getDataByPostSyn(url: String,
@@ -102,43 +182,30 @@ object UnsafeOkHttpClient {
                          addHead: Boolean,
                          iApiResult: IApiResult) {
         try {
-            val sc: SSLContext = SSLContext.getInstance("TLS")
-            sc.init(null, trustAllCerts, SecureRandom())
-
-            val builder = getBuilder()
-            if (addHead)
-                builder.addInterceptor(RequestParamInterceptor(false))
-            //val client = builder.build()
-            val client = builder.dns(HookDns()).readTimeout(5, TimeUnit.SECONDS).build()
             val json = if (bodyMap == null) "{}" else Gson().toJson(bodyMap)
-
-            val requestb = Request.Builder()
-                //.post(json.toRequestBody("application/json; charset=UTF-8".toMediaTypeOrNull()))
+            val requestBuilder = Request.Builder()
                 .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json))
                 .url(url)
-            val request = requestb.build()
-            val call = client.newCall(request)
+            val request = requestBuilder.build()
+            LogUtils.debug("getDataByPostSyn ", url)
+
+            val call = createCall(request, false, addHead)
             //痛步请求
             try {
                 val response = call.execute()
-                val body = response.body()
-                val data = body?.bytes()
-                val headers = response.headers()
-                callBack(data, headers, iApiResult)
+                val bodyString = decodeData(response.body()?.bytes(), response.headers())
+                iApiResult.onSuccess(bodyString)
             } catch (e: IOException) {
-                e.printStackTrace()
+                iApiResult.onError()
             }
         } catch (e: Exception) {
             e.printStackTrace()
             //callBackFunc("")
         }
     }
-
 }
 
 fun bodyIsGzip(array: ByteArray): Boolean {
-    if (array == null)
-        return false
     if (array.size < 6)
         return false
     if (array[1] != 31.toByte())
@@ -150,17 +217,18 @@ fun bodyIsGzip(array: ByteArray): Boolean {
     return true
 }
 
-fun callBack(data: ByteArray?, headers: Headers, iApiResult: IApiResult) {
+@Throws(IOException::class)
+fun decodeData(data: ByteArray?, headers: Headers): String {
     var iszip = false
     val encoding = headers.get("Content-Encoding")
     if (encoding != null && TextUtils.equals("gzip", encoding))
         iszip = true
     if (iszip != bodyIsGzip(data!!)) {
-        iApiResult.callBack("", headers)
-        return
+        LogUtils.debug("decodeData ", "gzip error")
+        throw IOException()
     }
-    val bodyString: String?
-    if (bodyIsGzip(data!!)) {
+    val bodyString: String
+    if (bodyIsGzip(data)) {
         var baos = ByteArrayOutputStream()
         val gzipIn = GZIPInputStream(ByteArrayInputStream(data))
         var readByte: Int
@@ -169,30 +237,7 @@ fun callBack(data: ByteArray?, headers: Headers, iApiResult: IApiResult) {
     } else {
         bodyString = data.toString(charset("UTF-8"))
     }
-    iApiResult.callBack("" + bodyString, headers)
-}
-
-fun asynchronousCall(call: Call, iApiResult: IApiResult) {
-    call.enqueue(object : Callback {
-        override fun onFailure(call: Call, e: IOException) {
-            iApiResult.callBack(" ", null)
-        }
-
-        @Throws(IOException::class)
-        override fun onResponse(call: Call, response: Response) {
-            //更新界面必须在UI线程里调用，所以需要用Handler
-            var mHandler: Handler = Handler(Looper.getMainLooper())
-            val mRunnable: Runnable = object : Runnable {
-                val body = response.body()
-                val data = body?.bytes()
-                val headers = response.headers()
-                override fun run() {
-                    callBack(data, headers, iApiResult)
-                }
-            }
-            mHandler.postDelayed(mRunnable, 0)
-        }
-    })
+    return bodyString
 }
 
 fun saveBuff2File(data: String, saveFile: String) {
@@ -207,7 +252,7 @@ fun saveBuff2File(data: String, saveFile: String) {
 fun loadBuff4File(readFile: String): String {
     val path = HiCore.context.getExternalFilesDir(null)?.path
     val file = File(path, readFile)
-    //file.exists()总是返回false
+//file.exists()总是返回false
     if (!file.canRead())
         return ""
     val inStream = FileInputStream(file)

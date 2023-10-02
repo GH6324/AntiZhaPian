@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.demo.antizha.*
 import com.demo.antizha.ui.HiCore
 import com.demo.antizha.ui.activity.PromosWebDetActivity
+import com.demo.antizha.util.LogUtils
 import com.demo.antizha.util.Parameters
 import com.demo.antizha.util.UrlAES
 import com.just.agentweb.AbsAgentWebSettings
@@ -60,6 +61,7 @@ class WebFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         dashboardViewModel = ViewModelProvider(this)[WebViewModel::class.java]
         root = inflater.inflate(R.layout.fragment_web, container, false)
         mVirtualWeb = root.findViewById(R.id.ll_virtual_web)
@@ -207,6 +209,14 @@ class WebFragment : Fragment() {
             isInitWeb = true
             initPage()
         }
+    }
+
+    fun goBack(): Boolean {
+        if (!webView.canGoBack()) {
+            return false
+        }
+        webView.goBack()
+        return true
     }
 
     fun analysisParam(param: Parameters) {

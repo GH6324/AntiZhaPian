@@ -5,7 +5,7 @@ package com.demo.antizha.util;
  */
 public class EncoderException
         extends IllegalStateException {
-    private Throwable cause;
+    private final Throwable cause;
 
     EncoderException(String msg, Throwable cause) {
         super(msg);

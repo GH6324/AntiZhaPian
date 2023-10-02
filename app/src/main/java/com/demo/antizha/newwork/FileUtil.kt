@@ -2,10 +2,10 @@ package com.demo.antizha.newwork
 
 import android.text.TextUtils
 import com.demo.antizha.BuildConfig
-import com.demo.antizha.UnsafeOkHttpClient.getDataByPost
 import com.demo.antizha.interfaces.IApiResult
 import com.demo.antizha.md.JniHandStamp
-import com.demo.antizha.saveBuff2File
+import com.demo.antizha.newwork.UnsafeOkHttpClient.getDataByPost
+import com.demo.antizha.util.LogUtils
 import com.hjq.toast.ToastUtils
 import okhttp3.Headers
 
@@ -17,7 +17,12 @@ object FileUtil {
             this.saveFile = saveFile
         }
 
-        override fun callBack(data: String, headers: Headers?) {
+        override fun onError() {
+            LogUtils.debug("NormalSave Error", "")
+        }
+
+        override fun onSuccess(data: String) {
+            LogUtils.debug("NormalSave Success", data)
             val text = JniHandStamp.getSData(data)
             if (TextUtils.isEmpty(text))
                 return

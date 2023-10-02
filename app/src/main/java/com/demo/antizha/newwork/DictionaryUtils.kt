@@ -1,9 +1,10 @@
 package com.demo.antizha.newwork
 
 import com.demo.antizha.BuildConfig
-import com.demo.antizha.UnsafeOkHttpClient.getDataByPost
 import com.demo.antizha.interfaces.IApiResult
 import com.demo.antizha.md.JniHandStamp
+import com.demo.antizha.newwork.UnsafeOkHttpClient.getDataByPost
+import com.demo.antizha.util.LogUtils
 import okhttp3.Headers
 
 object DictionaryUtils {
@@ -17,7 +18,12 @@ object DictionaryUtils {
     }
 
     class OnGetDictionary : IApiResult {
-        override fun callBack(data: String, headers: Headers?) {
+        override fun onError() {
+            LogUtils.debug("OnGetDictionary Error", "")
+        }
+
+        override fun onSuccess(data: String) {
+            LogUtils.debug("OnGetDictionary Success", data)
             onDictionaryGetted(data)
         }
     }

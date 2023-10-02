@@ -18,6 +18,7 @@ import com.demo.antizha.BuildConfig
 import com.demo.antizha.R
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.ui.activity.*
+import com.demo.antizha.util.LogUtils
 
 class MineFragment : Fragment() {
     private lateinit var mActivity: Activity
@@ -31,7 +32,6 @@ class MineFragment : Fragment() {
         mineViewModel =
             ViewModelProvider(this)[MineViewModel::class.java]
         root = inflater.inflate(R.layout.fragment_mine, container, false)
-
         val head: ConstraintLayout = root.findViewById(R.id.cl_head)
         head.setOnClickListener {
             val intentInfo = Intent(activity, MinePersonalActivity::class.java)

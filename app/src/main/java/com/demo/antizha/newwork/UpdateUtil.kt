@@ -1,25 +1,25 @@
 package com.demo.antizha.newwork
 
+import android.content.Context
 import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.demo.antizha.BuildConfig
 import com.demo.antizha.R
-import com.demo.antizha.UnsafeOkHttpClient.getDataByPost
 import com.demo.antizha.UserInfoBean
 import com.demo.antizha.interfaces.IApiResult
 import com.demo.antizha.md.JniHandStamp
-import com.demo.antizha.saveBuff2File
+import com.demo.antizha.newwork.UnsafeOkHttpClient.getDataByPost
 import com.demo.antizha.ui.BaseDialog
-import com.demo.antizha.ui.activity.BaseActivity
+import com.demo.antizha.util.LogUtils
 import com.demo.antizha.util.RegisterBody
 import com.google.gson.Gson
 import okhttp3.Headers
 
 
 object UpdateUtil : View.OnClickListener {
-    var mActivity: BaseActivity? = null
+    var mActivity: Context? = null
     var uppVerDlg: BaseDialog? = null
 
     class DownloadInfo {
@@ -39,8 +39,13 @@ object UpdateUtil : View.OnClickListener {
             this.saveFile = saveFile
         }
 
-        override fun callBack(data: String, headers: Headers?) {
-            onGetVersion(data, saveFile, headers)
+        override fun onError() {
+            LogUtils.debug("OnGetVersion Error", "")
+        }
+
+        override fun onSuccess(data: String) {
+            LogUtils.debug("OnGetVersion Success", data)
+            onGetVersion(data, saveFile)
         }
     }
 
@@ -61,7 +66,7 @@ object UpdateUtil : View.OnClickListener {
     /*新颁布返回类似信息，无法获得最新版本号*/
     /*{"code":2,"msg":"当前版本过低，请前往应用市场下载最新版本"}*/
     @Suppress("UNUSED_PARAMETER")
-    fun onGetVersion(data: String, saveFile: String, headers: Headers?) {
+    fun onGetVersion(data: String, saveFile: String) {
         val text = JniHandStamp.getSData(data)
         val ver = Gson().fromJson(text, DownloadInfoPackage::class.java)
         val oldVer = UserInfoBean.version
